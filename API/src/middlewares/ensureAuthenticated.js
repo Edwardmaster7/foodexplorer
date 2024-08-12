@@ -1,6 +1,5 @@
 const { verifyToken } = require('./configs/auth');
 const AppError = require('../utils/AppError');
-const authConfig = require('../configs/auth');
 
 async function ensureAuthenticated(request, response, next) {
   const authHeader = request.headers.authorization;
@@ -14,7 +13,10 @@ async function ensureAuthenticated(request, response, next) {
   try {
     const decoded = await verifyToken(token);
 
-    request.user = { id: decoded.userId };
+    request.user = {
+        id: decoded.userId,
+        role: decoded.role, // or permissions: decoded.permissions
+      };
 
     return next();
   } catch (err) {
