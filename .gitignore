@@ -129,8 +129,11 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-#database
-database
+# database
+database.db
 *.xml
 *.iml
 *.meta
+
+# RSA
+*.pem

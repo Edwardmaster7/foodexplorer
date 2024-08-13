@@ -1,7 +1,8 @@
+const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
-// Fetch the secret key from an environment variable
-const secretKey = process.env.JWT_SECRET_KEY;
+// Read the private key from the file
+const secretKey = fs.readFileSync('private.pem', 'utf8');
 
 // Sign a new JWT token
 const signToken = (payload) => {

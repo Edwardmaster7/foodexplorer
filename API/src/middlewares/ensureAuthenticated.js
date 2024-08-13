@@ -1,4 +1,4 @@
-const { verifyToken } = require('./configs/auth');
+const { verifyToken } = require('../configs/auth');
 const AppError = require('../utils/AppError');
 
 async function ensureAuthenticated(request, response, next) {
