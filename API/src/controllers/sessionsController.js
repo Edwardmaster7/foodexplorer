@@ -1,13 +1,16 @@
 const knex = require("../database/knex")
 const AppError = require("../utils/AppError")
-const authConfig = require("../configs/auth")
 const { signToken } = require("../configs/auth")
 
 class SessionsController {
   async create(request, response) {
     const { email, password } = request.body
 
-    const user = await knex("users").where({ email }).first()
+    console.log(`email: ${email}, password: ${password}`)
+
+    const user = await knex("Users").where('email', email).first()
+    
+    // console.log(`user ${JSON.stringify(user)}`)
 
     if (!user) {
       throw new AppError("Email and/or password incorrect.", 401)
@@ -17,9 +20,11 @@ class SessionsController {
       throw new AppError("Email and/or password incorrect.", 401)
     }
 
-    const token = signToken({ id: user.id })
+    console.log(`user id on sessionsController: ${user.id}`)
 
-    return response.json({ token })
+    const token = signToken({ userId: String(user.id), isAdmin: user.isAdmin })
+
+    return response.json({ id:user.id, token })
   }
 }
 

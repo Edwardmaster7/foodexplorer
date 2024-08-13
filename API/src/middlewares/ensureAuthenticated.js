@@ -13,9 +13,10 @@ async function ensureAuthenticated(request, response, next) {
   try {
     const decoded = await verifyToken(token);
 
+    console.log(decoded);
     request.user = {
         id: decoded.userId,
-        role: decoded.role, // or permissions: decoded.permissions
+        isAdmin: decoded.isAdmin, // or permissions: decoded.permissions
       };
 
     return next();
