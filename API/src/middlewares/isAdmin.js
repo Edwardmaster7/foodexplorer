@@ -1,10 +1,13 @@
 const AppError = require('../utils/AppError');
 
-const isAdmin = (req, res, next) => {
-    if (req.user.role !== 'admin') {
-      return new AppError('Insuficient privileges to perform this action', 403);
+async function isAdmin (req, res, next) {
+    // console.log(req.user.isAdmin);
+
+    if (req.user.isAdmin === true) {
+      return next();
+    } else {
+      throw new AppError('Insuficient privileges to perform this action', 403);
     }
-    next();
   };
 
 module.exports = isAdmin;
