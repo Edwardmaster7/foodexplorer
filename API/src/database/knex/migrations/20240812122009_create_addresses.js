@@ -11,6 +11,15 @@ exports.up = (knex) => {
     table.string('country').notNullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at');
+  }).then(() => {
+    return knex.raw(`
+      CREATE TRIGGER update_addresses_timestamp
+      BEFORE UPDATE ON Addresses
+      FOR EACH ROW
+      BEGIN
+        UPDATE Addresses SET updated_at = datetime('now') WHERE id = NEW.id;
+      END;
+    `);
   });
 };
 
