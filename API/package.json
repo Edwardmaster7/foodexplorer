@@ -9,9 +9,9 @@
     "rsa": "openssl genrsa -out private.pem 2048; openssl rsa -in private.pem -outform PEM -pubout -out public.pem"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Eduardo Batista",
+  "license": "MIT",
+  "description": "API to deal with all operations from FoodExplorer app",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
