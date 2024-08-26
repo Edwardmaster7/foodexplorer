@@ -14,20 +14,29 @@ class IngredientsController {
      * @returns {Object} - Returns a response object with status 201 and an empty JSON body.
      */
     async create(request, response) {
-        const { name } = request.body;
+        const { names } = request.body;
 
         // validate name is provided and not empty
-        if (!name) {
+        if (!names) {
             throw new AppError("Name is required.");
         }
 
+        // check if the name is an array
+        if (!Array.isArray(names)) {
+            throw new AppError("Names must be an array.");
+        } else if (names.length === 0) {
+            throw new AppError("At least one name is required.");
+        }
+
         // check if one or more ingredients with the same name already exists
-        const checkIngredientExists = await knex("Ingredients").where({ name }).first();
-        if (checkIngredientExists) {
+        const checkIngredientExists = await knex("Ingredients").whereIn("name", names).select("id");
+        // console.log(checkIngredientExists);
+        if (checkIngredientExists && checkIngredientExists.length > 0) {
             throw new AppError("One or more ingredients already exists.");
         }
 
-        await knex("Ingredients").insert({ name });
+        // insert all the ingredients into the database
+        await knex("Ingredients").insert(names.map(name => ({ name })));
 
         return response.status(201).json();
     }
