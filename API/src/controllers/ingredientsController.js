@@ -1,6 +1,6 @@
-const AppError = require("../utils/AppError")
+const AppError = require("../utils/AppError");
 
-const knex = require("../database/knex")
+const knex = require("../database/knex");
 
 class IngredientsController {
 
@@ -14,56 +14,56 @@ class IngredientsController {
      * @returns {Object} - Returns a response object with status 201 and an empty JSON body.
      */
     async create(request, response) {
-        const { name } = request.body
+        const { name } = request.body;
 
         // validate name is provided and not empty
         if (!name) {
-            throw new AppError("Name is required.")
+            throw new AppError("Name is required.");
         }
 
-        // check if ingredient already exists
-        const checkIngredientExists = await knex("Ingredients").where({ name }).first()
+        // check if one or more ingredients with the same name already exists
+        const checkIngredientExists = await knex("Ingredients").where({ name }).first();
         if (checkIngredientExists) {
-            throw new AppError("Ingredient already exists.")
+            throw new AppError("One or more ingredients already exists.");
         }
 
-        await knex("Ingredients").insert({ name })
+        await knex("Ingredients").insert({ name });
 
-        return response.status(201).json()
+        return response.status(201).json();
     }
 
     async update(request, response) {
-        const { id } = request.params
-        const { name } = request.body
+        const { id } = request.params;
+        const { name } = request.body;
 
         // validate name is provided and not empty
         if (!name) {
-            throw new AppError("Name is required.")
+            throw new AppError("Name is required.");
         }
 
         // check if ingredient already exists
-        const checkIngredientExists = await knex("Ingredients").where({ id }).first()
+        const checkIngredientExists = await knex("Ingredients").where({ id }).first();
         if (!checkIngredientExists) {
-            throw new AppError("Ingredient not found.")
+            throw new AppError("Ingredient not found.");
         }
 
-        await knex("Ingredients").where({ id }).update({ name })
+        await knex("Ingredients").where({ id }).update({ name });
 
-        return response.status(200).json()
+        return response.status(200).json();
     }
 
     async delete(request, response) {
-        const { id } = request.params
+        const { id } = request.params;
 
         // check if ingredient exists
-        const checkIngredientExists = await knex("Ingredients").where({ id }).first()
+        const checkIngredientExists = await knex("Ingredients").where({ id }).first();
         if (!checkIngredientExists) {
-            throw new AppError("Ingredient not found.")
+            throw new AppError("Ingredient not found.");
         }
 
-        await knex("Ingredients").where({ id }).delete()
+        await knex("Ingredients").where({ id }).delete();
 
-        return response.status(200).json()
+        return response.status(200).json();
     }
 
     async index(request, response) {
@@ -75,15 +75,15 @@ class IngredientsController {
     async show(request, response) {
         const { id } = request.params
 
-        const ingredient = await knex("Ingredients").where({ id }).first()
+        const ingredient = await knex("Ingredients").where({ id }).first();
 
         // check if the ingredient was found
         if (!ingredient) {
-            throw new AppError("Ingredient not found.")
+            throw new AppError("Ingredient not found.");
         }
 
-        return response.json(ingredient)
+        return response.json(ingredient);
     }
 }
 
-module.exports = IngredientsController 
+module.exports = IngredientsController;
