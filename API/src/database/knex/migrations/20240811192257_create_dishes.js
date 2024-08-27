@@ -6,6 +6,7 @@ exports.up = (knex) => {
         table.string('description', 160);
         table.decimal('price', 8, 2).notNullable();
         table.integer('category_id').references('id').inTable('Categories');
+        table.text('image')
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at');
         }).then(() => {

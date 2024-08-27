@@ -126,6 +126,17 @@ class DishesController {
             throw new AppError('Dish not found');
         }
 
+        // check if there is any order with status = pending or preparing containing the given dish
+        const checkOrderExists = await knex('Orders')
+                                            .join('OrderDishes', 'OrderDishes.order_id','=', 'Orders.id')
+                                            .where({ status: 'pending', dish_id: id })
+                                            .orWhere({ status: 'preparing', dish_id: id })
+                                            .select('Orders.id')
+                                            .first();
+        if (checkOrderExists) {
+            throw new AppError('Dish is in use by an order. Cannot delete.');
+        }
+
         await knex('Dishes').where({ id }).delete();
 
         // delete dish_ingredients relation

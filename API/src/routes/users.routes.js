@@ -16,6 +16,5 @@ const usersController = new UsersController()
 usersRouter.get("/:id", usersController.show)
 usersRouter.post("/", usersController.create)
 usersRouter.put("/", ensureAuthenticated, usersController.update)
-// usersRouter.patch("/avatar", ensureAuthenticated, upload.single("avatar"), usersController.updateAvatar)
 
 module.exports = usersRouter
