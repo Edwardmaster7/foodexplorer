@@ -88,51 +88,26 @@ class OrdersController {
     }
 
     async index(request, response) {
-        const userId = request.user.id;
-        const isAdmin = request.user.isAdmin;
-    
-        if (!isAdmin) {
-            const orders = await knex('Orders')
-                .where('user_id', userId)
-                .orderBy('created_at', 'desc')
-                .select('Orders.*')
-                .leftJoin('OrderDishes', 'Orders.id', '=', 'OrderDishes.order_id')
-                .leftJoin('Dishes', 'OrderDishes.dish_id', '=', 'Dishes.id')
-                .select('Dishes.name', 'Dishes.price', 'OrderDishes.quantity')
-                .groupBy('Orders.id', 'Dishes.id');
-    
-            const formattedOrders = orders.reduce((accumulator, order) => {
-                const existingOrder = accumulator.find(o => o.id === order.id);
-                if (existingOrder) {
-                    existingOrder.dishes.push({ name: order.name, price: order.price, quantity: order.quantity });
-                } else {
-                    accumulator.push({ ...order, dishes: [{ name: order.name, price: order.price, quantity: order.quantity }] });
-                }
-                return accumulator;
-            }, []);
+        const userId = request.user.id;    
+        
+        const orders = await knex('OrderDishes')
+            .join('Dishes', 'OrderDishes.dish_id', '=', 'Dishes.id')
+            .join('Orders', 'OrderDishes.order_id', '=', 'Orders.id')
+            .select('Orders.*', 'Dishes.name', 'Dishes.price', 'OrderDishes.quantity')
+            .groupBy('Orders.id', 'Dishes.id');
 
-            return response.json(formattedOrders);
-        } else {
-            const orders = await knex('OrderDishes')
-                .join('Dishes', 'OrderDishes.dish_id', '=', 'Dishes.id')
-                .join('Orders', 'OrderDishes.order_id', '=', 'Orders.id')
-                .select('Orders.*', 'Dishes.name', 'Dishes.price', 'OrderDishes.quantity')
-                .groupBy('Orders.id', 'Dishes.id');
-    
-            const formattedOrders = orders.reduce((accumulator, order) => {
-                const existingOrder = accumulator.find(o => o.id === order.id);
-                if (existingOrder) {
-                    existingOrder.dishes.push({ name: order.name, price: order.price, quantity: order.quantity });
-                } else {
-                    accumulator.push({ ...order, dishes: [{ name: order.name, price: order.price, quantity: order.quantity }] });
-                }
-                return accumulator;
-            }, []);
-    
-            return response.json(formattedOrders);
-        }
+        const formattedOrders = orders.reduce((accumulator, order) => {
+            const existingOrder = accumulator.find(o => o.id === order.id);
+            if (existingOrder) {
+                existingOrder.dishes.push({ name: order.name, price: order.price, quantity: order.quantity });
+            } else {
+                accumulator.push({ ...order, dishes: [{ name: order.name, price: order.price, quantity: order.quantity }] });
+            }
+            return accumulator;
+        }, []);
+
+        return response.json(formattedOrders);
     }
-    
 
     async show(request, response) {
         const { id } = request.params;
