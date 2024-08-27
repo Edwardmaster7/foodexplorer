@@ -137,3 +137,5 @@ database.db
 
 # RSA
 *.pem
+
+tmp/
