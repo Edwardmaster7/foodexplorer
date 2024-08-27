@@ -55,10 +55,16 @@ class CategoriesController {
     async delete(request, response) {
         const { id } = request.params
 
-        // check if ingredient exists
+        // check if the category exists
         const checkCategoryExists = await knex("Categories").where({ id }).first()
         if (!checkCategoryExists) {
             throw new AppError("Category not found.")
+        }
+
+        // check if there is any dish with the given category
+        const checkDishExists = await knex("Dishes").where({ category_id: id }).first()
+        if (checkDishExists) {
+            throw new AppError("Cannot delete a category that has dishes associated with it. Update them first.")
         }
 
         await knex("Categories").where({ id }).delete()
@@ -67,7 +73,7 @@ class CategoriesController {
     }
 
     async index(request, response) {
-        const categories = await knex("Categories").orderBy("id", "desc")
+        const categories = await knex("Categories").orderBy("id", "asc")
 
         return response.json(categories)
     }

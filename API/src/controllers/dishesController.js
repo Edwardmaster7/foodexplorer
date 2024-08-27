@@ -134,29 +134,32 @@ class DishesController {
                                             .select('Orders.id')
                                             .first();
         if (checkOrderExists) {
-            throw new AppError('Dish is in use by an order. Cannot delete.');
+            throw new AppError('Dish is in use by an order with status equal pending or preparing. Cannot delete it.');
         }
 
         await knex('Dishes').where({ id }).delete();
 
         // delete dish_ingredients relation
-        await knex('DishIngredients').where({ id }).delete();
-
-        // delete dish_ingredients relation
         await knex('DishIngredients').where({ dish_id: id }).delete();
 
-        // check if relation was deleted successfully
-        const checkRelation = await knex('DishIngredients').where({ dish_id: id }).select('id');
-        if (checkRelation.length > 0) {
-            throw new AppError('Error deleting dish_ingredients relation. Dish not deleted.');
-        }
-
+        // delete favourites relation
+        await knex('Favourites').where({ dish_id: id }).delete();
 
         return response.json();
     }
     async index(request, response) {
 
         const dishes = await knex('Dishes')
+                        .join('Categories', 'Categories.id', '=', 'Dishes.category_id')
+                        .leftJoin('DishIngredients', 'DishIngredients.dish_id', '=', 'Dishes.id')
+                        .leftJoin('Ingredients', 'Ingredients.id', '=', 'DishIngredients.ingredient_id')
+                        .select('Dishes.*', 'Categories.name as category_name', knex.raw(`GROUP_CONCAT(distinct Ingredients.name) as ingredients`))
+                        .groupBy('Dishes.id', 'Categories.name');
+
+        
+
+        // console.log(dishes.map((dish) => {dish.ingredients = dish.ingredients.split(',')}));
+        dishes.map((dish) => {dish.ingredients = dish.ingredients.split(',')})
 
         return response.json(dishes);
     }

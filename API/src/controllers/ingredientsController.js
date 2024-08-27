@@ -70,6 +70,12 @@ class IngredientsController {
             throw new AppError("Ingredient not found.");
         }
 
+        // check if ingredient is used in any dish
+        const checkIngredientInDish = await knex("DishesIngredients").where({ ingredient_id: id }).first();
+        if (checkIngredientInDish) {
+            throw new AppError("Ingredient is used in a dish. Cannot delete it.");
+        }
+
         await knex("Ingredients").where({ id }).delete();
 
         return response.status(200).json();
