@@ -81,7 +81,7 @@ class DishesController {
 
         // check if ingredients array is not undefined
         if(ingredients_id && !Array.isArray(ingredients_id)) {
-            throw new AppError('Ingredients must be an array');
+            throw new AppError('Ingredients must be an array of integers');
         } else if (ingredients_id) {
             
             // check if ingredients exists

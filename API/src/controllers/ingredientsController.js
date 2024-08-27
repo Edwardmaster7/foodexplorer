@@ -76,7 +76,7 @@ class IngredientsController {
     }
 
     async index(request, response) {
-        const ingredients = await knex("Ingredients").orderBy("id", "desc")
+        const ingredients = await knex("Ingredients").orderBy("id", "asc")
 
         return response.json(ingredients)
     }

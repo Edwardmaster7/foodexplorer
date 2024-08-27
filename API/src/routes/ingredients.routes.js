@@ -5,12 +5,12 @@ const ingredientsController = new IngredientsController()
 
 const isAdmin = require("../middlewares/isAdmin") 
 
-const ingredientsRoutes = Router()
+const ingredientsRouter = Router()
 
-ingredientsRoutes.get("/", ingredientsController.index)
-ingredientsRoutes.get("/:id", ingredientsController.show)
-ingredientsRoutes.post("/", isAdmin, ingredientsController.create)
-ingredientsRoutes.put("/:id", isAdmin, ingredientsController.update)
-ingredientsRoutes.delete("/:id", isAdmin, ingredientsController.delete)
+ingredientsRouter.get("/", ingredientsController.index)
+ingredientsRouter.get("/:id", ingredientsController.show)
+ingredientsRouter.post("/", isAdmin, ingredientsController.create)
+ingredientsRouter.put("/:id", isAdmin, ingredientsController.update)
+ingredientsRouter.delete("/:id", isAdmin, ingredientsController.delete)
 
-module.exports = ingredientsRoutes
+module.exports = ingredientsRouter

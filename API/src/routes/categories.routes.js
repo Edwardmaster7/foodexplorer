@@ -5,12 +5,12 @@ const categoriesController = new CategoriesController()
 
 const isAdmin = require("../middlewares/isAdmin") 
 
-const categoriesRoutes = Router()
+const categoriesRouter = Router()
 
-categoriesRoutes.get("/", categoriesController.index)
-categoriesRoutes.get("/:id", categoriesController.show)
-categoriesRoutes.post("/", isAdmin, categoriesController.create)
-categoriesRoutes.put("/:id", isAdmin, categoriesController.update)
-categoriesRoutes.delete("/:id", isAdmin, categoriesController.delete)
+categoriesRouter.get("/", categoriesController.index)
+categoriesRouter.get("/:id", categoriesController.show)
+categoriesRouter.post("/", isAdmin, categoriesController.create)
+categoriesRouter.put("/:id", isAdmin, categoriesController.update)
+categoriesRouter.delete("/:id", isAdmin, categoriesController.delete)
 
-module.exports = categoriesRoutes
+module.exports = categoriesRouter

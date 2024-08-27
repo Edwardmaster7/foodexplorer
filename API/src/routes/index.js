@@ -5,17 +5,19 @@ const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
 const usersRouter = require('./users.routes');
 const sessionsRouter = require('./sessions.routes');
 const ingredientsRouter = require('./ingredients.routes');
-const dishesRoutes = require('./dishes.routes');
-const searchRoutes = require('./search.routes');
-const categoriesRoutes = require("./categories.routes");
+const dishesRouter = require('./dishes.routes');
+const searchRouter = require('./search.routes');
+const categoriesRouter = require("./categories.routes");
+const ordersRouter = require('./orders.routes');
 
 const routes = Router();
 
 routes.use('/users', usersRouter);
 routes.use('/sessions', sessionsRouter);
 routes.use('/ingredients', ensureAuthenticated, ingredientsRouter);
-routes.use('/dishes', ensureAuthenticated, dishesRoutes);
-routes.use('/search', ensureAuthenticated, searchRoutes);
-routes.use('/categories', ensureAuthenticated, categoriesRoutes);
+routes.use('/dishes', ensureAuthenticated, dishesRouter);
+routes.use('/search', ensureAuthenticated, searchRouter);
+routes.use('/categories', ensureAuthenticated, categoriesRouter);
+routes.use('/orders', ensureAuthenticated, ordersRouter);
 
 module.exports = routes;

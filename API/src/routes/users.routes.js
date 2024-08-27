@@ -7,15 +7,15 @@ const UsersController = require("../controllers/usersController.js")
 // const UserAvatarController = require("../controllers/userAvatarController")
 const ensureAuthenticated = require("../middlewares/ensureAuthenticated")
 
-const usersRoutes = Router()
+const usersRouter = Router()
 const upload = multer(uploadConfig.MULTER)
 
 const usersController = new UsersController()
 // const userAvatarController = new UserAvatarController()
 
-usersRoutes.get("/:id", usersController.show)
-usersRoutes.post("/", usersController.create)
-usersRoutes.put("/", ensureAuthenticated, usersController.update)
-// usersRoutes.patch("/avatar", ensureAuthenticated, upload.single("avatar"), usersController.updateAvatar)
+usersRouter.get("/:id", usersController.show)
+usersRouter.post("/", usersController.create)
+usersRouter.put("/", ensureAuthenticated, usersController.update)
+// usersRouter.patch("/avatar", ensureAuthenticated, upload.single("avatar"), usersController.updateAvatar)
 
-module.exports = usersRoutes
+module.exports = usersRouter

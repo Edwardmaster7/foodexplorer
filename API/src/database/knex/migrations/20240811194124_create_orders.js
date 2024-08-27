@@ -4,6 +4,7 @@ exports.up = (knex) => {
       table.integer('user_id').notNullable().references('id').inTable('Users');
       table.string('status').notNullable().defaultTo('pending');
       table.decimal('total_price', 8, 2).notNullable().defaultTo(0.00);
+      table.string('payment_method').notNullable();
       table.timestamp('created_at').defaultTo(knex.fn.now());
       table.timestamp('updated_at');
     }).then(() => {

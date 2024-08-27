@@ -5,12 +5,12 @@ const dishesController = new DishesController()
 
 const isAdmin = require("../middlewares/isAdmin") 
 
-const dishesRoutes = Router()
+const dishesRouter = Router()
 
-dishesRoutes.get("/", dishesController.index)
-dishesRoutes.get("/:id", dishesController.show)
-dishesRoutes.post("/", isAdmin, dishesController.create)
-dishesRoutes.put("/:id", isAdmin, dishesController.update)
-dishesRoutes.delete("/:id", isAdmin, dishesController.delete)
+dishesRouter.get("/", dishesController.index)
+dishesRouter.get("/:id", dishesController.show)
+dishesRouter.post("/", isAdmin, dishesController.create)
+dishesRouter.put("/:id", isAdmin, dishesController.update)
+dishesRouter.delete("/:id", isAdmin, dishesController.delete)
 
-module.exports = dishesRoutes
+module.exports = dishesRouter
