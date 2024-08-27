@@ -14,20 +14,31 @@ class CategoriesController {
      * @returns {Object} - Returns a response object with status 201 and an empty JSON body.
      */
     async create(request, response) {
-        const { name } = request.body
+        const { names } = request.body
 
-        // validate name is provided and not empty
-        if (!name) {
+        // validate names is provided and not empty
+        if (!names) {
             throw new AppError("Name is required.")
         }
 
-        // check if ingredient already exists
-        const checkCategoryExists = await knex("Categories").where({ name }).first()
-        if (checkCategoryExists) {
-            throw new AppError("Category already exists.")
+        // check if the names is an array
+        if (!Array.isArray(names)) {
+            throw new AppError("Names must be an array.")
+        } else if (names.length === 0) {
+            throw new AppError("At least one name is required.")
         }
 
-        await knex("Categories").insert({ name })
+        // check if one or more ingredients with the same name already exists
+        const checkCategoryExists = await knex("Categories").whereIn("name", names).select("id")
+        // console.log(checkCategoryExists)
+        if (checkCategoryExists && checkCategoryExists.length > 0) {
+            throw new AppError("One or more categories already exists.")
+        }
+
+        console.log(names)
+
+        // insert all the ingredients into the database
+        await knex("Categories").insert(names.map(name => ({ name })))
 
         return response.status(201).json()
     }
