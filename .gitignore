@@ -139,3 +139,5 @@ database.db
 *.pem
 
 tmp/
+
+queries
