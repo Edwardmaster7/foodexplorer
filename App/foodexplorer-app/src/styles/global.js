@@ -9,13 +9,24 @@ const GlobalStyles = createGlobalStyle`
 
   html, body, #root {
     height: 100%;
+    font-size: 62.5%;
   }
 
   body {
-    background-color: ${({ theme }) => theme.colors.dark_900};
+    background-color: ${({ theme }) => theme.colors.dark_400};
     color: ${({ theme }) => theme.colors.light_100};
 
+    /* instruções para deixar as fontes mais bonitas */
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body, button, a, p {
+    font-family: 'Poppins', sans-serif;
+  }
+
+  label, input, textarea {
+    font-family: 'Roboto', sans-serif;
   }
 
   a {

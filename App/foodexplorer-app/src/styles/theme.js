@@ -1,6 +1,6 @@
 export default {
   colors: {
-    red: "#750310",
+    tomato_100: "#750310",
 
     cyano: "#82F3FF",
 
