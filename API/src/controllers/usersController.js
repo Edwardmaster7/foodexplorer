@@ -2,6 +2,8 @@ const AppError = require("../utils/AppError")
 
 const knex = require("../database/knex")
 
+const { encrypt, compare } = require("../configs/crypto")
+
 class UsersController {
   // A controller should have up to 5 methods
   /**
@@ -26,7 +28,9 @@ class UsersController {
       throw new AppError("Email already in use.")
     }
 
-    await knex("Users").insert({ name, email, password, isAdmin: (isAdmin ? true : false) });
+    const hashed_pwd = await encrypt(password)
+
+    await knex("Users").insert({ name, email, password:hashed_pwd, isAdmin: (isAdmin ? true : false) })
 
     // 201 - Created
 
@@ -37,7 +41,7 @@ class UsersController {
     const { name, email, password, old_password } = request.body
     const user_id = request.user.id
 
-    const userA = await knex("Users").where({ id:user_id });
+    const userA = await knex("Users").where({ id:user_id })
     
     const user = userA[0];
 
@@ -63,14 +67,13 @@ class UsersController {
       } else if (password === old_password) {
         throw new AppError("New password cannot be the same as old password.")
       } else {
-        const isValid = old_password === user.password ? true : false
-
+        const isValid = await compare(old_password, user.password)
         // console.log(`old password: ${old_password}\nuser password: ${user.password}\nisValid: ${isValid}`)
         if (!isValid) {
           throw new AppError("Old password does not match.")
         }
 
-        user.password = password
+        user.password = await encrypt(password)
       }
     }
 
@@ -86,7 +89,7 @@ class UsersController {
   async show(request, response) {
     const { id } = request.params
 
-    const user = await knex("Users").where({ id }).first()
+    const user = await knex("Users").select("name", "email", "isAdmin", "created_at", "updated_at" ).where({ id }).first()
 
     if (!user) {
       throw new AppError("User not found.", 404)

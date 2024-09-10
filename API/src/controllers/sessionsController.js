@@ -1,6 +1,7 @@
 const knex = require("../database/knex")
 const AppError = require("../utils/AppError")
 const { signToken } = require("../configs/auth")
+const { compare } = require("../configs/crypto")
 
 class SessionsController {
   async create(request, response) {
@@ -16,7 +17,8 @@ class SessionsController {
       throw new AppError("Email and/or password incorrect.", 401)
     }
 
-    if (password !== user.password) {
+    const isValid = await compare(password, user.password)
+    if (!isValid) {
       throw new AppError("Email and/or password incorrect.", 401)
     }
 
