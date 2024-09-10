@@ -17,7 +17,7 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  #create-account-link {
+  #login-link {
     display: flex;
     justify-content: center;
 
@@ -45,6 +45,7 @@ export const InputWrapper = styled.div`
   input {
     border: ${(props) => (props.isValid ? "" : `3px solid ${theme.colors.tomato_100}`)};
     
+    /* height: 4.8rem; */
     padding: 1.4rem;
   }
   input:focus {
