@@ -1,27 +1,23 @@
 import React from "react";
-import { Container, Content, Form, InputWrapper } from "./styles";
+import { Container, Content, Title, Form, InputWrapper } from "./styles";
 
-import { Link, useNavigate } from "react-router-dom";
-import { api } from "../../services/api";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-// import { useAuth } from "../../hooks/auth";
+import { useAuth } from "../../hooks/auth";
 
 import InputField from "../../components/InputField";
 import Logo from "../../components/Logo";
 import Button from "../../components/Button";
 
 function SignIn() {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
 
-  // const { signIn } = useAuth();
-  
+  const { signIn } = useAuth();
+
   function handleSubmit() {
-    console.log(email, password)
     if (!email) {
       setIsEmailValid(false);
       return alert("Preencha todos os campos!");
@@ -36,22 +32,18 @@ function SignIn() {
       setIsPasswordValid(true);
     }
 
-
-    // try {
-    //   signIn({ email, password });
-    // } catch (error) {
-    //   if (error.response) {
-    //     alert(error.response.data.message);
-    //   } else {
-    //     alert("Não foi possível entrar.");
-    //   }
-    // }
+    signIn({ email, password });
   }
 
   return (
     <Container>
-      <Logo />
+      <Logo id="logo"/>
       <Content>
+        <Title>
+          <h1>Bem-vindo!</h1>
+          <h2>Faça login para prosseguir</h2>
+        </Title>
+
         <Form>
           <InputWrapper isValid={isEmailValid}>
             <InputField

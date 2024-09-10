@@ -14,9 +14,24 @@ export default {
     
     dark_200: "#00070A",
     dark_400: "#000A0F",
+    dark_700: "#001119",
     dark_900: "#0D1D25",
     dark_1000: "#192227",
 
     black: "#000000",
   },
 };
+
+// constants.js
+const sizes = {
+  mobile: '320px',
+  tablet: '840px',
+  desktop: '1024px'
+}
+
+export const devices = {
+  mobile: `(min-width: ${sizes.mobile})`,
+  tablet: `(min-width: ${sizes.tablet})`,
+  desktop: `(min-width: ${sizes.desktop})`
+}
+

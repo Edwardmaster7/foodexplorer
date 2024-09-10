@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Content, Form, InputWrapper } from "./styles";
+import { Container, Content, Title, Form, InputWrapper } from "./styles";
 
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../services/api";
@@ -65,8 +65,12 @@ function SignUp() {
   }
   return (
     <Container>
-      <Logo />
+      <Logo id="logo"/>
       <Content>
+        <Title>
+          <h1>Crie sua conta</h1>
+        </Title>
+
         <Form>
           <InputWrapper isValid={isNameValid}>
             <InputField
