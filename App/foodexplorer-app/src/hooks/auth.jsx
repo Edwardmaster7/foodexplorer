@@ -12,6 +12,7 @@ function AuthProvider({ children }) {
     const token = localStorage.getItem("@foodex:token");
     const user = localStorage.getItem("@foodex:user");
     const date = localStorage.getItem("@foodex:expires_at");
+
     if (token && user) {
       // Check if token is expired
       const expiresAt = new Date(
@@ -19,8 +20,7 @@ function AuthProvider({ children }) {
       );
       if (expiresAt > new Date()) {
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        setData({ user: JSON.parse(user), token });
-        console.log(data)
+        setData({ user: JSON.parse(user[0]), isAdmin: JSON.parse(user[2]), token });
         console.log("Token is valid");
       } else {
         signOut();
@@ -35,12 +35,14 @@ function AuthProvider({ children }) {
 
     try {
       const response = await api.post("/sessions", data);
-      const { id: user, token } = response.data;
+      const { id: user, token, isAdmin } = response.data;
       console.log(response.data);
 
       const expirationDate = new Date(Date.now() + 3600000); // 1 hour
 
-      localStorage.setItem("@foodex:user", JSON.stringify(user));
+      
+
+      localStorage.setItem("@foodex:user", [user, isAdmin]);
       localStorage.setItem("@foodex:token", token);
       localStorage.setItem("@foodex:expires_at", expirationDate);
 
@@ -65,7 +67,7 @@ function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ signIn, signOut, user: data.user }}
+      value={{ signIn, signOut, user: { id: data.user, isAdmin: data.isAdmin } }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,11 +1,14 @@
 import React from 'react';
 import { Container } from './styles';
 
-function InputField({label, ...props}) {
+function InputField({label, icon, alt, ...props}) {
     return (
         <Container>
-            <label htmlFor={label}>{label}</label>
-            <input {...props} />
+            { label && <label htmlFor={label}>{label}</label>}
+            <div className="icon">
+                { icon && <img src={icon} alt={alt} className="search-icon" /> }
+            </div>
+            <input alt={alt} {...props} className={icon ? "input-with-icon" : ""} />
         </Container>
     )
 }

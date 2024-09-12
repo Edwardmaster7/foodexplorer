@@ -45,7 +45,7 @@ function SignIn() {
         </Title>
 
         <Form>
-          <InputWrapper isValid={isEmailValid}>
+          <InputWrapper is_valid={isEmailValid}>
             <InputField
               type="email"
               label="E-mail"
@@ -53,7 +53,7 @@ function SignIn() {
               placeholder="exemplo@mail.com"
             />
           </InputWrapper>
-          <InputWrapper isValid={isPasswordValid}>
+          <InputWrapper is_valid={isPasswordValid}>
             <InputField
               type="password"
               label="Senha"

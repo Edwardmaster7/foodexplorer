@@ -72,7 +72,7 @@ function SignUp() {
         </Title>
 
         <Form>
-          <InputWrapper isValid={isNameValid}>
+          <InputWrapper is_valid={isNameValid}>
             <InputField
               type="text"
               label="Seu nome"
@@ -81,7 +81,7 @@ function SignUp() {
               placeholder="Silvia Roberts"
             />
           </InputWrapper>
-          <InputWrapper isValid={isEmailValid}>
+          <InputWrapper is_valid={isEmailValid}>
             <InputField
               type="email"
               label="E-mail"              
@@ -89,7 +89,7 @@ function SignUp() {
               placeholder="exemplo@mail.com"
             />
           </InputWrapper>
-          <InputWrapper isValid={isPasswordValid}>
+          <InputWrapper is_valid={isPasswordValid}>
             <InputField
               type="password"
               label="Senha"

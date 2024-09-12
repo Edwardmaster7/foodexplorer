@@ -87,7 +87,7 @@ export const Form = styled.form`
 
 export const InputWrapper = styled.div`
   input {
-    outline: ${(props) => (props.isValid ? "" : `3px solid ${theme.colors.tomato_100}`)};
+    outline: ${(props) => (props.is_valid ? "" : `3px solid ${theme.colors.tomato_100}`)};
   
     height: 4.8rem;
     padding: 1.4rem;
