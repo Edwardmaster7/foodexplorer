@@ -26,7 +26,7 @@ class SessionsController {
 
     const token = signToken({ userId: String(user.id), isAdmin: user.isAdmin })
 
-    return response.json({ id:user.id, token })
+    return response.json({ id:user.id, token, isAdmin: user.isAdmin })
   }
 }
 
