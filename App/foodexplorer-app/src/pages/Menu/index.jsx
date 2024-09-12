@@ -31,7 +31,7 @@ function Menu() {
           placeholder="Busque por pratos ou ingredientes"
         />
         <div>
-          {user.isAdmin && <Link to="/" className="option">Novo Prato</Link>}
+          {user.isAdmin ? <Link to="/" className="option">Novo Prato</Link> : null}
           <Link onClick={signOut} className="option">Sair</Link>
         </div>
       </Container>
