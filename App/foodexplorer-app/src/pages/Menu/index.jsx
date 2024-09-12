@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { App, Container, Header, Footer } from "./styles";
+import { App, Container, Header } from "./styles";
 
 import InputField from "../../components/InputField";
+import Footer from "../../components/Footer";
 
-import logo from "../../assets/footer_logo.svg";
 import close from "../../assets/icons/close.svg";
 import search from "../../assets/icons/search.svg";
 
@@ -35,11 +35,6 @@ function Menu() {
           <Link onClick={signOut} className="option">Sair</Link>
         </div>
       </Container>
-
-      <Footer>
-        <img src={logo} alt="" />
-        <p>© 2023 - Todos os direitos reservados.</p>
-      </Footer>
     </App>
   );
 }
