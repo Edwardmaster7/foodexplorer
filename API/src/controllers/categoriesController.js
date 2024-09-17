@@ -14,16 +14,12 @@ class CategoriesController {
      * @returns {Object} - Returns a response object with status 201 and an empty JSON body.
      */
     async create(request, response) {
-        const { names } = request.body
+        const { names, name } = request.body
 
         // validate names is provided and not empty
-        if (!names) {
-            throw new AppError("Name is required.")
-        }
-
         // check if the names is an array
-        if (!Array.isArray(names)) {
-            throw new AppError("Names must be an array.")
+        if (name || !Array.isArray(names)) {
+            throw new AppError("Names is required and must be an array.")
         } else if (names.length === 0) {
             throw new AppError("At least one name is required.")
         }
