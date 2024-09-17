@@ -6,7 +6,7 @@ export const App = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: max-content;
   width: 100vw;
 `;
 
@@ -52,6 +52,7 @@ export const Container = styled.div`
   max-width: 1200px;
   height: 100%;
   padding: 3.2rem 2.4rem;
+  padding-right: 0;
 
   gap: 3.2rem;
 
