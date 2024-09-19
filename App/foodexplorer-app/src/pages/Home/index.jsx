@@ -1,54 +1,92 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { App, Header, Container, Banner } from "./styles";
 
 import { Link } from "react-router-dom";
 
 import ReceiptIcon from "../../components/ReceiptIcon";
-import InputField from "../../components/InputField";
 import Logo from "../../components/Logo";
 import DishWrapper from "../../components/DishWrapper";
 
 import menuIcon from "../../assets/icons/stack-menu.svg";
 import macarons from "../../assets/macarons.png";
-import dish from "../../assets/dish.png";
 
 import { api } from "../../services/api";
 
 function Home() {
   const [categories, setCategories] = useState([]);
   const [meals, setMeals] = useState([]);
-  const [mealsByCategory, setMealsByCategory] = useState([]);
 
+  // Load categories from API or sessionStorage
   useEffect(() => {
     async function loadCategories() {
-      const { data } = await api.get("/categories");
-
-      setCategories(data);
-    }
-
-    async function loadMeals() {
-      const { data } = await api.get("/dishes");
-
-      setMeals(data);
-    }
-
-    async function loadMealsByCategory() {
-      const groupedMeals = categories.map(category => ({
-        ...category,
-        meals: meals.filter(meal => meal.categoryId === category.id)
-      }));
-
-      setMealsByCategory(groupedMeals);
+      const storedCategories = sessionStorage.getItem('@foodex:categories');
+      if (storedCategories) {
+        setCategories(JSON.parse(storedCategories));
+      } else {
+        const { data } = await api.get("/categories");
+        setCategories(data);
+        sessionStorage.setItem('@foodex:categories', JSON.stringify(data));
+      }
     }
 
     loadCategories();
-
-    loadMeals();
-
-    loadMealsByCategory();
   }, []);
 
-  console.log(mealsByCategory);
+  // Load meals from API or sessionStorage
+  useEffect(() => {
+    async function loadMeals() {
+      const storedMeals = sessionStorage.getItem('@foodex:meals');
+      if (storedMeals) {
+        setMeals(JSON.parse(storedMeals));
+      } else {
+        const { data } = await api.get("/dishes");
+        const dataWithQuantity = data.map((meal) => ({ ...meal, quantity: 1 }));
+        setMeals(dataWithQuantity);
+      }
+    }
+
+    loadMeals();
+  }, []);
+
+  // Load images for meals only when necessary
+  useEffect(() => {
+    async function loadImages() {
+      if (meals.length > 0 && !meals.every(meal => meal.imgURL)) {
+        const updatedData = await Promise.all(
+          meals.map(async (meal) => {
+            const image = `${api.defaults.baseURL}/files/${meal.image}`;
+            return { ...meal, imgURL: image };
+          })
+        );
+        setMeals(updatedData);
+        sessionStorage.setItem('@foodex:meals', JSON.stringify(updatedData));
+      }
+    }
+
+    loadImages();
+  }, [meals]);
+
+  // Memorize the filtered meals for each category
+  const memorizedCategoryMeals = useMemo(() => {
+    if (categories.length === 0 || meals.length === 0) return [];
+    return categories.map((category) => ({
+      ...category,
+      meals: meals.filter((meal) => meal.category_name === category.name),
+    }));
+  }, [categories, meals]);
+
+  // Memorize the DishWrapper components
+  const memorizedDishWrappers = useMemo(() => {
+    if (memorizedCategoryMeals.length === 0) return null;
+    return memorizedCategoryMeals.map((category) => (
+      <DishWrapper
+        key={category.id}
+        label={category.name}
+        setData={setMeals}
+        data={category.meals}
+      />
+    ));
+  }, [memorizedCategoryMeals]);
 
   return (
     <App>
@@ -76,9 +114,7 @@ function Home() {
         </div>
       </Banner>
       <Container>
-        {categories.map((category) => (
-          <DishWrapper label={category.name} data={meals} />
-        ))}
+        {memorizedDishWrappers}
       </Container>
     </App>
   );

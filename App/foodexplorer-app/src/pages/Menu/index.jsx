@@ -14,8 +14,6 @@ import { useAuth } from "../../hooks/auth";
 function Menu() {
   const { signOut, user } = useAuth();
 
-  useEffect(() => {}, []);
-
   return (
     <App>
       <Header>
@@ -32,7 +30,7 @@ function Menu() {
         />
         <div>
           {user.isAdmin ? <Link to="/" className="option">Novo Prato</Link> : null}
-          <Link onClick={signOut} className="option">Sair</Link>
+          <Link to="/" onClick={signOut} className="option">Sair</Link>
         </div>
       </Container>
     </App>
