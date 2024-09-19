@@ -21,12 +21,33 @@ function DishWrapper({ label, data, add, setData, ...props }) {
           add(dish.id);
         };
 
+        const handleFavorite = (id) => {
+          const updatedDish = prevData => prevData.map(item =>
+            item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+          );
+          try {
+            // api.patch(`/dishes/${id}`, { isFavorite: !dish.isFavorite });
+            if (dish.isFavorite) {
+              api.delete(`/favourites/${id}`);
+              setData(updatedDish);
+            } else {
+              api.post(`/favourites/${id}`);
+              setData(updatedDish);
+            }
+          } catch (error) {
+            console.error(error);
+            alert(`Erro ao favoritar/desfavoritar o prato. Tente novamente mais tarde.${error.message}`);
+          }
+          
+        };
+
         return (
           <DishCard
             key={dish.id}
             dish={dish}
             onQuantityChange={handleQuantityChange}
             onInclude={handleInclude}
+            onFavorite={handleFavorite}
           />
         );
       })

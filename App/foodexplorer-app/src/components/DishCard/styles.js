@@ -7,7 +7,7 @@ export const Card = styled.div`
   /* gap: 1.2rem; */
   justify-content: space-between;
 
-  min-width: 20rem;
+  min-width: 21rem;
   height: 100%;
 
   min-height: fit-content;
@@ -17,9 +17,20 @@ export const Card = styled.div`
   border-radius: 0.8rem;
   border: 2px solid ${({ theme }) => theme.colors.dark_100};
 
-  transition: border 0.3s ease-in-out;
+  transition: outline 0.3s ease-in-out;
   &:hover {
-    border: 2px solid ${({ theme }) => theme.colors.light_700};
+    outline: 2.8px solid ${({ theme }) => theme.colors.light_700};
+  } 
+
+  position: relative;
+
+  #favorite {
+    position: absolute;
+    top: 1.6rem;
+    right: 1.6rem;
+
+    color: ${({ theme }) => theme.colors.light_300};
+    font-size: 3rem;
   }
 
   #card-content {
@@ -30,6 +41,7 @@ export const Card = styled.div`
     gap: 1.2rem;
 
     text-align: center;
+    margin-top: 2.4rem;
     margin-bottom: 1.2rem;
   }
 
@@ -75,25 +87,31 @@ export const ButtonContainer = styled.div`
 
     color: ${({ theme }) => theme.colors.cyano};
   }
+`;
+
+export const QuantityControl = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.4rem;
+
+  margin-bottom: 1.6rem;
+
+  p {
+    font-size: 1.6rem;
+    font-family: "Roboto", sans-serif;
+    font-size: 2rem;
+  }
 
   #buttons {
     font-size: x-large;
   }
-`;
 
-export const QuantityControl = styled.div`
+  #buttons:active {
+    transform: scale(0.9);
+  }
 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1.4rem;
-
-    margin-bottom: 1.6rem;
-
-    p {
-      font-size: 1.6rem;
-      font-family: "Roboto", sans-serif;
-      font-size: 2rem;
-    }
-
+  #buttons:hover {
+    cursor: pointer;
+  }
 `;

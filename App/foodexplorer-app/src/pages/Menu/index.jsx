@@ -17,8 +17,8 @@ function Menu() {
   return (
     <App>
       <Header>
-        <Link to="/">
-          <img src={close} alt="" />
+        <Link id="close" to="/">
+          <img src={close} alt="close menu"/>
         </Link>
         Menu
       </Header>

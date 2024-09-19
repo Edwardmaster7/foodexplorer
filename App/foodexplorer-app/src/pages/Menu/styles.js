@@ -29,6 +29,10 @@ export const Header = styled.header`
     margin-bottom: 0.4rem;
   }
 
+  #close:active {
+    transform: scale(0.9);
+  }
+
 `;
 
 export const Container = styled.div`

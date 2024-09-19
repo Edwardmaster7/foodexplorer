@@ -24,6 +24,9 @@ export const Header = styled.header`
   font-family: "Roboto", sans-serif;
   font-size: 2.4rem;
 
+  #menu:active {
+    transform: scale(0.9);
+  }
 
   #logo {
     gap: 0.6rem;
