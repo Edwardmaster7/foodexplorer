@@ -8,7 +8,7 @@ function InputField({label, icon, alt, ...props}) {
             <div className="icon">
                 { icon && <img src={icon} alt={alt} className="search-icon" /> }
             </div>
-            <input alt={alt} {...props} className={icon ? "input-with-icon" : ""} />
+            <input alt={alt} {...props} className={icon ? "input-with-icon" : null} />
         </Container>
     )
 }

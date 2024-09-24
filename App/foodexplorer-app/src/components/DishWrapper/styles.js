@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { devices } from "../../styles/theme";
+import theme, { devices } from "../../styles/theme";
 
 export const Container = styled.div`
   width: 100%;
@@ -30,25 +30,42 @@ export const Container = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
-
       position: relative;
 
       font-size: 3rem;
+      
     }
 
     #right {
-      display: flex;
-      background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0) 10%, ${theme.colors.dark_400});
       height: 100%;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-right: 1rem;
+      padding-left: 8rem;
+
+      /* background-color: red; */
 
       position: absolute;
       right: 0;
+      z-index: 1;
     }
     #left {
+      background-image: linear-gradient(to right, ${theme.colors.dark_400} 10%, rgba(0, 0, 0, 0));
+      height: 100%;
+
       display: flex;
-      background-image: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 1rem;
+      padding-right: 8rem;
+
+      /* background-color: red; */
+
       position: absolute;
-      left: 0;
+      /* left: 0; */
       z-index: 1;
     }
   }

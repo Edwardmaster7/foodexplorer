@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { devices } from "../../styles/theme";
+import searchIcon from "../../assets/icons/search.svg";
 
 export const App = styled.div`
   /* background-color: #F5F5F5; */
@@ -98,13 +99,39 @@ export const SearchWrapper = styled.div`
     padding: 1.2rem 1.4rem;
     border-radius: 0.5rem;
 
-    font-size: 1.4rem;
+    text-align: center;
+
+    font-size: 1.6rem;
     font-weight: 400;
     line-height: 160%;
+    background-image: url(${searchIcon});
+    background-position: 16%;
+    background-repeat: no-repeat;
+    background-size: auto 50%; // Adjust as needed
+  }
+
+  input:not(:placeholder-shown) {
+    background-image: none;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    img {
+      width: calc(28dvw / 2);
+      height: 2.3rem;
+      margin-bottom: 0.2rem;
+    }
   }
 
   @media ${devices.tablet} {
     display: flex;
+  }
+
+  @media ${devices.desktop} {
+    input {
+      background-position: 25%;
+    }
   }
 `;
 

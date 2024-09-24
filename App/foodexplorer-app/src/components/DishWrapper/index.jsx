@@ -2,12 +2,33 @@ import { Container, Wrapper } from "./styles";
 
 import DishCard from "../DishCard";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { api } from "../../services/api";
 
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
 
 function DishWrapper({ label, data, add, setData, ...props }) {
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 3; 
+  const maxScroll = Math.floor(data.length / itemsPerPage); 
+  const wrapperRef = useRef(null);
+
+  // Function to scroll the dishes to the right
+  const handleNext = () => {
+    if (currentPage < maxScroll) {
+      setCurrentPage(currentPage + 1);
+      wrapperRef.current.scrollBy({ left: wrapperRef.current.offsetWidth, behavior: "smooth" });
+    }
+  };
+
+  // Function to scroll the dishes to the left
+  const handlePrev = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+      wrapperRef.current.scrollBy({ left: -wrapperRef.current.offsetWidth, behavior: "smooth" });
+    }
+  };
+
   // Memorize the dish cards
   const dishCards = useMemo(() => {
     return data.map((dish) => {
@@ -73,9 +94,9 @@ function DishWrapper({ label, data, add, setData, ...props }) {
     <Container>
       <h1>{label}</h1>
       <div className="pagination">
-        <div id="left"><SlArrowLeft /></div>
-        <Wrapper>{dishCards}</Wrapper>
-        <div id="right"><SlArrowRight /></div>
+        {(currentPage === 0 || data.length <= itemsPerPage) ? null : <div id="left" onClick={handlePrev}><SlArrowLeft /></div>}
+        <Wrapper ref={wrapperRef} totalItems={data.length}>{dishCards}</Wrapper>
+        {(currentPage >= maxScroll - 1 || data.length <= itemsPerPage) ? null : <div id="right" onClick={handleNext} disabled={currentPage == maxScroll}><SlArrowRight /></div>}
       </div>
     </Container>
   );

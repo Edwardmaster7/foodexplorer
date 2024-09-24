@@ -176,7 +176,7 @@ function Home() {
           {/* <img id="logo" src={logo} alt="" /> */}
           <InputField
             id="search-input"
-            icon={searchIcon}
+            // icon={searchIcon}
             placeholder="Busque por pratos ou ingredientes"
           />
         </SearchWrapper>
