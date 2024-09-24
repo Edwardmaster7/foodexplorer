@@ -12,8 +12,13 @@ export const App = styled.div`
 
   #header-top-padding {
     background-color: ${({ theme }) => theme.colors.dark_700};
-    height: 3.6rem;
+    height: 1.6rem;
     width: 100%;
+  }
+  @media ${devices.tablet} {
+    #header-top-padding {
+      height: 3.6rem;
+    }
   }
 `;
 
@@ -25,6 +30,10 @@ export const Header = styled.header`
   width: 100%;
   padding: 2rem 2.8rem 2.4rem;
   /* border-bottom: 1px solid #ccc; */
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 
   background-color: ${({ theme }) => theme.colors.dark_700};
 
@@ -54,10 +63,6 @@ export const Header = styled.header`
     gap: 3.2rem;
 
     justify-content: none;
-
-    position: sticky;
-    top: 0;
-    z-index: 1000;
 
     #menu {
       display: none;
