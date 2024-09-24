@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { devices } from "../../styles/theme"
 
 export const Card = styled.div`
   /* width: 100%; */
@@ -67,6 +68,10 @@ export const Card = styled.div`
     font-size: 1.4rem;
     font-weight: 500;
     font-family: "Poppins", sans-serif;
+  }
+  
+  @media ${devices.tablet} {
+    max-height: fit-content;
   }
 `;
 

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { devices } from "../../styles/theme";
 
 export const Container = styled.div`
   width: 100%;
@@ -18,6 +19,39 @@ export const Container = styled.div`
     margin-bottom: 2.4rem;
     line-height: 140%;
   }
+
+  #right, #left {
+    display: none;
+  }
+
+  @media ${devices.desktop} {
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      position: relative;
+
+      font-size: 3rem;
+    }
+
+    #right {
+      display: flex;
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+      height: 100%;
+
+      position: absolute;
+      right: 0;
+    }
+    #left {
+      display: flex;
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+      position: absolute;
+      left: 0;
+      z-index: 1;
+    }
+  }
 `;
 
 export const Wrapper = styled.div`
@@ -33,4 +67,3 @@ export const Wrapper = styled.div`
   gap: 1.6rem;
   padding: 0.5rem;
 `;
-

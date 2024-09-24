@@ -3,9 +3,9 @@ import { App, Container, Header } from "./styles";
 
 import InputField from "../../components/InputField";
 import Footer from "../../components/Footer";
+import search from "../../assets/icons/search.svg";
 
 import close from "../../assets/icons/close.svg";
-import search from "../../assets/icons/search.svg";
 
 import { Link } from "react-router-dom";
 

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { devices } from "../../styles/theme";
 
 export const App = styled.div`
   /* background-color: #F5F5F5; */
@@ -8,6 +9,12 @@ export const App = styled.div`
   align-items: center;
   height: max-content;
   width: 100vw;
+
+  #header-top-padding {
+    background-color: ${({ theme }) => theme.colors.dark_700};
+    height: 3.6rem;
+    width: 100%;
+  }
 `;
 
 export const Header = styled.header`
@@ -16,7 +23,7 @@ export const Header = styled.header`
   gap: 1.6rem;
   justify-content: space-between;
   width: 100%;
-  padding: 5.6rem 2.8rem 2.4rem;
+  padding: 2rem 2.8rem 2.4rem;
   /* border-bottom: 1px solid #ccc; */
 
   background-color: ${({ theme }) => theme.colors.dark_700};
@@ -24,22 +31,75 @@ export const Header = styled.header`
   font-family: "Roboto", sans-serif;
   font-size: 2.4rem;
 
-  #menu:active {
+  #menu-img:active {
     transform: scale(0.9);
   }
 
   #logo {
-    gap: 0.6rem;
+    height: 2.6rem;
 
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-    }
-    img {
-      width: 2.4rem;
-      height: 2.4rem;
-    }
     /* margin-bottom: 1.6rem; */
+  }
+  #sign-out {
+    display: none;
+  }
+  #sign-out:active {
+    transform: scale(0.9);
+  }
+
+  @media ${devices.tablet} {
+    padding-right: 10rem;
+    padding-left: 10rem;
+
+    gap: 3.2rem;
+
+    justify-content: none;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    #menu {
+      display: none;
+    }
+
+    #logo {
+      height: 3rem;
+
+      /* margin-bottom: 1.6rem; */
+    }
+    #receipt {
+      display: none;
+    }
+    #sign-out {
+      display: flex;
+    }
+  }
+
+  @media ${devices.desktop} {
+    padding-right: 12rem;
+    padding-left: 12rem;
+  }
+`;
+
+export const SearchWrapper = styled.div`
+  display: none;
+  width: 100%;
+  gap: 3.2rem;
+  /* justify-content: space-around; */
+  align-items: center;
+
+  input {
+    padding: 1.2rem 1.4rem;
+    border-radius: 0.5rem;
+
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 160%;
+  }
+
+  @media ${devices.tablet} {
+    display: flex;
   }
 `;
 
@@ -49,7 +109,7 @@ export const Container = styled.div`
   /* align-items: center; */
   justify-content: baseline;
   width: 100%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   height: 100%;
   padding: 3.2rem 2.4rem;
   padding-right: 0;
@@ -65,6 +125,16 @@ export const Container = styled.div`
     font-size: 2.4rem;
     font-weight: lighter;
     line-height: 140%;
+  }
+
+  @media ${devices.tablet} {
+    padding-right: 10rem;
+    padding-left: 10rem;
+  }
+
+  @media ${devices.desktop} {
+    padding-right: 12rem;
+    padding-left: 12rem;
   }
 `;
 
@@ -87,8 +157,9 @@ export const Banner = styled.div`
 
     img {
       position: relative;
-      height: 14.2rem;
 
+      top: 0.6rem;
+      height: 14.2rem;
     }
   }
 
@@ -108,7 +179,7 @@ export const Banner = styled.div`
 
       color: ${({ theme }) => theme.colors.light_300};
       font-family: "Poppins", sans-serif;
-      
+
       h1 {
         font-size: 1.6rem;
         font-weight: bolder;
@@ -117,8 +188,90 @@ export const Banner = styled.div`
         font-size: 1.1rem;
         font-weight: normal;
         line-height: 140%;
-
       }
     }
+  }
+
+  @media ${devices.tablet} {
+    margin-top: 12rem;
+
+    #wrapper {
+      img {
+        height: 42rem;
+        left: 6rem;
+      }
+
+      top: 15rem;
+      overflow: hidden;
+
+      height: 39rem;
+      width: 60rem;
+    }
+    #rectangle {
+      margin-top: 3.2rem;
+      margin-left: 10rem;
+      margin-right: 10rem;
+      min-height: 26rem;
+
+      grid-template-columns: 1fr 1fr;
+
+      /* padding: 8.8rem 10rem 1.2rem; */
+      padding-top: 6rem;
+
+      #banner-text {
+        h1 {
+          font-size: 4rem;
+          font-weight: 500;
+          line-height: 140%;
+        }
+        p {
+          font-size: 1.4rem;
+          line-height: 100%;
+          font-weight: normal;
+
+          br {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  @media ${devices.desktop} {
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+`;
+
+export const OrderButton = styled.button`
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+
+  width: 17.2rem;
+  height: 4.8rem;
+
+  padding: 1.2rem 3.2rem;
+
+  border: none;
+  border-radius: 0.5rem;
+
+  background-color: ${({ theme }) => theme.colors.tomato_100};
+  color: ${({ theme }) => theme.colors.light_100};
+
+  font-family: "Poppins", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.9);
+    animation: none;
+  }
+
+  @media ${devices.tablet} {
+    display: flex;
   }
 `;

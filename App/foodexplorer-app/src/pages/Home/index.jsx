@@ -1,23 +1,40 @@
 import { useState, useEffect, useMemo } from "react";
-import { App, Header, Container, Banner } from "./styles";
+import {
+  App,
+  Header,
+  Container,
+  Banner,
+  SearchWrapper,
+  OrderButton,
+} from "./styles";
 
 import { Link } from "react-router-dom";
 
 import ReceiptIcon from "../../components/ReceiptIcon";
 import Logo from "../../components/Logo";
 import DishWrapper from "../../components/DishWrapper";
+import InputField from "../../components/InputField";
+import Button from "../../components/Button";
 
 import menuIcon from "../../assets/icons/stack-menu.svg";
 import macarons from "../../assets/macarons.png";
+import searchIcon from "../../assets/icons/search.svg";
+import receipt from "../../assets/icons/receipt.svg";
+import logo from "../../assets/logo.svg";
+import signOut from "../../assets/icons/sign_out.svg";
 
 import { api } from "../../services/api";
+
+import { useAuth } from "../../hooks/auth";
 
 function Home() {
   const [categories, setCategories] = useState([]);
   const [meals, setMeals] = useState([]);
   const [order, setOrder] = useState([]);
 
-  // Load categories from API or sessionStorage
+  const { signOut: signOutUser, user } = useAuth();
+
+  // Load categories from API
   useEffect(() => {
     async function loadCategories() {
       // const storedCategories = sessionStorage.getItem('@foodex:categories');
@@ -35,7 +52,7 @@ function Home() {
     loadCategories();
   }, []);
 
-  // Load meals from API or sessionStorage
+  // Load meals from API
   useEffect(() => {
     const loadMeals = async () => {
       // const storedMeals = sessionStorage.getItem('@foodex:meals');
@@ -47,16 +64,22 @@ function Home() {
       //   setMeals(dataWithQuantity);
       // }
       try {
-      const { data } = await api.get("/dishes");
-      const dataWithQuantity = data.map((meal) => ({ ...meal, quantity: 1 }));
-      setMeals(dataWithQuantity);
+        const { data } = await api.get("/dishes");
+        const dataWithQuantity = data.map((meal) => ({ ...meal, quantity: 1 }));
+        setMeals(dataWithQuantity);
       } catch (error) {
-        console.error("Error loading meals:", error);
-        alert(
-          `Erro ao carregar pratos.\nPor favor, tente novamente mais tarde.\n${error}`
-        );
+        // check if the error is because of JWT
+        if (error.response && error.response.status === 401) {
+          // JWT expired or invalid, redirect to login
+          window.location.href = "/";
+        } else {
+          console.error("Error loading meals:", error);
+          alert(
+            `Erro ao carregar pratos.\nPor favor, tente novamente mais tarde.\n${error}`
+          );
+        }
       }
-    }
+    };
 
     loadMeals();
   }, []);
@@ -75,16 +98,21 @@ function Home() {
           }))
         );
       } catch (error) {
-        console.error("Error loading favourites:", error);
-        alert(
-          `Erro ao carregar os favoritos.\nPor favor, tente novamente mais tarde.\n${error}`
-        );
+        // check if the error is because of JWT
+        if (error.response && error.response.status === 401) {
+          // JWT expired or invalid, redirect to login
+          window.location.href = "/";
+        } else {
+          console.error("Error loading favourites:", error);
+          alert(
+            `Erro ao carregar os favoritos.\nPor favor, tente novamente mais tarde.\n${error}`
+          );
+        }
       }
     };
 
     // if (meals.length > 0 && !meals.every((meal) => meal.isFavourite)) {
-      loadFavourites();
-
+    loadFavourites();
   }, []);
 
   // Load images for meals only when necessary
@@ -137,12 +165,27 @@ function Home() {
 
   return (
     <App>
+      <div id="header-top-padding"></div>
       <Header>
-        <Link to="/menu">
-          <img id="menu" src={menuIcon} alt="Menu" />
+        <Link id="menu" to="/menu">
+          <img id="menu-img" src={menuIcon} alt="Menu" />
         </Link>
-        <Logo id="logo" />
-        <ReceiptIcon to="/menu" children={0} />
+        <img id="logo" src={logo} alt="" />
+        <SearchWrapper>
+          {/* <Logo id="logo" /> */}
+          {/* <img id="logo" src={logo} alt="" /> */}
+          <InputField
+            id="search-input"
+            icon={searchIcon}
+            placeholder="Busque por pratos ou ingredientes"
+          />
+        </SearchWrapper>
+        <OrderButton>
+          <img src={receipt} alt="ícone de comanda" />
+          Pedidos(0)
+        </OrderButton>
+        {user.isAdmin ? "" : <ReceiptIcon id="receipt" to="/menu" children={0} />}
+        <img id="sign-out" src={signOut} alt="" onClick={signOutUser} />
       </Header>
       <Banner>
         <div id="wrapper">
@@ -153,8 +196,7 @@ function Home() {
           <div id="banner-text">
             <h1>Sabores inigualáveis</h1>
             <p>
-              Sinta o cuidado do preparo com
-              <br />
+              Sinta o cuidado do preparo com <br />
               ingredientes selecionados.
             </p>
           </div>
