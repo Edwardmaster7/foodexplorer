@@ -22,6 +22,10 @@ export const Header = styled.header`
 
   background-color: ${({ theme }) => theme.colors.dark_700};
 
+  position: sticky;
+  top: 0;
+  /* z-index: 1000; */
+
   font-family: 'Roboto', sans-serif;
   font-size: 2.4rem;
 

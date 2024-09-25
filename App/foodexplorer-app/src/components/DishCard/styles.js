@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { devices } from "../../styles/theme"
+import { devices } from "../../styles/theme";
 
 export const Card = styled.div`
   /* width: 100%; */
@@ -9,9 +9,13 @@ export const Card = styled.div`
   justify-content: space-between;
 
   min-width: 21rem;
-  height: 100%;
+  /* height: 100%; */
 
-  min-height: fit-content;
+  /* min-height: max-content; */
+
+  p {
+    font-family: "Roboto", sans-serif;
+  }
 
   background-color: ${({ theme }) => theme.colors.dark_300};
   padding: 1.6rem;
@@ -21,7 +25,7 @@ export const Card = styled.div`
   transition: outline 0.3s ease-in-out;
   &:hover {
     outline: 2.8px solid ${({ theme }) => theme.colors.light_700};
-  } 
+  }
 
   position: relative;
 
@@ -39,39 +43,82 @@ export const Card = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    gap: 1.2rem;
+    gap: 1.8rem;
 
     text-align: center;
     margin-top: 2.4rem;
     margin-bottom: 1.2rem;
   }
 
-  #name {
-    display: flex;
-    flex-direction: row;
-    /* justify-content: space-around; */
-    align-items: center;
+  @media ${devices.tablet} {
+    max-height: fit-content;
+
+    min-width: 25rem;
   }
+  @media ${devices.desktop} {
+    min-width: 30rem;
+  }
+`;
+
+export const Image = styled.img`
+  width: 10rem;
+  height: 10rem;
+
+  border-radius: 50%;
+
+  @media ${devices.tablet} {
+    width: 15rem;
+    height: 15rem;
+  }
+  @media ${devices.desktop} {
+    width: 17.6rem;
+    height: 17.6rem;
+  }
+`;
+
+export const Description = styled.p`
+  display: none;
+  @media ${devices.tablet} {
+    display: flex;
+    line-height: 160%;
+    font-size: 1.4rem;
+    color: ${({ theme }) => theme.colors.light_400};
+  }
+`;
+
+export const Price = styled.div``;
+
+export const Name = styled.div`
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-around; */
+  align-items: center;
 
   #chevron-right {
     /* margin-left: 0.2rem; */
-    font-size: 1.4rem;
-  }
-
-  img {
-    width: 9rem;
-    height: 9rem;
-    border-radius: 50%;
+    font-size: clamp(1.4rem, 4vw, 2rem);
   }
 
   h3 {
-    font-size: 1.4rem;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    line-height: 140%;
     font-weight: 500;
     font-family: "Poppins", sans-serif;
   }
-  
+
   @media ${devices.tablet} {
-    max-height: fit-content;
+    /* min-height: max-content; */
+  }
+`;
+
+export const LogicsContainer = styled.div`
+  /* display: flex; */
+  align-items: center;
+
+  @media ${devices.tablet} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: space-between;
   }
 `;
 
@@ -85,12 +132,22 @@ export const ButtonContainer = styled.div`
   width: 100%;
 
   span {
-    font-size: 1.6rem;
+    font-size: clamp(2rem, 4vw, 3.2rem);
     font-weight: 400;
     font-family: "Roboto", sans-serif;
     margin-top: 0.8rem;
 
+    /* line-height: 160%; */
+
     color: ${({ theme }) => theme.colors.cyano};
+  }
+
+  @media ${devices.tablet} {
+    /* flex-direction: row; */
+    /* justify-content: space-between; */
+    span {
+      line-height: 160%;
+    }
   }
 `;
 
@@ -108,6 +165,10 @@ export const QuantityControl = styled.div`
     font-size: 2rem;
   }
 
+  &.desktop {
+    display: none;
+  }
+
   #buttons {
     font-size: x-large;
   }
@@ -118,5 +179,15 @@ export const QuantityControl = styled.div`
 
   #buttons:hover {
     cursor: pointer;
+  }
+
+  @media ${devices.tablet} {
+    &.desktop {
+      display: flex;
+    }
+
+    &.mobile {
+      display: none;
+    }
   }
 `;

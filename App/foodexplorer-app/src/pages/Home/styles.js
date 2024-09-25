@@ -167,6 +167,8 @@ export const Container = styled.div`
   @media ${devices.desktop} {
     padding-right: 12rem;
     padding-left: 12rem;
+
+    
   }
 `;
 

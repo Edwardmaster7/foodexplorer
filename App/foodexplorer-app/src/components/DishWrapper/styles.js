@@ -4,6 +4,8 @@ import theme, { devices } from "../../styles/theme";
 export const Container = styled.div`
   width: 100%;
 
+  height: max-content;
+
   /* height: 100%; */
   display: flex;
   flex-direction: column;
@@ -23,8 +25,19 @@ export const Container = styled.div`
   #right, #left {
     display: none;
   }
+  @media ${devices.tablet} {
+    h1 {
+      font-size: 2.4rem;
+      font-weight: medium;
+    }
+  }
 
   @media ${devices.desktop} {
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: medium;
+    }
 
     .pagination {
       display: flex;
