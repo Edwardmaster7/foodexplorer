@@ -1,14 +1,13 @@
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   App,
   Container,
   Header,
   SearchWrapper,
   ResultsWrapper,
-  IngredientsWrapper,
 } from "./styles";
 
-import { debounce } from "lodash"; // You'll need to install lodash
+import { debounce } from "lodash";
 
 import InputField from "../../components/InputField";
 import Footer from "../../components/Footer";
@@ -44,6 +43,7 @@ function Menu() {
 
   // Handle search input change
   const handleSearch = (e) => {
+    setMeals([]);
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
     debouncedSearch(searchTerm);
@@ -56,7 +56,7 @@ function Menu() {
     return (
        <ResultsWrapper>
          {meals.map((meal) => (
-           <Link to="/" className="result">
+           <Link key={meal.id} to="/" className="result">
              <h2>{meal.name}</h2>
              <p>{meal.description}</p>
            </Link>

@@ -39,7 +39,7 @@ export const Header = styled.header`
 
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 999;
 
   background-color: ${({ theme }) => theme.colors.dark_700};
 
@@ -78,10 +78,10 @@ export const Header = styled.header`
       display: none;
     }
 
-    #logo{
+    #logo {
       display: none;
     }
-    
+
     #logo-desktop {
       display: flex;
       height: clamp(3rem, 2dw, 5rem);
@@ -103,11 +103,11 @@ export const Header = styled.header`
 `;
 
 export const SearchWrapper = styled.div`
-  display: none;
+  position: relative;
   width: 100%;
-  gap: 3.2rem;
-  /* justify-content: space-around; */
+  display: none;
   align-items: center;
+  flex-direction: column;
 
   input {
     padding: 1.2rem 1.4rem;
@@ -119,23 +119,13 @@ export const SearchWrapper = styled.div`
     font-weight: 400;
     line-height: 160%;
     background-image: url(${searchIcon});
-    background-position: 16%;
+    background-position: 19%;
     background-repeat: no-repeat;
     background-size: auto 50%; // Adjust as needed
   }
 
   input:not(:placeholder-shown) {
     background-image: none;
-  }
-
-  .icon {
-    display: flex;
-    justify-content: center;
-    img {
-      width: calc(28dvw / 2);
-      height: 2.3rem;
-      margin-bottom: 0.2rem;
-    }
   }
 
   @media ${devices.tablet} {
@@ -146,6 +136,82 @@ export const SearchWrapper = styled.div`
     input {
       background-position: 25%;
     }
+  }
+
+`;
+
+export const ResultsWrapper = styled.div`
+  position: absolute;
+  top: 100%; // This positions it right below the search input
+  left: 0;
+  width: 100%; // This makes it the same width as the search input
+  max-height: 60vh;
+  overflow-y: auto;
+
+  background-color: ${({ theme }) => theme.colors.dark_400};  
+
+  width: 100%;
+
+  z-index: 998;
+
+  border-radius: 1rem;
+
+  outline: 0.3rem solid ${({ theme }) => theme.colors.deep_green};
+
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  border-top: transparent;
+
+  /* &:hover {
+    border: 0.3rem solid ${({ theme }) => theme.colors.deep_green};
+  } */
+
+  .result {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.8rem;
+
+    padding: 1.2rem;
+
+    border-bottom: 0.2rem solid ${({ theme }) => theme.colors.dark_600};
+
+    cursor: pointer;
+
+    transition: all 0.2s ease-in-out;
+
+    background-color: ${({ theme }) => theme.colors.dark_400};
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .result h2 {
+    font-family: "Poppins", sans-serif;
+    font-size: 2rem;
+    font-weight: 500;
+  }
+
+  .result p {
+    font-family: "Roboto", sans-serif;
+    font-size: 1.2rem;
+    line-height: 140%;
+    font-weight: 400;
+
+    color: ${({ theme }) => theme.colors.light_400};
+  }
+
+  .result a {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.tunrs_green};
+  }
+
+  .result a:active {
+    transform: scale(0.9);
   }
 `;
 

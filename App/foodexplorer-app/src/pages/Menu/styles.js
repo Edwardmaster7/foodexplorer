@@ -140,12 +140,6 @@ export const ResultsWrapper = styled.div`
   }
 `;
 
-export const IngredientsWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  /* gap: 0.4rem; */
-`;
-
 // export const Footer = styled.footer`
 //   display: flex;
 //   align-items: center;
