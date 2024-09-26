@@ -21,6 +21,8 @@ import macarons from "../../assets/macarons.png";
 import searchIcon from "../../assets/icons/search.svg";
 import receipt from "../../assets/icons/receipt.svg";
 import logo from "../../assets/logo.svg";
+import adminLogo from "../../assets/admin_logo_mobile.svg";
+import adminLogoDesktop from "../../assets/admin_logo_desktop.svg";
 import signOut from "../../assets/icons/sign_out.svg";
 
 import { api } from "../../services/api";
@@ -30,6 +32,7 @@ import { useAuth } from "../../hooks/auth";
 function Home() {
   const [categories, setCategories] = useState([]);
   const [meals, setMeals] = useState([]);
+  const [search, setSearch] = useState("");
   const [order, setOrder] = useState([]);
 
   const { signOut: signOutUser, user } = useAuth();
@@ -144,6 +147,7 @@ function Home() {
   // Memorize the filtered meals for each category
   const memorizedCategoryMeals = useMemo(() => {
     if (categories.length === 0 || meals.length === 0) return [];
+
     return categories.map((category) => ({
       ...category,
       meals: meals.filter((meal) => meal.category_name === category.name),
@@ -159,9 +163,19 @@ function Home() {
         label={category.name}
         setData={setMeals}
         data={category.meals}
+        isAdmin={user.isAdmin}
       />
     ));
   }, [memorizedCategoryMeals]);
+  
+  const handleSearch = (search) => {
+    // Filter meals based on search query
+    const filteredMeals = meals.filter((meal) =>
+      meal.name.toLowerCase().includes(search.toLowerCase()) ||
+      meal.description.toLowerCase().includes(search.toLowerCase())
+    );
+    setMeals(filteredMeals);
+  }
 
   return (
     <App>
@@ -170,7 +184,8 @@ function Home() {
         <Link id="menu" to="/menu">
           <img id="menu-img" src={menuIcon} alt="Menu" />
         </Link>
-        <img id="logo" src={logo} alt="" />
+        <img id="logo" src={user.isAdmin ? adminLogo : logo} alt="foodexplorer logo" />
+        <img id="logo-desktop" src={user.isAdmin ? adminLogoDesktop : logo} alt="foodexplorer logo" />
         <SearchWrapper>
           {/* <Logo id="logo" /> */}
           {/* <img id="logo" src={logo} alt="" /> */}
@@ -178,13 +193,15 @@ function Home() {
             id="search-input"
             // icon={searchIcon}
             placeholder="Busque por pratos ou ingredientes"
+            onChange={(e) => handleSearch(e.target.value)}
+            // onFocusChange={(e) => handle
           />
         </SearchWrapper>
         <OrderButton>
           <img src={receipt} alt="ícone de comanda" />
           Pedidos(0)
         </OrderButton>
-        {user.isAdmin ? "" : <ReceiptIcon id="receipt" to="/menu" children={0} />}
+        {user.isAdmin ? <div /> : <ReceiptIcon id="receipt" to="/menu" children={0} />}
         <img id="sign-out" src={signOut} alt="" onClick={signOutUser} />
       </Header>
       <Banner>

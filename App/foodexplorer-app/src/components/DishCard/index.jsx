@@ -5,6 +5,7 @@ import {
   ButtonContainer,
   Image,
   Name,
+  Price,
   LogicsContainer,
   Description,
 } from "./styles";
@@ -13,12 +14,20 @@ import { FiPlus, FiMinus } from "react-icons/fi";
 import { HiChevronRight } from "react-icons/hi";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import { PiPencilSimpleBold } from "react-icons/pi";
 
 import { api } from "../../services/api";
 
 import Button from "../Button";
 
-function DishCard({ dish, onQuantityChange, onInclude, onFavorite }) {
+function DishCard({
+  dish,
+  onQuantityChange,
+  onInclude,
+  onEdit,
+  onFavorite,
+  isAdmin,
+}) {
   // const [viewportWidth, setViewportWidth] = useState();
 
   // Using useCallback to optimize performance
@@ -40,6 +49,14 @@ function DishCard({ dish, onQuantityChange, onInclude, onFavorite }) {
     onFavorite(dish.id);
   }, [dish.id, onFavorite]);
 
+  const handleEditClick = useCallback(() => {
+    onEdit(dish);
+  }, [dish, onEdit]);
+
+  const handleIncludeClick = useCallback(() => {
+    onInclude(dish);
+  }, [dish, onInclude]);
+
   // function checkScreenSize() {
   //   const width = window.innerWidth;
 
@@ -58,33 +75,59 @@ function DishCard({ dish, onQuantityChange, onInclude, onFavorite }) {
     <Card key={dish.id}>
       <div id="card-content">
         <Image src={dish.imgURL} alt={dish.name} />
-        <div id="favorite" onClick={handleFavoriteClick}>
-          {dish.isFavorite ? <FaHeart /> : <FaRegHeart />}
-        </div>
+        {isAdmin ? (
+          <div id="edit" onClick={handleEditClick}>
+            <PiPencilSimpleBold className="icon" />
+          </div>
+        ) : (
+          <div id="favorite" onClick={handleFavoriteClick}>
+            {dish.isFavorite ? (
+              <FaHeart className="icon" />
+            ) : (
+              <FaRegHeart className="icon" />
+            )}
+          </div>
+        )}
         <Name>
           <h3>{dish.name}</h3>
           <HiChevronRight id="chevron-right" />
         </Name>
         <Description>{dish.description}</Description>
       </div>
-      <div>
-        <ButtonContainer>
+      <div id="card-logic">
+        {/* <ButtonContainer>
           <span>R$ {dish.price}</span>
           <QuantityControl className="mobile">
             <FiMinus id="buttons" onClick={() => handleDecrement(dish.id)} />
             <p>{dish.quantity < 10 ? `0${dish.quantity}` : dish.quantity}</p>
             <FiPlus id="buttons" onClick={() => handleIncrement(dish.id)} />
           </QuantityControl>
-        </ButtonContainer>
-        <LogicsContainer>
-          <QuantityControl className="desktop">
-            <FiMinus id="buttons" onClick={() => handleDecrement(dish.id)} />
-            <p>{dish.quantity < 10 ? `0${dish.quantity}` : dish.quantity}</p>
-            <FiPlus id="buttons" onClick={() => handleIncrement(dish.id)} />
-          </QuantityControl>
-          <Button title="Incluir" onClick={onInclude} />
-        </LogicsContainer>
+        </ButtonContainer> */}
+        <Price>R$ {dish.price}</Price>
+        {!isAdmin ? 
+          <LogicsContainer>
+            {/* <ButtonContainer> */}
+            <QuantityControl>
+              <FiMinus id="buttons" onClick={() => handleDecrement(dish.id)} />
+              <p>{dish.quantity < 10 ? `0${dish.quantity}` : dish.quantity}</p>
+              <FiPlus id="buttons" onClick={() => handleIncrement(dish.id)} />
+            </QuantityControl>
+            {/* </ButtonContainer> */}
+            <Button
+              id="desktop-include-button"
+              title="Incluir"
+              onClick={handleIncludeClick}
+            />
+          </LogicsContainer>
+        : <div />}
       </div>
+      {!isAdmin ? 
+        <Button
+          id="mobile-include-button"
+          title="Incluir"
+          onClick={handleIncludeClick}
+        />
+       : <div />}
     </Card>
   );
 }

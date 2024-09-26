@@ -38,7 +38,7 @@ export default {
 // constants.js
 const sizes = {
   mobile: '320px',
-  tablet: '1000px',
+  tablet: '840px',
   desktop: '1300px'
 }
 

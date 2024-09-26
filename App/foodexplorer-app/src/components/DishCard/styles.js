@@ -5,7 +5,7 @@ export const Card = styled.div`
   /* width: 100%; */
   display: flex;
   flex-direction: column;
-  /* gap: 1.2rem; */
+  gap: 1.2rem;
   justify-content: space-between;
 
   min-width: 21rem;
@@ -18,7 +18,7 @@ export const Card = styled.div`
   }
 
   background-color: ${({ theme }) => theme.colors.dark_300};
-  padding: 1.6rem;
+  padding: 2.4rem;
   border-radius: 0.8rem;
   border: 2px solid ${({ theme }) => theme.colors.dark_100};
 
@@ -29,13 +29,24 @@ export const Card = styled.div`
 
   position: relative;
 
-  #favorite {
+  #favorite,
+  #edit {
     position: absolute;
     top: 1.6rem;
     right: 1.6rem;
 
     color: ${({ theme }) => theme.colors.light_300};
     font-size: 3rem;
+
+    cursor: pointer;
+  }
+  #favorite:hover, #edit:hover {
+    transition: outline 0.3s ease-in-out;
+    color: ${({ theme }) => theme.colors.light_100};
+  }
+
+  #favorite:active, #edit:active {
+    transform: scale(0.8);
   }
 
   #card-content {
@@ -43,17 +54,48 @@ export const Card = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    gap: 1.8rem;
+    gap: 1.6rem;
 
     text-align: center;
     margin-top: 2.4rem;
-    margin-bottom: 1.2rem;
+    /* margin-bottom: 1.2rem; */
+  }
+
+  #card-logic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.6rem;
+    /* margin-top: 1.2rem; */
+  }
+
+  #mobile-include-button {
+    display: block;
+  }
+  #desktop-include-button {
+    display: none;
+
+    button {
+      font-size: 1.4rem;
+      font-weight: medium;
+      line-height: 2.4rem;
+      padding: 1.2rem 2.4rem;
+    }
   }
 
   @media ${devices.tablet} {
     max-height: fit-content;
 
     min-width: 25rem;
+
+    #mobile-include-button {
+      display: none;
+    }
+
+    #desktop-include-button {
+      display: block;
+    }
   }
   @media ${devices.desktop} {
     min-width: 30rem;
@@ -71,8 +113,8 @@ export const Image = styled.img`
     height: 15rem;
   }
   @media ${devices.desktop} {
-    width: 17.6rem;
-    height: 17.6rem;
+    width: 16rem;
+    height: 16rem;
   }
 `;
 
@@ -86,7 +128,24 @@ export const Description = styled.p`
   }
 `;
 
-export const Price = styled.div``;
+export const Price = styled.span`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+
+  font-size: clamp(2rem, 2vw, 2.4rem);
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+
+  /* line-height: 160%; */
+
+  color: ${({ theme }) => theme.colors.cyano};
+
+  @media ${devices.tablet} {
+    /* line-height: 160%;  */
+  }
+`;
 
 export const Name = styled.div`
   display: flex;
@@ -96,58 +155,63 @@ export const Name = styled.div`
 
   #chevron-right {
     /* margin-left: 0.2rem; */
-    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-size: clamp(1.4rem, 4vw, 1.6rem);
   }
 
   h3 {
-    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-size: clamp(1.4rem, 4vw, 1.6rem);
     line-height: 140%;
-    font-weight: 500;
+    font-weight: bold;
     font-family: "Poppins", sans-serif;
   }
-
   @media ${devices.tablet} {
-    /* min-height: max-content; */
+    h3 {
+      font-size: clamp(1.6rem, 4vw, 2rem);
+    }
   }
 `;
 
 export const LogicsContainer = styled.div`
-  /* display: flex; */
+  display: flex;
+  /* gap: 2rem; */
   align-items: center;
+  flex-direction: column;
+  width: 100%;
+
+  /* > * {
+    margin: 1.6rem; // Fallback for browsers that don't support gap
+  }
+
+  > *:last-child {
+    margin-bottom: 0; // Remove margin from the last child
+  } */
 
   @media ${devices.tablet} {
     display: grid;
+    gap: 1.2rem;
     grid-template-columns: repeat(2, 1fr);
-    justify-content: space-between;
+    justify-content: space-around;
+
+    padding: 0 2.4rem;
+    /* > * {
+      margin: 0; // Reset margin for grid layout
+    } */
   }
 `;
 
 export const ButtonContainer = styled.div`
   display: flex;
-  gap: 1.2rem;
+  gap: 1.6rem;
   align-items: center;
   flex-direction: column;
   /* justify-content: space-evenly; */
   /* align-self: baseline; */
   width: 100%;
 
-  span {
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    font-weight: 400;
-    font-family: "Roboto", sans-serif;
-    margin-top: 0.8rem;
-
-    /* line-height: 160%; */
-
-    color: ${({ theme }) => theme.colors.cyano};
-  }
-
   @media ${devices.tablet} {
     /* flex-direction: row; */
     /* justify-content: space-between; */
-    span {
-      line-height: 160%;
-    }
+    gap: 1.6rem;
   }
 `;
 
@@ -157,37 +221,33 @@ export const QuantityControl = styled.div`
   align-items: center;
   gap: 1.4rem;
 
-  margin-bottom: 1.6rem;
+  /* margin-bottom: 1.6rem; */
 
   p {
-    font-size: 1.6rem;
-    font-family: "Roboto", sans-serif;
     font-size: 2rem;
-  }
-
-  &.desktop {
-    display: none;
+    font-family: "Roboto", sans-serif;
+    /* font-size: 2rem; */
   }
 
   #buttons {
-    font-size: x-large;
+    font-size: 3.2rem;
   }
 
   #buttons:active {
-    transform: scale(0.9);
-  }
-
-  #buttons:hover {
-    cursor: pointer;
+    transform: scale(0.8);
+    transition: transform 0.3s ease-in-out;
   }
 
   @media ${devices.tablet} {
-    &.desktop {
-      display: flex;
-    }
+    margin: 0 auto;
+  }
 
-    &.mobile {
-      display: none;
-    }
+  @media ${devices.desktop} {
+    #buttons:hover {
+    cursor: pointer;
+
+    transition: outline 0.3s ease-in-out;
+    color: ${({ theme }) => theme.colors.light_300};
+  }
   }
 `;

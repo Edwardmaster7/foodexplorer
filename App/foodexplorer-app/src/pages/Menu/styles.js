@@ -24,7 +24,7 @@ export const Header = styled.header`
 
   position: sticky;
   top: 0;
-  /* z-index: 1000; */
+  z-index: 1000;
 
   font-family: 'Roboto', sans-serif;
   font-size: 2.4rem;
@@ -72,17 +72,20 @@ export const Container = styled.div`
   }
 `;
 
-export const Footer = styled.footer`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 3.2rem 2.4rem;
-  gap: 0.8rem;
-
-  font-family: 'DM Sans', sans-serif;
-  font-size: 1rem;
-
-  background-color: ${({ theme }) => theme.colors.dark_600};
-
+export const SearchWrapper = styled.div`
 `;
+
+// export const Footer = styled.footer`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 100%;
+//   padding: 3.2rem 2.4rem;
+//   gap: 0.8rem;
+
+//   font-family: 'DM Sans', sans-serif;
+//   font-size: 1rem;
+
+//   background-color: ${({ theme }) => theme.colors.dark_600};
+
+// `;

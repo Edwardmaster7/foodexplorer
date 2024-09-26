@@ -44,6 +44,10 @@ function DishWrapper({ label, data, add, setData, ...props }) {
         add(dish.id);
       };
 
+      const handleEdit = (dish) => {
+        console.log(dish);
+      };
+
       const handleFavorite = (id) => {
         const updatedDish = (prevData) =>
           prevData.map((item) =>
@@ -73,6 +77,8 @@ function DishWrapper({ label, data, add, setData, ...props }) {
           onQuantityChange={handleQuantityChange}
           onInclude={handleInclude}
           onFavorite={handleFavorite}
+          onEdit={handleEdit}
+          {...props}
         />
       );
     });

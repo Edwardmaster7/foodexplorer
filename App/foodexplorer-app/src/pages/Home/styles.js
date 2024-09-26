@@ -16,6 +16,11 @@ export const App = styled.div`
     height: 1.6rem;
     width: 100%;
   }
+
+  .hidden {
+    display: none;
+  }
+
   @media ${devices.tablet} {
     #header-top-padding {
       height: 3.6rem;
@@ -47,9 +52,13 @@ export const Header = styled.header`
 
   #logo {
     height: 2.6rem;
-
     /* margin-bottom: 1.6rem; */
   }
+
+  #logo-desktop {
+    display: none;
+  }
+
   #sign-out {
     display: none;
   }
@@ -69,11 +78,16 @@ export const Header = styled.header`
       display: none;
     }
 
-    #logo {
-      height: 3rem;
-
+    #logo{
+      display: none;
+    }
+    
+    #logo-desktop {
+      display: flex;
+      height: clamp(3rem, 2dw, 5rem);
       /* margin-bottom: 1.6rem; */
     }
+
     #receipt {
       display: none;
     }
@@ -167,8 +181,6 @@ export const Container = styled.div`
   @media ${devices.desktop} {
     padding-right: 12rem;
     padding-left: 12rem;
-
-    
   }
 `;
 
@@ -205,6 +217,8 @@ export const Banner = styled.div`
     margin-left: 3rem;
     margin-right: 1.2rem;
     background: linear-gradient(to bottom, #091e26, #00131c);
+
+    border-radius: 1.4rem;
 
     min-height: 12rem;
 

@@ -15,6 +15,7 @@ export const Container = styled.button`
   font-weight: 500;
 
   transition: background-color 0.3s ease-in-out;
+
   &:hover {
     background-color: ${({ theme }) => theme.colors.tomato_200};
   }
