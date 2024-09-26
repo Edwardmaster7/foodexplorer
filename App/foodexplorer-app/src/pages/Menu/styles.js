@@ -16,7 +16,7 @@ export const Header = styled.header`
   gap: 1.6rem;
   justify-content: baseline;
   width: 100%;
-  padding: 5.6rem 2.4rem 1.2rem;
+  padding: 3.6rem 2.8rem 2.4rem;
   /* border-bottom: 1px solid #ccc; */
 
   background-color: ${({ theme }) => theme.colors.dark_700};

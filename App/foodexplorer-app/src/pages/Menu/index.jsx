@@ -34,7 +34,7 @@ function Menu() {
     // console.log(data.dishes);
   }
 
-  // Memorize the search term, and just call loadMeals 
+  // Memorize the search term, and just call loadMeals
   // after 300 ms of the last change
   const debouncedSearch = useMemo(
     () => debounce((searchTerm) => loadMeals(searchTerm), 300),
@@ -54,15 +54,15 @@ function Menu() {
   const memorizedResultsWrapper = useMemo(() => {
     if (!meals.length) return null;
     return (
-       <ResultsWrapper>
-         {meals.map((meal) => (
-           <Link key={meal.id} to="/" className="result">
-             <h2>{meal.name}</h2>
-             <p>{meal.description}</p>
-           </Link>
-         ))}
-       </ResultsWrapper>
-     );
+      <ResultsWrapper>
+        {meals.map((meal) => (
+          <Link key={meal.id} to="/" className="result">
+            <h2>{meal.name}</h2>
+            <p>{meal.description}</p>
+          </Link>
+        ))}
+      </ResultsWrapper>
+    );
   }, [meals]);
 
   return (
