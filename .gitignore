@@ -141,3 +141,5 @@ database.db
 tmp/
 
 queries
+
+api.js
