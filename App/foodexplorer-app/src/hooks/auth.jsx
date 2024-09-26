@@ -22,11 +22,14 @@ function AuthProvider({ children }) {
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         setData({ user: JSON.parse(user[0]), isAdmin: JSON.parse(user[2]), token });
         console.log("Token is valid");
+
       } else {
         signOut();
       }
     }
+
   }, []);
+
 
   async function signIn({ email, password }) {
     signOut();
@@ -47,7 +50,7 @@ function AuthProvider({ children }) {
       localStorage.setItem("@foodex:expires_at", expirationDate);
 
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setData({ user, token });
+      setData({ user, token, isAdmin });
     } catch (error) {
       if (error.response) {
         return alert(`Ocorreu um erro no login\n${error.response.data.message}`);
