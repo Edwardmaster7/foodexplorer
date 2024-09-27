@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import {
   Card,
-  QuantityControl,
   ButtonContainer,
   Image,
   Name,
@@ -19,6 +18,7 @@ import { PiPencilSimpleBold } from "react-icons/pi";
 import { api } from "../../services/api";
 
 import Button from "../Button";
+import QuantityControl from "../QuantityControl";
 
 function DishCard({
   dish,
@@ -104,30 +104,32 @@ function DishCard({
           </QuantityControl>
         </ButtonContainer> */}
         <Price>R$ {dish.price}</Price>
-        {!isAdmin ? 
+        {!isAdmin ? (
           <LogicsContainer>
-            {/* <ButtonContainer> */}
-            <QuantityControl>
-              <FiMinus id="buttons" onClick={() => handleDecrement(dish.id)} />
-              <p>{dish.quantity < 10 ? `0${dish.quantity}` : dish.quantity}</p>
-              <FiPlus id="buttons" onClick={() => handleIncrement(dish.id)} />
-            </QuantityControl>
-            {/* </ButtonContainer> */}
+            <QuantityControl
+              dish={dish}
+              handleIncrement={handleIncrement}
+              handleDecrement={handleDecrement}
+            />
             <Button
               id="desktop-include-button"
               title="Incluir"
               onClick={handleIncludeClick}
             />
           </LogicsContainer>
-        : <div />}
+        ) : (
+          <div />
+        )}
       </div>
-      {!isAdmin ? 
+      {!isAdmin ? (
         <Button
           id="mobile-include-button"
           title="Incluir"
           onClick={handleIncludeClick}
         />
-       : <div />}
+      ) : (
+        <div />
+      )}
     </Card>
   );
 }

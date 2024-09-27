@@ -106,10 +106,11 @@ export const Container = styled.header`
 export const OrderButton = styled.button`
   display: none;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
+  flex-direction: row;
   gap: 0.8rem;
 
-  width: 17.2rem;
+  width: 28.2rem;
   height: 4.8rem;
 
   padding: 1.2rem 3.2rem;
@@ -130,6 +131,7 @@ export const OrderButton = styled.button`
     filter: brightness(0.9);
     animation: none;
   }
+
 
   @media ${devices.tablet} {
     display: flex;

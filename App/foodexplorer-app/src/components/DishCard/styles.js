@@ -40,12 +40,14 @@ export const Card = styled.div`
 
     cursor: pointer;
   }
-  #favorite:hover, #edit:hover {
+  #favorite:hover,
+  #edit:hover {
     transition: outline 0.3s ease-in-out;
     color: ${({ theme }) => theme.colors.light_100};
   }
 
-  #favorite:active, #edit:active {
+  #favorite:active,
+  #edit:active {
     transform: scale(0.8);
   }
 
@@ -244,10 +246,10 @@ export const QuantityControl = styled.div`
 
   @media ${devices.desktop} {
     #buttons:hover {
-    cursor: pointer;
+      cursor: pointer;
 
-    transition: outline 0.3s ease-in-out;
-    color: ${({ theme }) => theme.colors.light_300};
-  }
+      transition: outline 0.3s ease-in-out;
+      color: ${({ theme }) => theme.colors.light_300};
+    }
   }
 `;

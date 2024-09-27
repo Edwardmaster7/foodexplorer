@@ -117,11 +117,14 @@ const Header = () => {
             {memorizedResultsWrapper}
           </SearchWrapper>
           <OrderButton>
-            <img src={receipt} alt="ícone de comanda" />
-            Pedidos(0)
+            {user.isAdmin ? (
+              <>Novo prato</>
+            ) : (<><img src={receipt} alt="ícone de comanda" />
+            <p>Pedidos(0)</p></>)}
           </OrderButton>
           {user.isAdmin ? (
-            <div />
+            <>
+            </>
           ) : (
             <ReceiptIcon id="receipt" to="/menu" children={0} />
           )}
