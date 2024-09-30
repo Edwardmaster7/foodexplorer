@@ -9,6 +9,8 @@ import {
   Description,
 } from "./styles";
 
+import { Link } from "react-router-dom";
+
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { HiChevronRight } from "react-icons/hi";
 import { FaRegHeart } from "react-icons/fa";
@@ -28,8 +30,6 @@ function DishCard({
   onFavorite,
   isAdmin,
 }) {
-  // const [viewportWidth, setViewportWidth] = useState();
-
   // Using useCallback to optimize performance
   const handleIncrement = useCallback(
     (id) => {
@@ -57,20 +57,6 @@ function DishCard({
     onInclude(dish);
   }, [dish, onInclude]);
 
-  // function checkScreenSize() {
-  //   const width = window.innerWidth;
-
-  //   setViewportWidth(width);
-  // }
-
-  // // Call the function initially
-  // useCallback(() => {
-  //   checkScreenSize();
-  // }, []);
-
-  // // Set up an event listener to call the function when the window is resized
-  // window.addEventListener("resize", checkScreenSize);
-
   return (
     <Card key={dish.id}>
       <div id="card-content">
@@ -88,26 +74,21 @@ function DishCard({
             )}
           </div>
         )}
-        <Name>
-          <h3>{dish.name}</h3>
-          <HiChevronRight id="chevron-right" />
-        </Name>
+        <Link to={`/dish/${dish.id}`}>
+          <Name>
+            <h3>{dish.name}</h3>
+            <HiChevronRight id="chevron-right" />
+          </Name>
+        </Link>
         <Description>{dish.description}</Description>
       </div>
       <div id="card-logic">
-        {/* <ButtonContainer>
-          <span>R$ {dish.price}</span>
-          <QuantityControl className="mobile">
-            <FiMinus id="buttons" onClick={() => handleDecrement(dish.id)} />
-            <p>{dish.quantity < 10 ? `0${dish.quantity}` : dish.quantity}</p>
-            <FiPlus id="buttons" onClick={() => handleIncrement(dish.id)} />
-          </QuantityControl>
-        </ButtonContainer> */}
         <Price>R$ {dish.price}</Price>
         {!isAdmin ? (
           <LogicsContainer>
             <QuantityControl
-              dish={dish}
+              quantity={dish.quantity}
+              id={dish.id}
               handleIncrement={handleIncrement}
               handleDecrement={handleDecrement}
             />

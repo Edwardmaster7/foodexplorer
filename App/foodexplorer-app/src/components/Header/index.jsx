@@ -5,6 +5,7 @@ import {
   OrderButton,
   SearchWrapper,
   ResultsWrapper,
+  TopPadding
 } from "./styles";
 
 import menuIcon from "../../assets/icons/stack-menu.svg";
@@ -90,7 +91,7 @@ const Header = () => {
 
   return (
     <>
-      <div id="header-top-padding"></div>
+      <TopPadding />
       <App>
         <Container>
           <Link id="menu" to="/menu">

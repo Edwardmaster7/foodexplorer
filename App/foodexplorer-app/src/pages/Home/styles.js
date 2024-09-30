@@ -11,23 +11,10 @@ export const App = styled.div`
   height: max-content;
   width: 100vw;
 
-  #header-top-padding {
-    background-color: ${({ theme }) => theme.colors.dark_700};
-    height: 1.6rem;
-    width: 100%;
-  }
-
   .hidden {
     display: none;
   }
-
-  @media ${devices.tablet} {
-    #header-top-padding {
-      height: 3.6rem;
-    }
-  }
 `;
-
 
 export const Container = styled.div`
   display: flex;

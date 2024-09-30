@@ -1,6 +1,16 @@
 import styled from "styled-components";
-import { devices } from "../../styles/theme"
+import { devices } from "../../styles/theme";
 import searchIcon from "../../assets/icons/search.svg";
+
+export const TopPadding = styled.div`
+  background-color: ${({ theme }) => theme.colors.dark_700};
+  height: 1.6rem;
+  width: 100%;
+
+  @media ${devices.tablet} {
+    height: 3.6rem;
+  }
+`;
 
 export const App = styled.div`
   /* background-color: #F5F5F5; */
@@ -15,20 +25,8 @@ export const App = styled.div`
   top: 0;
   z-index: 999;
 
-  #header-top-padding {
-    background-color: ${({ theme }) => theme.colors.dark_700};
-    height: 1.6rem;
-    width: 100%;
-  }
-
   .hidden {
     display: none;
-  }
-
-  @media ${devices.tablet} {
-    #header-top-padding {
-      height: 3.6rem;
-    }
   }
 `;
 
@@ -40,7 +38,6 @@ export const Container = styled.header`
   width: 100%;
   padding: 2rem 2.8rem 2.4rem;
   /* border-bottom: 1px solid #ccc; */
-
 
   background-color: ${({ theme }) => theme.colors.dark_700};
 
@@ -132,7 +129,6 @@ export const OrderButton = styled.button`
     animation: none;
   }
 
-
   @media ${devices.tablet} {
     display: flex;
   }
@@ -173,7 +169,6 @@ export const SearchWrapper = styled.div`
       background-position: 25%;
     }
   }
-
 `;
 
 export const ResultsWrapper = styled.div`
@@ -184,7 +179,7 @@ export const ResultsWrapper = styled.div`
   max-height: 60vh;
   overflow-y: auto;
 
-  background-color: ${({ theme }) => theme.colors.dark_400};  
+  background-color: ${({ theme }) => theme.colors.dark_400};
 
   width: 100%;
 

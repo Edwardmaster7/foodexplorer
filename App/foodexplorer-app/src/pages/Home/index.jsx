@@ -16,12 +16,9 @@ import { useAuth } from "../../hooks/auth";
 
 function Home() {
   const [categories, setCategories] = useState([]);
-  const [meals, setMeals] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchMeals, setSearchMeals] = useState([]);
-  const [order, setOrder] = useState([]);
+  const [dishes, setDishes] = useState([]);
 
-  const { signOut: signOutUser, user } = useAuth();
+  const { user } = useAuth();
 
   // Load categories from API
   useEffect(() => {
@@ -33,20 +30,20 @@ function Home() {
     loadCategories();
   }, []);
 
-  // Load meals from API
+  // Load dishes from API
   useEffect(() => {
-    const loadMeals = async () => {
+    const loadDishes = async () => {
       try {
         const { data } = await api.get("/dishes");
         const dataWithQuantity = data.map((meal) => ({ ...meal, quantity: 1 }));
-        setMeals(dataWithQuantity);
+        setDishes(dataWithQuantity);
       } catch (error) {
         // check if the error is because of JWT
         if (error.response && error.response.status === 401) {
           // JWT expired or invalid, redirect to login
           window.location.href = "/";
         } else {
-          console.error("Error loading meals:", error);
+          console.error("Error loading dishes:", error);
           alert(
             `Erro ao carregar pratos.\nPor favor, tente novamente mais tarde.\n${error}`
           );
@@ -54,7 +51,7 @@ function Home() {
       }
     };
 
-    loadMeals();
+    loadDishes();
   }, []);
 
   // load user favourites and link them to dishes
@@ -64,8 +61,8 @@ function Home() {
         const { data } = await api.get("/favourites");
         const favouriteIds = new Set(data.map((fav) => fav.id));
 
-        setMeals((prevMeals) =>
-          prevMeals.map((meal) => ({
+        setDishes((prevDishes) =>
+          prevDishes.map((meal) => ({
             ...meal,
             isFavorite: favouriteIds.has(meal.id),
           }))
@@ -84,22 +81,22 @@ function Home() {
       }
     };
 
-    // if (meals.length > 0 && !meals.every((meal) => meal.isFavourite)) {
+    // if (dishes.length > 0 && !dishes.every((meal) => meal.isFavourite)) {
     loadFavourites();
   }, []);
 
-  // Load images for meals only when necessary
+  // Load images for dishes only when necessary
   useEffect(() => {
     const loadImages = async () => {
       try {
         const updatedData = await Promise.all(
-          meals.map(async (meal) => {
+          dishes.map(async (meal) => {
             const image = `${api.defaults.baseURL}/files/${meal.image}`;
             return { ...meal, imgURL: image };
           })
         );
-        setMeals(updatedData);
-        // sessionStorage.setItem('@foodex:meals', JSON.stringify(updatedData));
+        setDishes(updatedData);
+        // sessionStorage.setItem('@foodex:dishes', JSON.stringify(updatedData));
       } catch (error) {
         console.error("Error loading images:", error);
         alert(
@@ -108,35 +105,35 @@ function Home() {
       }
     };
 
-    // meals.every(meal => meal.imgURL) ensures that we only update meals if not all items already have an imgURL
-    if (meals.length > 0 && !meals.every((meal) => meal.imgURL)) {
+    // dishes.every(meal => meal.imgURL) ensures that we only update dishes if not all items already have an imgURL
+    if (dishes.length > 0 && !dishes.every((meal) => meal.imgURL)) {
       loadImages();
     }
-  }, [meals]); // ensure that the useEffect only runs when meals is updated
+  }, [dishes]); // ensure that the useEffect only runs when dishes is updated
 
-  // Memorize the filtered meals for each category
-  const memorizedCategoryMeals = useMemo(() => {
-    if (categories.length === 0 || meals.length === 0) return [];
+  // Memorize the filtered dishes for each category
+  const memorizedCategoryDishes = useMemo(() => {
+    if (categories.length === 0 || dishes.length === 0) return [];
 
     return categories.map((category) => ({
       ...category,
-      meals: meals.filter((meal) => meal.category_name === category.name),
+      dishes: dishes.filter((meal) => meal.category_name === category.name),
     }));
-  }, [categories, meals]);
+  }, [categories, dishes]);
 
   // Memorize the DishWrapper components
   const memorizedDishWrappers = useMemo(() => {
-    if (memorizedCategoryMeals.length === 0) return null;
-    return memorizedCategoryMeals.map((category) => (
+    if (memorizedCategoryDishes.length === 0) return null;
+    return memorizedCategoryDishes.map((category) => (
       <DishWrapper
         key={category.id}
         label={category.name}
-        setData={setMeals}
-        data={category.meals}
+        setData={setDishes}
+        data={category.dishes}
         isAdmin={user.isAdmin}
       />
     ));
-  }, [memorizedCategoryMeals]);
+  }, [memorizedCategoryDishes]);
 
   return (
     <App>

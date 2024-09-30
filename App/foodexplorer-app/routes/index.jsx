@@ -8,9 +8,12 @@ import { useAuth } from "../src/hooks/auth";
 export default function Routes() {
   const { user } = useAuth();
 
+  const isLoggedIn = user.id !== undefined
+  // console.log(isLoggedIn)
+
   return (
     <BrowserRouter>
-      {user.id ? <AppRoutes /> : <AuthRoutes />}
+      {isLoggedIn ? <AppRoutes /> : <AuthRoutes />}
     </BrowserRouter>
   );
 }

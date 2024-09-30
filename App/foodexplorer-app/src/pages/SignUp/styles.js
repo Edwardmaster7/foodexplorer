@@ -34,6 +34,10 @@ export const Container = styled.div`
       }
     }
   }
+  @media ${devices.desktop} {
+    padding: 10.4rem;
+
+  }
 `;
 
 export const Content = styled.div`
@@ -52,6 +56,10 @@ export const Content = styled.div`
     padding: 6.4rem;
 
     border-radius: 1.6rem;
+  }
+  @media ${devices.desktop} {
+    margin-bottom: 10.4rem;
+
   }
 `;
 

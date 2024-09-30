@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   App,
   Container,
@@ -15,7 +15,7 @@ import search from "../../assets/icons/search.svg";
 
 import close from "../../assets/icons/close.svg";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { useAuth } from "../../hooks/auth";
 
@@ -25,45 +25,58 @@ function Menu() {
   const { signOut, user } = useAuth();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [meals, setMeals] = useState([]);
+  const [dishes, setDishes] = useState([]);
 
   // Fetch teh search term results
-  async function loadMeals(searchTerm) {
+  async function loadDishes(searchTerm) {
     const { data } = await api.get(`/search/${searchTerm}`);
-    setMeals(data.dishes);
+    setDishes(data.dishes);
     // console.log(data.dishes);
   }
 
-  // Memorize the search term, and just call loadMeals
+  // Memorize the search term, and just call loadDishes
   // after 300 ms of the last change
   const debouncedSearch = useMemo(
-    () => debounce((searchTerm) => loadMeals(searchTerm), 300),
+    () => debounce((searchTerm) => loadDishes(searchTerm), 300),
     []
   );
 
   // Handle search input change
   const handleSearch = (e) => {
-    setMeals([]);
+    setDishes([]);
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
     debouncedSearch(searchTerm);
   };
 
   // Create a memoized version of the ResultsWrapper component,
-  // only re-rendering when the meals array changes
+  // only re-rendering when the dishes array changes
   const memorizedResultsWrapper = useMemo(() => {
-    if (!meals.length) return null;
+    if (!dishes.length) return null;
     return (
       <ResultsWrapper>
-        {meals.map((meal) => (
-          <Link key={meal.id} to="/" className="result">
-            <h2>{meal.name}</h2>
-            <p>{meal.description}</p>
+        {dishes.map((dish) => (
+          <Link key={dish.id} to={`/dish/${dish.id}`} className="result">
+            <h2>{dish.name}</h2>
+            <p>{dish.description}</p>
           </Link>
         ))}
       </ResultsWrapper>
     );
-  }, [meals]);
+  }, [dishes]);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const scrollToTop = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    };
+    
+    scrollToTop();
+  }, [location]);
 
   return (
     <App>
