@@ -148,7 +148,7 @@ export const Content = styled.div`
       /* background: none; */
       /* border: none; */
 
-      /* font-size: 1.2rem; */
+      font-size: 1.2rem;
       font-weight: 400;
       color: ${({ theme }) => theme.colors.tanger_100};
 
@@ -160,9 +160,8 @@ export const Content = styled.div`
       height: auto;
     }
 
-    .font-button-mobile {
-      font-size: 1.2rem;
-    }
+
+
 
     .font-button-admin-mobile {
       font-size: 1.6rem;
@@ -181,14 +180,11 @@ export const Content = styled.div`
         font-size: 2.4rem;
       }
 
-      .button-admin-mobile {
-        font-size: 1.6rem;
-      }
-
       button {
         /* display: flex; */
         padding-right: 4rem;
         padding-left: 4rem;
+        font-size: 1.6rem;
         /* width: 100%; */
       }
 

@@ -126,7 +126,7 @@ function DishDetails() {
                   handleDecrement={handleDecrement}
                 />
               )}
-              <Button className={user.isAdmin ? "font-button-admin-mobile" : "font-button-mobile"}>
+              <Button className={user.isAdmin ? "font-button-admin-mobile" : null}>
                 {user.isAdmin ? (
                   "Editar"
                 ) : (
