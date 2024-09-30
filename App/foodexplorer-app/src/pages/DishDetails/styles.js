@@ -7,19 +7,27 @@ export const App = styled.div`
   align-items: center;
   justify-content: center;
 
-  height: max-content;
+  min-height: 80vh;
 
-  padding: 1.6rem 5.6rem;
-  padding-bottom: 3rem;
+  margin: 1.6rem 5.6rem;
+  margin-bottom: 3rem;
 
   /* border: 1px solid red; */
 
   #button-link {
     margin-top: 2rem;
 
-    /* border: 1px solid red; */
+    /* border: 1px solid   red; */
 
     width: 100%;
+  }
+  @media ${devices.desktop} {
+    margin: 2.4rem 12.4rem;
+
+    align-items: flex-start;
+    justify-content: left;
+
+    max-height: 40vh;
   }
 `;
 
@@ -34,27 +42,11 @@ export const BackButton = styled.button`
   display: inline-flex;
   align-items: center;
 
-
   @media ${devices.tablet} {
     margin-left: 0;
+
+    /* border: 1px solid red; */
   }
-`;
-
-export const ImageContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* background-color: aliceblue; */
-
-  padding: 1.6rem 2.6rem;
-`;
-
-export const DishImage = styled.img`
-  width: 24rem;
-  height: 24rem;
-  object-fit: cover;
-  border-radius: 50%;
 `;
 
 export const Container = styled.div`
@@ -67,9 +59,45 @@ export const Container = styled.div`
   margin-top: 1.6rem;
 
   @media ${devices.tablet} {
+    /* border: 1px solid green; */
+
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
+
+    gap: 2.4rem;
+  }
+`;
+
+export const ImageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* background-color: aliceblue; */
+
+  padding: 1.6rem 2.6rem;
+
+  @media ${devices.desktop} {
+    padding: 0;
+    margin-right: 4.7rem;
+    /* border: 1px solid white; */
+  }
+`;
+
+export const DishImage = styled.img`
+  width: 24rem;
+  height: 24rem;
+  object-fit: cover;
+  border-radius: 50%;
+
+  @media ${devices.tablet} {
+    width: 32rem;
+    height: auto;
+  }
+  @media ${devices.desktop} {
+    width: 40rem;
+    height: auto;
   }
 `;
 
@@ -84,7 +112,7 @@ export const Content = styled.div`
     font-size: 3.2rem;
     font-weight: 500;
     text-align: center;
-    
+
     color: ${({ theme }) => theme.colors.light_300};
   }
 
@@ -111,7 +139,7 @@ export const Content = styled.div`
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: .8rem 2.8rem;
+      padding: 0.8rem 2rem;
       gap: 0.8rem;
 
       width: 100%;
@@ -119,21 +147,39 @@ export const Content = styled.div`
       /* background: none; */
       /* border: none; */
 
-      font-size: 1rem;
+      font-size: 1.2rem;
       font-weight: 400;
       color: ${({ theme }) => theme.colors.tanger_100};
 
       cursor: pointer;
     }
+
     button img {
       width: 2.4rem;
       height: 2.4rem;
+    }
+
+    @media ${devices.tablet} {
+      /* justify-content: flex-start;   */
+
+      /* border: 1px solid red; */
+      padding-top: 2.4rem;
+
+      width: auto;
+
+      gap: 3rem;
     }
   }
 
   @media ${devices.tablet} {
     align-items: flex-start;
     justify-content: flex-start;
+  }
+
+  @media ${devices.tablet} {
+    text-align: left;
+
+    gap: 2.4rem;
   }
 `;
 
@@ -145,6 +191,9 @@ export const IngredientsWrapper = styled.ul`
   gap: 2.4rem;
   justify-content: center;
   justify-items: center;
+
+  padding-right: 2rem;
+  padding-left: 2rem;
 
   width: 100%;
 
@@ -162,6 +211,10 @@ export const IngredientsWrapper = styled.ul`
     background-color: ${({ theme }) => theme.colors.dark_1000};
 
     list-style: none;
+  }
+
+  @media ${devices.tablet} {
+    padding-left: 0;
   }
   /* 
   li:nth-child(3n-1) {

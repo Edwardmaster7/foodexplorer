@@ -29,7 +29,7 @@ import { debounce } from "lodash";
 const Header = () => {
   const { signOut: signOutUser, user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchMeals, setSearchMeals] = useState([]);
+  const [searchDishes, setSearchDishes] = useState([]);
 
   // Mechanism for closing the searchWrapper and cleaning the search input when the user clicks outside
   const searchWrapperRef = useRef(null);
@@ -39,7 +39,7 @@ const Header = () => {
       searchWrapperRef.current &&
       !searchWrapperRef.current.contains(event.target)
     ) {
-      setSearchMeals([]);
+      setSearchDishes([]);
       setSearchTerm("");
     }
   }, []);
@@ -52,42 +52,42 @@ const Header = () => {
   }, [handleClickOutside]);
 
   // Fetch teh search term results
-  async function loadSearchMeals(searchTerm) {
+  async function loadSearchDishes(searchTerm) {
     const { data } = await api.get(`/search/${searchTerm}`);
-    setSearchMeals(data.dishes);
-    console.log(searchMeals);
+    setSearchDishes(data.dishes);
+    console.log(searchDishes);
   }
 
-  // Memorize the search term, and just call loadMeals
+  // Memorize the search term, and just call loadDishes
   // after 300 ms of the last change
   const debouncedSearch = useMemo(
-    () => debounce((searchTerm) => loadSearchMeals(searchTerm), 300),
+    () => debounce((searchTerm) => loadSearchDishes(searchTerm), 300),
     []
   );
 
   // Handle search input change
   const handleSearch = (e) => {
-    setSearchMeals([]);
+    setSearchDishes([]);
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
     debouncedSearch(searchTerm);
   };
 
   // Create a memoized version of the ResultsWrapper component,
-  // only re-rendering when the meals array changes
+  // only re-rendering when the dishes array changes
   const memorizedResultsWrapper = useMemo(() => {
-    if (!searchMeals.length) return null;
+    if (!searchDishes.length) return null;
     return (
       <ResultsWrapper>
-        {searchMeals.map((meal) => (
-          <Link key={meal.id} to="/" className="result">
-            <h2>{meal.name}</h2>
-            <p>{meal.description}</p>
+        {searchDishes.map((dish) => (
+          <Link key={dish.id} to={`/dish/${dish.id}`} className="result">
+            <h2>{dish.name}</h2>
+            <p>{dish.description}</p>
           </Link>
         ))}
       </ResultsWrapper>
     );
-  }, [searchMeals]);
+  }, [searchDishes]);
 
   return (
     <>

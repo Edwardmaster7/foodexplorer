@@ -112,13 +112,14 @@ function DishDetails() {
             </IngredientsWrapper>
             <div id="include">
               <QuantityControl
+                id="quantity"
                 quantity={quantity}
                 handleIncrement={handleIncrement}
                 handleDecrement={handleDecrement}
               />
               <Button>
                   <img src={receipt} alt="" />
-                  Pedir ∙ R$ 25,00
+                  Incluir ∙ R$ {dish.price}
               </Button>
             </div>
           </Content>
