@@ -167,7 +167,18 @@ class DishesController {
     async show(request, response) {
         const { id } = request.params;
 
-        const dish = await knex('Dishes').where({ id }).first();
+        const dish = await knex('Dishes').where({ dish_id:id })
+                        .join('Categories', 'Categories.id', '=', 'Dishes.category_id')
+                        .leftJoin('DishIngredients', 'DishIngredients.dish_id', '=', 'Dishes.id')
+                        .leftJoin('Ingredients', 'Ingredients.id', '=', 'DishIngredients.ingredient_id')
+                        .select('Dishes.*', 'Categories.name as category_name', knex.raw(`GROUP_CONCAT(distinct Ingredients.name) as ingredients`))
+                        .first();
+
+        if (!dish) {
+            throw new AppError('Dish not found');
+        }
+
+        dish.ingredients = dish.ingredients.split(',')
 
         return response.json(dish);
     }
