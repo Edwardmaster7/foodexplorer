@@ -80,7 +80,7 @@ const Header = () => {
     return (
       <ResultsWrapper>
         {searchDishes.map((dish) => (
-          <Link key={dish.id} to={`/dish/${dish.id}`} className="result">
+          <Link key={dish.id} to={`/dish/${dish.id}`} className="result" onClick={handleClickOutside}>
             <h2>{dish.name}</h2>
             <p>{dish.description}</p>
           </Link>
@@ -130,6 +130,7 @@ const Header = () => {
             <ReceiptIcon id="receipt" to="/menu" children={0} />
           )}
           <img id="sign-out" src={signOut} alt="" onClick={signOutUser} />
+          {user.isAdmin ?  <div id="padding-mobile-admin"/> : null}
         </Container>
       </App>
     </>

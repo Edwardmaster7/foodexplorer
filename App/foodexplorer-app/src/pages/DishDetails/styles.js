@@ -86,16 +86,12 @@ export const ImageContainer = styled.div`
 `;
 
 export const DishImage = styled.img`
-  width: 24rem;
-  height: 24rem;
+  width: clamp(24rem, 8vw, 40rem);
+  height: auto;
   object-fit: cover;
   border-radius: 50%;
 
   @media ${devices.tablet} {
-    width: 32rem;
-    height: auto;
-  }
-  @media ${devices.desktop} {
     width: 40rem;
     height: auto;
   }
@@ -133,7 +129,12 @@ export const Content = styled.div`
 
     width: 100%;
 
+    padding-top: 2.4rem;
     margin-bottom: 2rem;
+
+    a {
+      width: 100%;
+    }
 
     button {
       display: inline-flex;
@@ -147,7 +148,7 @@ export const Content = styled.div`
       /* background: none; */
       /* border: none; */
 
-      font-size: 1.2rem;
+      /* font-size: 1.2rem; */
       font-weight: 400;
       color: ${({ theme }) => theme.colors.tanger_100};
 
@@ -156,27 +157,50 @@ export const Content = styled.div`
 
     button img {
       width: 2.4rem;
-      height: 2.4rem;
+      height: auto;
+    }
+
+    .font-button-mobile {
+      font-size: 1.2rem;
+    }
+
+    .font-button-admin-mobile {
+      font-size: 1.6rem;
     }
 
     @media ${devices.tablet} {
       /* justify-content: flex-start;   */
 
       /* border: 1px solid red; */
-      padding-top: 2.4rem;
 
       width: auto;
 
       gap: 3rem;
+
+      p {
+        font-size: 2.4rem;
+      }
+
+      .button-admin-mobile {
+        font-size: 1.6rem;
+      }
+
+      button {
+        /* display: flex; */
+        padding-right: 4rem;
+        padding-left: 4rem;
+        /* width: 100%; */
+      }
+
+      button img {
+        display: none;
+      }
     }
   }
 
   @media ${devices.tablet} {
     align-items: flex-start;
     justify-content: flex-start;
-  }
-
-  @media ${devices.tablet} {
     text-align: left;
 
     gap: 2.4rem;

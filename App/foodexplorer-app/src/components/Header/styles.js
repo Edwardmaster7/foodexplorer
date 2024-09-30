@@ -64,18 +64,23 @@ export const Container = styled.header`
     transform: scale(0.9);
   }
 
+  
   @media ${devices.tablet} {
     padding-right: 10rem;
     padding-left: 10rem;
-
+    
     gap: 3.2rem;
-
+    
     justify-content: none;
-
+    
     #menu {
       display: none;
     }
-
+    
+    #padding-mobile-admin {
+      display: none;
+    }
+    
     #logo {
       display: none;
     }

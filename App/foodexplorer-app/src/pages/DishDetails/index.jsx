@@ -22,12 +22,15 @@ import { useParams, useLocation, Link } from "react-router-dom";
 
 import { api } from "../../services/api";
 
+import { useAuth } from "../../hooks/auth";
+
 function DishDetails() {
   const [dish, setDish] = useState([]);
   const [quantity, setQuantity] = useState(1);
 
-  const id = useParams().id;
+  const { user } = useAuth();
 
+  // Scroll to top of screen when loaded
   const location = useLocation();
 
   useEffect(() => {
@@ -40,6 +43,8 @@ function DishDetails() {
 
     scrollToTop();
   }, [location]);
+
+  const id = useParams().id;
 
   useEffect(() => {
     async function fetchDish() {
@@ -91,12 +96,14 @@ function DishDetails() {
     <>
       <Header />
       <App>
-        <Link id="button-link" to="/">
-          <BackButton>
-            <BsChevronLeft />
-            voltar
-          </BackButton>
-        </Link>
+        <div id="button-link">
+          <Link to="/">
+            <BackButton>
+              <BsChevronLeft />
+              voltar
+            </BackButton>
+          </Link>
+        </div>
         <Container>
           <ImageContainer>
             <DishImage src={dish.imgURL} alt="" />
@@ -111,15 +118,23 @@ function DishDetails() {
                 ))}
             </IngredientsWrapper>
             <div id="include">
-              <QuantityControl
-                id="quantity"
-                quantity={quantity}
-                handleIncrement={handleIncrement}
-                handleDecrement={handleDecrement}
-              />
-              <Button>
-                  <img src={receipt} alt="" />
-                  Incluir ∙ R$ {dish.price}
+              {user.isAdmin ? null : (
+                <QuantityControl
+                  id="quantity"
+                  quantity={quantity}
+                  handleIncrement={handleIncrement}
+                  handleDecrement={handleDecrement}
+                />
+              )}
+              <Button className={user.isAdmin ? "font-button-admin-mobile" : "font-button-mobile"}>
+                {user.isAdmin ? (
+                  "Editar"
+                ) : (
+                  <>
+                    <img src={receipt} alt="" />
+                    Incluir ∙ R$ {dish.price}
+                  </>
+                )}
               </Button>
             </div>
           </Content>
