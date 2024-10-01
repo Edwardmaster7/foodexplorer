@@ -24,11 +24,14 @@ import { api } from "../../services/api";
 
 import { useAuth } from "../../hooks/auth";
 
+import { useOrder } from "../../hooks/order";
+
 function DishDetails() {
   const [dish, setDish] = useState([]);
   const [quantity, setQuantity] = useState(1);
 
   const { user } = useAuth();
+  const { state, addItem, setCustomerID, getItemsSum } = useOrder();
 
   // Scroll to top of screen when loaded
   const location = useLocation();
@@ -50,7 +53,7 @@ function DishDetails() {
     async function fetchDish() {
       try {
         const response = await api.get(`/dishes/${id}`);
-        console.log(response.data);
+        // console.log(response.data);
         setDish(response.data);
         // loadImages();
       } catch (error) {
@@ -92,6 +95,21 @@ function DishDetails() {
     setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
   };
 
+  const handleAddItem = () => {
+    const item = {
+      id: dish.id,
+      name: dish.name,
+      price: Number(dish.price).toFixed(2),
+      quantity: quantity,
+      // imgURL: dish.imgURL,
+    };
+    
+    addItem(item);
+    setCustomerID(user.id);
+    // console.log(state)
+    // console.log(getItemsSum());
+  };
+
   return (
     <>
       <Header />
@@ -126,7 +144,10 @@ function DishDetails() {
                   handleDecrement={handleDecrement}
                 />
               )}
-              <Button className={user.isAdmin ? "font-button-admin-mobile" : null}>
+              <Button
+                onClick={handleAddItem}
+                className={user.isAdmin ? "font-button-admin-mobile" : null}
+              >
                 {user.isAdmin ? (
                   "Editar"
                 ) : (

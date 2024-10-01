@@ -30,6 +30,7 @@ function DishCard({
   onFavorite,
   isAdmin,
 }) {
+
   // Using useCallback to optimize performance
   const handleIncrement = useCallback(
     (id) => {

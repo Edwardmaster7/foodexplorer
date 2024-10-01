@@ -19,6 +19,7 @@ import InputField from "../InputField";
 import ReceiptIcon from "../ReceiptIcon";
 
 import { useAuth } from "../../hooks/auth";
+import { useOrder } from "../../hooks/order";
 
 import { api } from "../../services/api";
 
@@ -28,6 +29,7 @@ import { debounce } from "lodash";
 
 const Header = () => {
   const { signOut: signOutUser, user } = useAuth();
+  const { state, getItemsSum } = useOrder();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchDishes, setSearchDishes] = useState([]);
 
@@ -89,6 +91,10 @@ const Header = () => {
     );
   }, [searchDishes]);
 
+  const itemsSum = useMemo(() => {
+    return getItemsSum();
+  }, [state, getItemsSum]); 
+
   return (
     <>
       <TopPadding />
@@ -121,13 +127,13 @@ const Header = () => {
             {user.isAdmin ? (
               <>Novo prato</>
             ) : (<><img src={receipt} alt="ícone de comanda" />
-            <p>Pedidos(0)</p></>)}
+            <p>Pedidos({itemsSum})</p></>)}
           </OrderButton>
           {user.isAdmin ? (
             <>
             </>
           ) : (
-            <ReceiptIcon id="receipt" to="/menu" children={0} />
+            <ReceiptIcon id="receipt" to="/menu" children={itemsSum} />
           )}
           <img id="sign-out" src={signOut} alt="" onClick={signOutUser} />
           {user.isAdmin ?  <div id="padding-mobile-admin"/> : null}

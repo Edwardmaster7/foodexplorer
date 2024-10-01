@@ -3,6 +3,7 @@ import { Container, Wrapper } from "./styles";
 import DishCard from "../DishCard";
 
 import React, { useMemo, useRef, useState, useEffect } from "react";
+
 import { api } from "../../services/api";
 
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
@@ -41,7 +42,7 @@ function DishWrapper({ label, data, add, setData, ...props }) {
       };
 
       const handleInclude = () => {
-        add(dish.id);
+        add(dish);
       };
 
       const handleEdit = (dish) => {
@@ -101,7 +102,7 @@ function DishWrapper({ label, data, add, setData, ...props }) {
       <h1>{label}</h1>
       <div className="pagination">
         {(currentPage === 0 || data.length <= itemsPerPage) ? null : <div id="left" onClick={handlePrev}><SlArrowLeft /></div>}
-        <Wrapper ref={wrapperRef} totalItems={data.length}>{dishCards}</Wrapper>
+        <Wrapper ref={wrapperRef}>{dishCards}</Wrapper>
         {(currentPage >= maxScroll - 1 || data.length <= itemsPerPage) ? null : <div id="right" onClick={handleNext} disabled={currentPage == maxScroll}><SlArrowRight /></div>}
       </div>
     </Container>

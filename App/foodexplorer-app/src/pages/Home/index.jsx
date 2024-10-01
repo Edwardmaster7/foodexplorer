@@ -1,9 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import {
-  App,
-  Container,
-  Banner,
-} from "./styles";
+import { App, Container, Banner } from "./styles";
 
 import DishWrapper from "../../components/DishWrapper";
 import Header from "../../components/Header";
@@ -13,12 +9,14 @@ import macarons from "../../assets/macarons.png";
 import { api } from "../../services/api";
 
 import { useAuth } from "../../hooks/auth";
+import { useOrder } from "../../hooks/order";
 
 function Home() {
   const [categories, setCategories] = useState([]);
   const [dishes, setDishes] = useState([]);
 
   const { user } = useAuth();
+  const { state, addItem, setCustomerID, getItemsSum } = useOrder();
 
   // Load categories from API
   useEffect(() => {
@@ -123,6 +121,24 @@ function Home() {
 
   // Memorize the DishWrapper components
   const memorizedDishWrappers = useMemo(() => {
+    const handleInclude = (dish) => {
+      const item = {
+        id: dish.id,
+        name: dish.name,
+        price: Number(dish.price).toFixed(2),
+        quantity: dish.quantity,
+        // imgURL: dish.imgURL,
+      };
+
+      if (user.id) {
+        addItem(item);
+        setCustomerID(user.id);
+        console.log(state)
+        console.log(getItemsSum());
+      } else {
+        alert("Faça login para adicionar pratos ao carrinho");
+      }
+    };
     if (memorizedCategoryDishes.length === 0) return null;
     return memorizedCategoryDishes.map((category) => (
       <DishWrapper
@@ -131,6 +147,7 @@ function Home() {
         setData={setDishes}
         data={category.dishes}
         isAdmin={user.isAdmin}
+        add={handleInclude}
       />
     ));
   }, [memorizedCategoryDishes]);
