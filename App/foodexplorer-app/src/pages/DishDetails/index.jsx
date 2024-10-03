@@ -103,11 +103,18 @@ function DishDetails() {
       quantity: quantity,
       // imgURL: dish.imgURL,
     };
-    
+
     addItem(item);
     setCustomerID(user.id);
     // console.log(state)
     // console.log(getItemsSum());
+  };
+
+  const handleEdit = () => {
+    // redirect to edit dish page
+    let to=`/dish/edit/${dish.id}`;
+
+    window.location.href = to;
   };
 
   return (
@@ -145,7 +152,7 @@ function DishDetails() {
                 />
               )}
               <Button
-                onClick={handleAddItem}
+                onClick={user.isAdmin ? handleEdit : handleAddItem}
                 className={user.isAdmin ? "font-button-admin-mobile" : null}
               >
                 {user.isAdmin ? (

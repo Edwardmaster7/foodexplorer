@@ -12,7 +12,7 @@ class DishesController {
             throw new AppError('All fields must be provided');
         }
 
-        if (price < 0) {
+        if (price <= 0) {
             throw new AppError('Price must be a positive decimal number');
         }
 
@@ -55,7 +55,7 @@ class DishesController {
             throw new AppError('Error inserting dish_ingredients relation. Dish not created.');
         }
 
-        return response.status(201).json();
+        return response.status(201).json({id: dish_id});
     }
 
     async update(request, response) {

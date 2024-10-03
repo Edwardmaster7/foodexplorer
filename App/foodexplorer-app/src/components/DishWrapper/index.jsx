@@ -46,7 +46,7 @@ function DishWrapper({ label, data, add, setData, ...props }) {
       };
 
       const handleEdit = (dish) => {
-        console.log(dish);
+        window.location.href = `/dish/edit/${dish.id}`;
       };
 
       const handleFavorite = (id) => {

@@ -143,7 +143,7 @@ export const OrderProvider = ({ children }) => {
     };
 
     retrieveLocalStorage();
-  }, [state]);
+  }, []);
 
   return (
     <OrderContext.Provider

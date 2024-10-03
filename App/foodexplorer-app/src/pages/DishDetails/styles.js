@@ -5,7 +5,7 @@ export const App = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: top;
 
   min-height: 80vh;
 
@@ -44,7 +44,7 @@ export const BackButton = styled.button`
 
   @media ${devices.tablet} {
     margin-left: 0;
-
+    font-weight: bold;
     /* border: 1px solid red; */
   }
 `;
