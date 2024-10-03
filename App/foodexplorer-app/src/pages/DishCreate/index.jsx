@@ -38,6 +38,7 @@ import { api } from "../../services/api";
 
 function DishCreate() {
   const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [categories, setCategories] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
@@ -60,6 +61,7 @@ function DishCreate() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -70,7 +72,6 @@ function DishCreate() {
 
   const handleAddIngredientClick = () => {
     setAddingIngredient(true);
-    // setAddNewIngredient(true);
     setExistentIngredient(false);
   };
 
@@ -120,41 +121,34 @@ function DishCreate() {
 
   const onSubmit = async (formData) => {
     try {
-      const data = {
+      const form = {
         ...formData,
         ingredients_id: selectedIngredients.map((ingredient) => ingredient.id),
       };
-      console.log(data);
+      console.log(form);
 
-      // If you need to handle the image file separately
-      // if (formData.image && formData.image[0]) {
-      //   const formDataWithImage = new FormData();
+      // First, create the dish without the image
+      const { data } = await api.post("/dishes", form);
+      const id = data.id;
+      console.log(id);
 
-      //   await api.post("/dishes", formDataWithImage, {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   });
-      // } else {
-      //   await api.post("/dishes", data);
-      // }
+      // console.log(imagePreview);
 
-      const dishId = await api.post("/dishes", data);
+      // If an image is provided, handle the image upload separately
+      if (imagePreview) {
+        const formDataWithImage = new FormData();
+        formDataWithImage.append("img", imageFile);
 
-      // If you want to handle the image file separately
-      await api.patch(`/dishes/img/${dishId}`, data.img[0], {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
+        await api.patch(`/dishes/img/${id}`, formDataWithImage, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
       // Handle successful submission (e.g., redirect or show a success message)
       console.log("Dish created successfully");
+      window.location.href = `/dish/${id}`;
 
-      
-
-      // Handle successful submission (e.g., redirect or show a success message)
-      console.log("Dish created successfully");
     } catch (error) {
       // Handle error (e.g., show an error message)
       alert(error.response.data.message);
@@ -228,7 +222,7 @@ function DishCreate() {
                 type="file"
                 id="img"
                 accept="image/*"
-                {...register("img", { required: "Image is required" })}
+                {...register("img", { required: "Imagem é obrigatória" })}
                 onChange={handleFileChange}
               />
               <FileInputLabel
@@ -266,7 +260,7 @@ function DishCreate() {
               type="text"
               placeholder="Ex.: Salada Ceasar"
               className={`input ${errors.name ? "error" : ""}`}
-              {...register("name", { required: "Name is required" })}
+              {...register("name", { required: "Nome é um campo obrigatório" })}
             />
             {errors.name && (
               <span className="error-message">{errors.name.message}</span>
@@ -278,8 +272,11 @@ function DishCreate() {
               <Select
                 name="category_id"
                 className={`input ${errors.category ? "error" : ""}`}
-                {...register("category_id")}
-              >
+                {...register("category_id", { required: "Categoria é um campo obrigatório" })}
+                >
+                  <option value="" disabled defaultValue>
+                    Selecione uma categoria
+                  </option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -384,7 +381,7 @@ function DishCreate() {
               type="number"
               placeholder="R$ 00,00"
               className={`input ${errors.price ? "error" : ""}`}
-              {...register("price", { required: "Price is required" })}
+              {...register("price", { required: "Preço é um campo obrigatório" })}
             />
             {errors.price && (
               <span className="error-message">{errors.price.message}</span>
@@ -400,7 +397,7 @@ function DishCreate() {
               cols={50}
               maxLength={150}
               {...register("description", {
-                required: "Description is required",
+                required: "Descrição é um campo obrigatório",
               })}
             />
             {errors.description && (
@@ -410,7 +407,7 @@ function DishCreate() {
             )}
           </Container>
           <button id="submit-btn" type="submit" disabled={isSubmitting || !isValid}>
-            {isSubmitting ? "Salvando..." : "Salvar alterações"}
+            {isSubmitting ? "Salvando..." : "Criar prato"}
           </button>
         </Form>
       </App>

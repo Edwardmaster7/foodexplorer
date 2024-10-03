@@ -188,11 +188,12 @@ export const FileInputWrapper = styled.div`
 `;
 
 export const FileInput = styled.input`
-  font-size: 1rem;
   position: absolute;
   left: 0;
   top: 0;
   opacity: 0;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 `;
 

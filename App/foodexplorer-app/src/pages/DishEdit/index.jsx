@@ -41,11 +41,16 @@ import { useAuth } from "../../hooks/auth";
 
 function DishEdit() {
   const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+
+  const { id } = useParams();
+  const [dish, setDish] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+
   const [selectedIngredients, setSelectedIngredients] = useState([]);
 
   const [addingIngredient, setAddingIngredient] = useState(false);
-  // const [addNewIngredient, setAddNewIngredient] = useState(false);
   const [addExistentIngredient, setExistentIngredient] = useState(true);
 
   const [filterTerm, setFilterTerm] = useState("");
@@ -54,24 +59,49 @@ function DishEdit() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
+    formState: { errors, isSubmitting, isDirty },
+    reset,
+    setValue,
+    watch,
+    formState,
+  } = useForm({ defaultValues: { ingredients: selectedIngredients } });
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        register("image");
-      };
-      reader.readAsDataURL(file);
+      // Set the file in the form
+      setValue("img", file, {
+        shouldValidate: true,
+        shouldDirty: true, // This will mark the field as dirty
+      });
+      setImagePreview(URL.createObjectURL(file)); // Create a preview URL
+      setImageFile(file);
+      // Log immediately after setting the value
+      // console.log("Immediately after setValue:");
+      // console.log("Current img form value:", watch("img"));
+      // console.log("Is form dirty?", formState.isDirty);
+      // console.log("Dirty fields:", formState.dirtyFields);
+
+      // Use setTimeout to log again after a short delay
+      // setTimeout(() => {
+      //   console.log("After short delay:");
+      //   console.log("Current img form value:", watch("img"));
+      //   console.log("Is form dirty?", formState.isDirty);
+      //   console.log("Dirty fields:", formState.dirtyFields);
+      // }, 100);
+
+      // setImageFile(file);
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+      //   setImagePreview(reader.result);
+      // };
+      // reader.readAsDataURL(file);
     }
   };
 
   const handleAddIngredientClick = () => {
     setAddingIngredient(true);
-    // setAddNewIngredient(true);
     setExistentIngredient(false);
   };
 
@@ -79,10 +109,56 @@ function DishEdit() {
     setFilterTerm(event.target.value);
     setFilterResults(
       ingredients.filter((ingredient) =>
-        ingredient.toLowerCase().startsWith(event.target.value.toLowerCase())
+        ingredient.name
+          .toLowerCase()
+          .startsWith(event.target.value.toLowerCase())
       )
     );
   };
+
+  // fetch dish data from the api endpoint
+  useEffect(() => {
+    const fetchDish = async () => {
+      const { data } = await api.get(`/dishes/${id}`);
+      setDish(data);
+      reset({
+        img: null,
+        name: "",
+        category_id: "",
+        price: "",
+        description: "",
+        ingredients: [],
+      });
+    };
+
+    fetchDish();
+  }, [id, reset]);
+
+  // fetch image from the api endpoint
+  useEffect(() => {
+    const fetchImage = async () => {
+      // const { data } = await api.get(
+      //   `${api.defaults.baseURL}/files/${dish.image}`
+      // );
+      setImagePreview(`${api.defaults.baseURL}/files/${dish.image}`);
+    };
+
+    if (dish.image && dish.image !== undefined) {
+      fetchImage();
+    }
+  }, [dish, dish.image]);
+
+  // fetch categories form api and store them
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data } = await api.get("/categories");
+      // console.log(data);
+
+      // filter the categories name only from data and store them in the state
+      setCategories(data);
+    };
+    fetchCategories();
+  }, []);
 
   // fetch ingredients from api and store them in the state
   useEffect(() => {
@@ -90,12 +166,20 @@ function DishEdit() {
       const { data } = await api.get("/ingredients");
       // console.log(data);
 
-      // filter the ingredients name only from data and store them in the state
-      const ingredientNames = data.map((ingredient) => ingredient.name);
-      setIngredients(ingredientNames);
+      // store the ingredients as objects in the state
+      setIngredients(data);
     };
     fetchIngredients();
-  }, []);
+  }, [dish, id]);
+
+  // merge the dish ingredients's id's and names into the selectedIngredients's state
+  useEffect(() => {
+    setSelectedIngredients(
+      ingredients.filter((ingredient) =>
+        dish.ingredients.includes(ingredient.name)
+      )
+    );
+  }, [ingredients]);
 
   const handleIngredientChange = (ingredient) => {
     setSelectedIngredients((prevSelected) =>
@@ -103,20 +187,150 @@ function DishEdit() {
         ? prevSelected.filter((i) => i !== ingredient)
         : [...prevSelected, ingredient]
     );
+
+    setValue("ingredients", selectedIngredients, {
+      shouldValidate: true,
+      shouldDirty: true, // This will mark the field as dirty
+    });
+
+    // setTimeout(() => {
+    //   console.log("After short delay:");
+    //   console.log("Current img form value:", watch("img"));
+    //   console.log("Is form dirty?", formState.isDirty);
+    //   console.log("Dirty fields:", formState.dirtyFields);
+    // }, 100);
   };
 
-  const onSubmit = async (data) => {
-    // Handle form submission
-    console.log(data);
-    // You can send the data to an API here
+  const onSubmit = async (formData) => {
+    try {
+      const form = {
+        ...formData,
+        ingredients_id: selectedIngredients.map((ingredient) => ingredient.id),
+      };
+      console.log(form);
+
+      // First, create the dish without the image
+      // const { data } = await api.put("/dishes", form);
+      // const id = data.id;
+      // console.log(id);
+
+      // console.log(imagePreview);
+
+      // const name = form.name || dish.name;
+      // const category_id = form.category_id || dish.category_id;
+      // const price = form.price || dish.price;
+      // const description = form.description || dish.description;
+      const ingredientsIdChanged = form.ingredients_id !== selectedIngredients.reduce(
+        (acc, ingredient) => [...acc, ingredient.id],
+        []
+      );
+      // const img = form.img || dish.image;
+
+
+      // Append all form fields to the FormData object
+      // Perform check if any fields are empty
+
+      console.log(form.ingredients_id);
+      console.log(selectedIngredients.reduce(
+        (acc, ingredient) => [...acc, ingredient.id],
+        []
+      ));
+
+      Object.keys(form).forEach((key) => {
+        if (form[key] === undefined || !form[key] || form[key].length <= 0 || key === "img" || key === "ingredients" || (key === "ingredients_id" && ingredientsIdChanged)) {
+          delete form[key];
+        }
+      });
+
+      console.log(form);
+
+      // Send the updated dish to the API if name, category, ingredients, description or price is changed
+      if (Object.keys(form).length > 0) {
+        await api.put(`/dishes/${id}`, form);
+      }
+
+      // If an image is provided, handle the image upload separately
+      if (imageFile) {
+        const formDataWithImage = new FormData();
+        formDataWithImage.append("img", imageFile);
+
+        console.log(imageFile);
+
+        console.log(formDataWithImage);
+
+        await api.patch(`/dishes/img/${id}`, formDataWithImage, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+      // Handle successful submission (e.g., redirect or show a success message)
+      console.log("Dish updated successfully");
+      window.location.href = `/dish/${id}`;
+    } catch (error) {
+      // Handle error (e.g., show an error message)
+      alert(error.response.data.message);
+      console.error("Error updating dish:", error);
+    }
   };
+
+  const handleDelete = () => {
+    if (confirm("Tem certeza que deseja excluir o prato?")) {
+      api.delete(`/dishes/${id}`);
+      window.location.href = "/";
+    }
+  };
+
+  // Create a memoized version of the ResultsWrapper component,
+  // only re-rendering when the filterResults array changes
+  const memorizedResultsWrapper = useMemo(() => {
+    return (
+      <ResultsWrapper>
+        {filterTerm
+          ? filterResults
+              .filter(
+                (ingredient) =>
+                  !selectedIngredients.some(
+                    (selected) =>
+                      selected.name.toLowerCase() ===
+                      ingredient.name.toLowerCase()
+                  )
+              )
+              .map((result) => (
+                <CustomOption
+                  onClick={() => handleIngredientChange(result)}
+                  className="result"
+                  key={result.id}
+                  children={result.name}
+                />
+              ))
+          : ingredients
+              .filter(
+                (ingredient) =>
+                  !selectedIngredients.some(
+                    (selected) =>
+                      selected.name.toLowerCase() ===
+                      ingredient.name.toLowerCase()
+                  )
+              )
+              .map((ingredient) => (
+                <CustomOption
+                  onClick={() => handleIngredientChange(ingredient)}
+                  className="result"
+                  key={ingredient.id}
+                  children={ingredient.name}
+                />
+              ))}
+      </ResultsWrapper>
+    );
+  }, [filterResults, ingredients, selectedIngredients]);
 
   return (
     <>
       <Header />
       <App>
         <div id="button-link">
-          <Link to="/">
+          <Link to={window.location.origin}>
             <BackButton>
               <BsChevronLeft />
               voltar
@@ -126,16 +340,19 @@ function DishEdit() {
         <h1>Editar prato</h1>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Container>
-            <label htmlFor="image">Imagem do prato</label>
+            <label htmlFor="img">Imagem do prato</label>
             <FileInputWrapper>
               <FileInput
                 type="file"
-                id="image"
+                id="img"
                 accept="image/*"
+                {...register("img")}
                 onChange={handleFileChange}
-                // {...register("image")}
               />
-              <FileInputLabel htmlFor="image" className="input">
+              <FileInputLabel
+                htmlFor="img"
+                className={`input ${errors.image ? "error" : ""}`}
+              >
                 {imagePreview ? (
                   <>
                     <img
@@ -165,57 +382,90 @@ function DishEdit() {
             <input
               id="name"
               type="text"
-              placeholder="Ex.: Salada Ceasar"
-              className="input"
-              {...register("name", { required: "Name is required" })}
+              placeholder={dish.name}
+              className={`input ${errors.name ? "error" : ""}`}
+              {...register("name")}
             />
-            {errors.name && <span>{errors.name.message}</span>}
+            {errors.name && (
+              <span className="error-message">{errors.name.message}</span>
+            )}
           </Container>
           <Container>
-            <label htmlFor="category">Categoria</label>
+            <label htmlFor="category_id">Categoria</label>
             <SelectWrapper>
               <Select
-                name="category"
-                className="input"
-                {...register("category", { required: "Category is required" })}
+                name="category_id"
+                className={`input ${errors.category ? "error" : ""}`}
+                {...register("category_id")}
               >
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
+                <option value="" disabled defaultValue>
+                  {dish.category_name}
+                </option>
+                {categories.map((category) =>
+                  category.id !== dish.category_id ? (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ) : null
+                )}
               </Select>
               <IoChevronDown />
             </SelectWrapper>
-            {errors.category && <span>{errors.category.message}</span>}
           </Container>
           <Container>
             <label htmlFor="ingredients">Ingredientes</label>
-            <IngredientsWrapper className="input">
+            <IngredientsWrapper
+              className={`input ${errors.ingredients ? "error" : ""}`}
+            >
               <SelectedIngredientsWrapper>
-                {selectedIngredients.map((ingredient, ingredientIndex) => (
-                  <Ingredient key={ingredientIndex}>
+                {selectedIngredients.map((ingredient) => (
+                  <Ingredient key={ingredient.id}>
                     <IngredientInput
                       type="text"
-                      value={ingredient}
+                      value={ingredient.name}
                       placeholder="Ex.: Banana"
-                      // {...register(`ingredients.${ingredientIndex}`, { required: "Ingredient is required" })}
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setSelectedIngredients(
-                          selectedIngredients.map((ingredientItem, itemIndex) =>
-                            itemIndex === ingredientIndex
-                              ? e.target.value
-                              : ingredientItem
+                          selectedIngredients.map((selIngredient) =>
+                            selIngredient.id === ingredient.id
+                              ? { ...selIngredient, name: e.target.value }
+                              : selIngredient
                           )
-                        )
-                      }
+                        );
+                        setValue(
+                          "ingredients",
+                          selectedIngredients.map((selIngredient) =>
+                            selIngredient.id === ingredient.id
+                              ? { ...selIngredient, name: e.target.value }
+                              : selIngredient
+                          ),
+                          {
+                            shouldValidate: true,
+                            shouldDirty: true, // This will mark the field as dirty
+                          }
+                        );
+                      }}
                     />
                     <IoClose
-                      onClick={() =>
+                      onClick={() => {
                         setSelectedIngredients(
                           selectedIngredients.filter(
-                            (_, itemIndex) => itemIndex !== ingredientIndex
+                            (selIngredient) =>
+                              selIngredient.id !== ingredient.id
                           )
-                        )
-                      }
+                        );
+                        setValue(
+                          "ingredients",
+                          selectedIngredients.filter(
+                            (selIngredient) =>
+                              selIngredient.id !== ingredient.id
+                          ),
+                          {
+                            shouldValidate: true,
+                            shouldDirty: true, // This will mark the field as dirty
+                          }
+                        );
+                      }}
                     />
                   </Ingredient>
                 ))}
@@ -236,7 +486,10 @@ function DishEdit() {
                     id="add-new-ingredient"
                     type="button"
                     onClick={() => {
-                      setSelectedIngredients([...selectedIngredients, ""]);
+                      setSelectedIngredients([
+                        ...selectedIngredients,
+                        { id: Date.now(), name: "" },
+                      ]);
                     }}
                   >
                     Novo
@@ -250,83 +503,60 @@ function DishEdit() {
                     <img src={filterIcon} alt="" />
                     <InputField
                       id="filter-input"
-                      // ref={filterWrapperRef}
                       placeholder="Busque por ingredientes"
                       onChange={(e) => handleFilterChange(e)}
                       value={filterTerm}
                     />
                   </div>
-                  <ResultsWrapper>
-                    {filterTerm
-                      ? filterResults
-                          .filter(
-                            (ingredient) =>
-                              !selectedIngredients.includes(ingredient)
-                          )
-                          .map((result, index) => (
-                            <CustomOption
-                              onClick={() => handleIngredientChange(result)}
-                              className="result"
-                              key={index}
-                              children={result}
-                            />
-                          ))
-                      : ingredients
-                          .filter(
-                            (ingredient) =>
-                              !selectedIngredients.includes(ingredient)
-                          )
-                          .map((ingredient, index) => (
-                            <CustomOption
-                              onClick={() => handleIngredientChange(ingredient)}
-                              className="result"
-                              key={index}
-                              children={ingredient}
-                            />
-                          ))}
-                    {/* <CustomOption className="result">
-                    Banana
-                  </CustomOption>
-                  <CustomOption className="result">
-                    Banana
-                  </CustomOption> */}
-                  </ResultsWrapper>
+                  {memorizedResultsWrapper}
                 </FilterWrapper>
               )}
+              {errors.ingredients && (
+                <span className="error-message">
+                  {errors.ingredients.message}
+                </span>
+              )}
             </IngredientsWrapper>
-            {errors.ingredients && <span>{errors.ingredients.message}</span>}
           </Container>
           <Container>
             <label htmlFor="price">Preço</label>
             <input
               id="price"
               type="number"
-              placeholder="R$ 00,00"
-              className="input"
-              // {...register("price", { required: "Price is required" })}
+              placeholder={dish.price}
+              className={`input ${errors.price ? "error" : ""}`}
+              {...register("price")}
             />
-            {/* {errors.price && <span>{errors.price.message}</span>} */}
+            {errors.price && (
+              <span className="error-message">{errors.price.message}</span>
+            )}
           </Container>
           <Container>
             <label htmlFor="description">Descrição</label>
             <textarea
               id="description"
-              placeholder="Fale brevemente sobre o prato, seus ingredientes e composição\nEx.: Uma salada de folhas verdes e cilantro"
-              className="input"
+              placeholder={dish.description}
+              className={`input ${errors.description ? "error" : ""}`}
               rows={8}
               cols={50}
               maxLength={150}
-              // {...register("description", {
-              //   required: "Description is required",
-              // })}
+              {...register("description")}
             />
-            {errors.description && <span>{errors.description.message}</span>}
+            {errors.description && (
+              <span className="error-message">
+                {errors.description.message}
+              </span>
+            )}
           </Container>
           <ButtonContainer>
-            <Button id="delete-btn">Excluir prato</Button>
-            <Button id="submit-btn" type="submit" disabled={isSubmitting}>
+            <Button id="delete-btn" onClick={handleDelete}>Excluir prato</Button>
+            <button
+              id="submit-btn"
+              type="submit"
+              disabled={isSubmitting || !isDirty}
+            >
               {isSubmitting ? "Salvando..." : "Salvar alterações"}
-            </Button>
+            </button>
           </ButtonContainer>
         </Form>
       </App>

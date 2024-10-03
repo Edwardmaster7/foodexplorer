@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { devices } from "../../styles/theme";
+import theme, { devices } from "../../styles/theme";
 
 export const App = styled.div`
   display: flex;
@@ -30,6 +30,34 @@ export const App = styled.div`
 
   #button-link {
     width: 100%;
+  }
+
+  #submit-btn {
+    width: 100%;
+
+    cursor: pointer;
+    width: 100%;
+    height: 4.8rem;
+
+    background-color: ${({ theme }) => theme.colors.tomato_100};
+
+    border: none;
+    border-radius: 0.8rem;
+
+    color: ${({ theme }) => theme.colors.light_100};
+    font-size: 1.6rem;
+    font-weight: 500;
+
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.tomato_200};
+    }
+  }
+
+  #submit-btn:disabled {
+    background-color: ${({ theme }) => theme.colors.tomato_400};
+    cursor: not-allowed;
   }
 `;
 
@@ -70,30 +98,6 @@ export const Form = styled.form`
   }
 `;
 
-export const ButtonContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 3.2rem;
-
-  button {
-    font-size: 1.4rem;
-  }
-
-  #submit-btn {
-    button::disabled {
-      background-color: ${({ theme }) => theme.colors.tomato_400};
-      cursor: not-allowed;
-    }
-  }
-
-  #delete-btn {
-    button {
-      background-color: ${({ theme }) => theme.colors.dark_800};
-    }
-  }
-`;
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -121,8 +125,20 @@ export const Container = styled.div`
     font-family: "Roboto", sans-serif;
     font-weight: 400;
     color: ${({ theme }) => theme.colors.light_100};
-    outline: none;
+
     background-color: ${({ theme }) => theme.colors.dark_900};
+  }
+
+  .error-message {
+    color: red;
+    font-size: 1rem;
+    font-weight: 500;
+    display: block; /* Ensure this is not set to 'none' */
+  }
+
+  .input.error {
+    outline: ${(props) =>
+      props.isValid ? "" : `3px solid ${theme.colors.tomato_100}`};
   }
 
   .input::placeholder {
@@ -177,6 +193,8 @@ export const FileInput = styled.input`
   left: 0;
   top: 0;
   opacity: 0;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 `;
 
@@ -224,7 +242,8 @@ export const SelectedIngredientsWrapper = styled.div`
 
   overflow: auto;
 
-  #add-ingredient, #add-new-ingredient {
+  #add-ingredient,
+  #add-new-ingredient {
     display: inline-flex;
     align-items: center;
     gap: 0.2rem;
@@ -324,7 +343,7 @@ export const FilterWrapper = styled.div`
     font-weight: 400;
     line-height: 160%;
 
-    background-color: ${({ theme }) => theme.colors.dark_600 };
+    background-color: ${({ theme }) => theme.colors.dark_600};
 
     border-bottom: 0.4rem solid ${({ theme }) => theme.colors.dark_900};
   }
@@ -390,7 +409,6 @@ export const ResultsWrapper = styled.div`
       border-bottom: none;
     }
   }
-
 `;
 
 export const CustomOption = styled.a`
@@ -412,3 +430,47 @@ export const CustomOption = styled.a`
   }
 `;
 
+export const ButtonContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3.2rem;
+
+  button {
+    font-size: 1.4rem;
+  }
+
+  #submit-btn {
+    width: 100%;
+
+    cursor: pointer;
+    width: 100%;
+    height: 4.8rem;
+
+    background-color: ${({ theme }) => theme.colors.tomato_100};
+
+    border: none;
+    border-radius: 0.8rem;
+
+    color: ${({ theme }) => theme.colors.light_100};
+    font-size: 1.3rem;
+    font-weight: 500;
+
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.tomato_200};
+    }
+  }
+
+  #submit-btn:disabled {
+    background-color: ${({ theme }) => theme.colors.tomato_400};
+    cursor: not-allowed;
+  }
+
+  #delete-btn {
+    button {
+      background-color: ${({ theme }) => theme.colors.dark_800};
+    }
+  }
+`;

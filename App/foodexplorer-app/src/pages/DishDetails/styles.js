@@ -87,13 +87,12 @@ export const ImageContainer = styled.div`
 
 export const DishImage = styled.img`
   width: clamp(24rem, 8vw, 40rem);
-  height: auto;
+  height: clamp(24rem, 8vw, 40rem);
   object-fit: cover;
   border-radius: 50%;
-
   @media ${devices.tablet} {
     width: 40rem;
-    height: auto;
+    height: 40rem;
   }
 `;
 
