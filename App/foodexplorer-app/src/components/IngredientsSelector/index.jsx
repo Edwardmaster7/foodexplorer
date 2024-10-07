@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import filterIcon from "../../assets/icons/search.svg";
@@ -31,23 +31,32 @@ function IngredientsSelector({
     setExistentIngredient(false);
   };
 
+  // load the existing state of ingredients on the form values for validation purposes
+  useEffect(() => {
+    setValue("ingredients", selectedIngredients, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  }, [ingredients]);
+
   const handleFilterChange = (event) => {
     setFilterTerm(event.target.value);
     setFilterResults(
       ingredients.filter((ingredient) =>
-        ingredient.name.toLowerCase().startsWith(event.target.value.toLowerCase())
+        ingredient.name
+          .toLowerCase()
+          .startsWith(event.target.value.toLowerCase())
       )
     );
   };
 
-  const handleIngredientChange = (ingredient) => {
-    setSelectedIngredients((prevSelected) =>
-      prevSelected.includes(ingredient)
-        ? prevSelected.filter((i) => i !== ingredient)
-        : [...prevSelected, ingredient]
-    );
+  const handleIngredientChange = (ingredientName) => {
+    const newSelectedIngredients = selectedIngredients.includes(ingredientName)
+      ? selectedIngredients.filter((name) => name !== ingredientName)
+      : [...selectedIngredients, ingredientName];
 
-    setValue("ingredients", selectedIngredients, {
+    setSelectedIngredients(newSelectedIngredients);
+    setValue("ingredients", newSelectedIngredients, {
       shouldValidate: true,
       shouldDirty: true,
     });
@@ -59,16 +68,11 @@ function IngredientsSelector({
         {filterTerm
           ? filterResults
               .filter(
-                (ingredient) =>
-                  !selectedIngredients.some(
-                    (selected) =>
-                      selected.name.toLowerCase() ===
-                      ingredient.name.toLowerCase()
-                  )
+                (ingredient) => !selectedIngredients.includes(ingredient.name)
               )
               .map((result) => (
                 <CustomOption
-                  onClick={() => handleIngredientChange(result)}
+                  onClick={() => handleIngredientChange(result.name)}
                   className="result"
                   key={result.id}
                   children={result.name}
@@ -76,16 +80,11 @@ function IngredientsSelector({
               ))
           : ingredients
               .filter(
-                (ingredient) =>
-                  !selectedIngredients.some(
-                    (selected) =>
-                      selected.name.toLowerCase() ===
-                      ingredient.name.toLowerCase()
-                  )
+                (ingredient) => !selectedIngredients.includes(ingredient.name)
               )
               .map((ingredient) => (
                 <CustomOption
-                  onClick={() => handleIngredientChange(ingredient)}
+                  onClick={() => handleIngredientChange(ingredient.name)}
                   className="result"
                   key={ingredient.id}
                   children={ingredient.name}
@@ -96,53 +95,50 @@ function IngredientsSelector({
   }, [filterResults, ingredients, selectedIngredients]);
 
   return (
-    <IngredientsWrapper className={`input ${errors.ingredients ? "error" : ""}`}>
+    <IngredientsWrapper
+      className={`input ${errors.ingredients ? "error" : ""}`}
+    >
+      <input
+        type="hidden"
+        {...register("ingredients", {
+          required: "Pelo menos um ingrediente é requerido",
+          validate: (value) =>
+            value.length > 0 || "Pelo menos um ingrediente é requerido",
+        })}
+        value={selectedIngredients}
+      />
       <SelectedIngredientsWrapper>
-        {selectedIngredients.map((ingredient) => (
-          <Ingredient key={ingredient.id}>
+        {selectedIngredients.map((ingredientName, index) => (
+          <Ingredient key={index}>
             <IngredientInput
               type="text"
-              value={ingredient.name}
+              value={ingredientName}
               placeholder="Ex.: Banana"
               onChange={(e) => {
-                setSelectedIngredients(
-                  selectedIngredients.map((selIngredient) =>
-                    selIngredient.id === ingredient.id
-                      ? { ...selIngredient, name: e.target.value }
-                      : selIngredient
-                  )
-                );
-                setValue(
-                  "ingredients",
-                  selectedIngredients.map((selIngredient) =>
-                    selIngredient.id === ingredient.id
-                      ? { ...selIngredient, name: e.target.value }
-                      : selIngredient
-                  ),
-                  {
-                    shouldValidate: true,
-                    shouldDirty: true,
-                  }
-                );
+                const newSelectedIngredients = [...selectedIngredients];
+                newSelectedIngredients[index] = e.target.value;
+                setSelectedIngredients(newSelectedIngredients);
+                setValue("ingredients", newSelectedIngredients, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
               }}
+              //when the ingredient is on the ingredient list, then the field is readOnly
+              readOnly={ingredients.some(
+                (ingredient) => ingredient.name === ingredientName
+              )}
+              //when the ingredient is not on the ingredient list, then the field is not readOnly
             />
             <IoClose
               onClick={() => {
-                setSelectedIngredients(
-                  selectedIngredients.filter(
-                    (selIngredient) => selIngredient.id !== ingredient.id
-                  )
+                const newSelectedIngredients = selectedIngredients.filter(
+                  (name) => name !== ingredientName
                 );
-                setValue(
-                  "ingredients",
-                  selectedIngredients.filter(
-                    (selIngredient) => selIngredient.id !== ingredient.id
-                  ),
-                  {
-                    shouldValidate: true,
-                    shouldDirty: true,
-                  }
-                );
+                setSelectedIngredients(newSelectedIngredients);
+                setValue("ingredients", newSelectedIngredients, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
               }}
             />
           </Ingredient>
@@ -162,10 +158,7 @@ function IngredientsSelector({
             id="add-new-ingredient"
             type="button"
             onClick={() => {
-              setSelectedIngredients([
-                ...selectedIngredients,
-                { id: Date.now(), name: "" },
-              ]);
+              setSelectedIngredients([...selectedIngredients, ""]);
             }}
           >
             Novo

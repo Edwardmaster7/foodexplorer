@@ -8,31 +8,19 @@ import {
   FileInputWrapper,
   FileInput,
   FileInputLabel,
-  SelectedIngredientsWrapper,
-  IngredientsWrapper,
-  Ingredient,
-  IngredientInput,
-  FilterWrapper,
-  ResultsWrapper,
-  CustomOption,
 } from "./styles";
 
 import { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import Header from "../../components/Header";
-import QuantityControl from "../../components/QuantityControl";
-import Button from "../../components/Button";
-import InputField from "../../components/InputField";
-
-import filterIcon from "../../assets/icons/search.svg";
+import IngredientsSelector from "../../components/IngredientsSelector";
 
 import { BsChevronLeft } from "react-icons/bs";
 import { PiUploadSimple } from "react-icons/pi";
 import { IoChevronDown, IoClose } from "react-icons/io5";
-import { HiOutlinePlusSm } from "react-icons/hi";
 
-import { useParams, useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { api } from "../../services/api";
 
@@ -41,50 +29,54 @@ function DishCreate() {
   const [imageFile, setImageFile] = useState(null);
   const [categories, setCategories] = useState([]);
   const [ingredients, setIngredients] = useState([]);
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
-
-  const [addingIngredient, setAddingIngredient] = useState(false);
-  // const [addNewIngredient, setAddNewIngredient] = useState(false);
-  const [addExistentIngredient, setExistentIngredient] = useState(true);
-
-  const [filterTerm, setFilterTerm] = useState("");
-  const [filterResults, setFilterResults] = useState([]);
+  const [selectedIngredientNames, setSelectedIngredientNames] = useState([]);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
+    reset,
+    setValue,
+    watch,
+    formState,
   } = useForm({
     mode: "onBlur",
   });
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     if (file) {
+      // Set the file in the form
+      setValue("img", file, {
+        shouldValidate: true,
+        shouldDirty: true, // This will mark the field as dirty
+      });
+      setImagePreview(URL.createObjectURL(file)); // Create a preview URL
       setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+      // Log immediately after setting the value
+      // console.log("Immediately after setValue:");
+      // console.log("Current img form value:", watch("img"));
+      // console.log("Is form dirty?", formState.isDirty);
+      // console.log("Dirty fields:", formState.dirtyFields);
+
+      // Use setTimeout to log again after a short delay
+      // setTimeout(() => {
+      //   console.log("After short delay:");
+      //   console.log("Current img form value:", watch("img"));
+      //   console.log("Is form dirty?", formState.isDirty);
+      //   console.log("Dirty fields:", formState.dirtyFields);
+      // }, 100);
+
+      // setImageFile(file);
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+      //   setImagePreview(reader.result);
+      // };
+      // reader.readAsDataURL(file);
     }
   };
 
-  const handleAddIngredientClick = () => {
-    setAddingIngredient(true);
-    setExistentIngredient(false);
-  };
-
-  const handleFilterChange = (event) => {
-    setFilterTerm(event.target.value);
-    setFilterResults(
-      ingredients.filter((ingredient) =>
-        ingredient.name
-          .toLowerCase()
-          .startsWith(event.target.value.toLowerCase())
-      )
-    );
-  };
 
   // fetch categories form api and store them
   useEffect(() => {
@@ -111,21 +103,35 @@ function DishCreate() {
     fetchIngredients();
   }, []);
 
-  const handleIngredientChange = (ingredient) => {
-    setSelectedIngredients((prevSelected) =>
-      prevSelected.some((i) => i.id === ingredient.id)
-        ? prevSelected.filter((i) => i.id !== ingredient.id)
-        : [...prevSelected, ingredient]
-    );
-  };
-
   const onSubmit = async (formData) => {
+    const createIngredients = async (ingredients) => {
+      const { data } = await api.post("/ingredients", { names: ingredients });
+      // console.log(data);
+      return data.id;
+    };
+
     try {
+      const ingredientIds = await Promise.all(
+        selectedIngredientNames.map(async (name) => {
+          const ingredient = ingredients.find((ing) => ing.name === name);
+          if (ingredient) {
+            console.log(
+              `Found existing ingredient: ${name} with ID: ${ingredient.id}`
+            );
+            return ingredient.id;
+          } else {
+            console.log(`Creating new ingredient: ${name}`);
+            const newIngredientIds = await createIngredients([name]);
+            console.log(`Created ingredient ID: ${newIngredientIds[0]}`);
+            return newIngredientIds[0]; // Assuming createIngredients returns an array of IDs
+          }
+        })
+      );
+
       const form = {
         ...formData,
-        ingredients_id: selectedIngredients.map((ingredient) => ingredient.id),
+        ingredients_id: ingredientIds,
       };
-      console.log(form);
 
       // First, create the dish without the image
       const { data } = await api.post("/dishes", form);
@@ -151,55 +157,14 @@ function DishCreate() {
 
     } catch (error) {
       // Handle error (e.g., show an error message)
-      alert(error.response.data.message);
+      if (error.response && error.response.data) {
+        alert(error.response.data.message);
+      } else {
+        alert("An unexpected error occurred.");
+      }
       console.error("Error creating dish:", error);
     }
   };
-
-
-  // Create a memoized version of the ResultsWrapper component,
-  // only re-rendering when the filterResults array changes
-  const memorizedResultsWrapper = useMemo(() => {
-    return (
-      <ResultsWrapper>
-        {filterTerm
-          ? filterResults
-              .filter(
-                (ingredient) =>
-                  !selectedIngredients.some(
-                    (selected) =>
-                      selected.name.toLowerCase() ===
-                      ingredient.name.toLowerCase()
-                  )
-              )
-              .map((result) => (
-                <CustomOption
-                  onClick={() => handleIngredientChange(result)}
-                  className="result"
-                  key={result.id}
-                  children={result.name}
-                />
-              ))
-          : ingredients
-              .filter(
-                (ingredient) =>
-                  !selectedIngredients.some(
-                    (selected) =>
-                      selected.name.toLowerCase() ===
-                      ingredient.name.toLowerCase()
-                  )
-              )
-              .map((ingredient) => (
-                <CustomOption
-                  onClick={() => handleIngredientChange(ingredient)}
-                  className="result"
-                  key={ingredient.id}
-                  children={ingredient.name}
-                />
-              ))}
-      </ResultsWrapper>
-    );
-  }, [filterResults, ingredients, selectedIngredients]);
 
   return (
     <>
@@ -222,11 +187,12 @@ function DishCreate() {
                 type="file"
                 id="img"
                 accept="image/*"
-                {...register("img", { required: "Imagem é obrigatória" })}
+                // {...register("img", { required: "Imagem é obrigatória" })}
+                // value={imageFile}
                 onChange={handleFileChange}
               />
               <FileInputLabel
-                htmlFor="image"
+                htmlFor="img"
                 className={`input ${errors.image ? "error" : ""}`}
               >
                 {imagePreview ? (
@@ -288,91 +254,14 @@ function DishCreate() {
           </Container>
           <Container>
             <label htmlFor="ingredients">Ingredientes</label>
-            <IngredientsWrapper
-              className={`input ${errors.ingredients ? "error" : ""}`}
-              // {...register("ingredients", {
-              //   value: selectedIngredients.map(ingredient => ingredient.name),
-              //   required: "At least one ingredient is required",
-              // })}
-            >
-              <SelectedIngredientsWrapper>
-                {selectedIngredients.map((ingredient) => (
-                  <Ingredient key={ingredient.id}>
-                    <IngredientInput
-                      type="text"
-                      value={ingredient.name}
-                      placeholder="Ex.: Banana"
-                      onChange={(e) =>
-                        setSelectedIngredients(
-                          selectedIngredients.map((selIngredient) =>
-                            selIngredient.id === ingredient.id
-                              ? { ...selIngredient, name: e.target.value }
-                              : selIngredient
-                          )
-                        )
-                      }
-                      
-                    />
-                    <IoClose
-                      onClick={() =>
-                        setSelectedIngredients(
-                          selectedIngredients.filter(
-                            (selIngredient) =>
-                              selIngredient.id !== ingredient.id
-                          )
-                        )
-                      }
-                    />
-                  </Ingredient>
-                ))}
-                {addExistentIngredient ? (
-                  <>
-                    <button
-                      id="add-ingredient"
-                      type="button"
-                      className="hidden"
-                      onClick={handleAddIngredientClick}
-                    >
-                      Adicionar
-                      <HiOutlinePlusSm />
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    id="add-new-ingredient"
-                    type="button"
-                    onClick={() => {
-                      setSelectedIngredients([
-                        ...selectedIngredients,
-                        { id: Date.now(), name: "" },
-                      ]);
-                    }}
-                  >
-                    Novo
-                    <HiOutlinePlusSm />
-                  </button>
-                )}
-              </SelectedIngredientsWrapper>
-              {addingIngredient && (
-                <FilterWrapper>
-                  <div id="filter-input-wrapper">
-                    <img src={filterIcon} alt="" />
-                    <InputField
-                      id="filter-input"
-                      placeholder="Busque por ingredientes"
-                      onChange={(e) => handleFilterChange(e)}
-                      value={filterTerm}
-                    />
-                  </div>
-                  {memorizedResultsWrapper}
-                </FilterWrapper>
-              )}
-              {errors.ingredients && (
-                <span className="error-message">
-                  {errors.ingredients.message}
-                </span>
-              )}
-            </IngredientsWrapper>
+            <IngredientsSelector
+              ingredients={ingredients}
+              selectedIngredients={selectedIngredientNames}
+              setSelectedIngredients={setSelectedIngredientNames}
+              register={register}
+              setValue={setValue}
+              errors={errors}
+            />
           </Container>
           <Container>
             <label htmlFor="price">Preço</label>

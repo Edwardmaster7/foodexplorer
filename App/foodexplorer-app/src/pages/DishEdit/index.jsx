@@ -42,14 +42,8 @@ function DishEdit() {
   const [categories, setCategories] = useState([]);
   const [ingredients, setIngredients] = useState([]);
 
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
-  const [actualIngredients, setActualIngredients] = useState([]);
-
-  const [addingIngredient, setAddingIngredient] = useState(false);
-  const [addExistentIngredient, setExistentIngredient] = useState(true);
-
-  const [filterTerm, setFilterTerm] = useState("");
-  const [filterResults, setFilterResults] = useState([]);
+  const [selectedIngredientNames, setSelectedIngredientNames] = useState([]);
+  const [actualIngredientNames, setActualIngredientNames] = useState([]);
 
   const {
     register,
@@ -59,7 +53,7 @@ function DishEdit() {
     setValue,
     watch,
     formState,
-  } = useForm({ defaultValues: { ingredients: selectedIngredients } });
+  } = useForm({ defaultValues: { ingredients: selectedIngredientNames } });
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -93,22 +87,6 @@ function DishEdit() {
       // };
       // reader.readAsDataURL(file);
     }
-  };
-
-  const handleAddIngredientClick = () => {
-    setAddingIngredient(true);
-    setExistentIngredient(false);
-  };
-
-  const handleFilterChange = (event) => {
-    setFilterTerm(event.target.value);
-    setFilterResults(
-      ingredients.filter((ingredient) =>
-        ingredient.name
-          .toLowerCase()
-          .startsWith(event.target.value.toLowerCase())
-      )
-    );
   };
 
   // fetch dish data from the api endpoint
@@ -169,76 +147,65 @@ function DishEdit() {
 
   // merge the dish ingredients's id's and names into the selectedIngredients's state
   useEffect(() => {
-    setSelectedIngredients(
-      ingredients.filter((ingredient) =>
-        dish.ingredients.includes(ingredient.name)
-      )
-    );
-    setActualIngredients(
-      ingredients.filter((ingredient) =>
-        dish.ingredients.includes(ingredient.name)
-      )
-    );
-  }, [ingredients]);
-
-  const handleIngredientChange = (ingredient) => {
-    setSelectedIngredients((prevSelected) =>
-      prevSelected.includes(ingredient)
-        ? prevSelected.filter((i) => i !== ingredient)
-        : [...prevSelected, ingredient]
-    );
-
-    setValue("ingredients", selectedIngredients, {
-      shouldValidate: true,
-      shouldDirty: true, // This will mark the field as dirty
-    });
-
-    // setTimeout(() => {
-    //   console.log("After short delay:");
-    //   console.log("Current img form value:", watch("img"));
-    //   console.log("Is form dirty?", formState.isDirty);
-    //   console.log("Dirty fields:", formState.dirtyFields);
-    // }, 100);
-  };
+    setSelectedIngredientNames(dish.ingredients || []);
+    setActualIngredientNames(dish.ingredients || []);
+  }, [dish]);
+  // useEffect(() => {
+  //   setSelectedIngredients(
+  //     ingredients.filter((ingredient) =>
+  //       dish.ingredients.includes(ingredient.name)
+  //     )
+  //   );
+  //   setActualIngredients(
+  //     ingredients.filter((ingredient) =>
+  //       dish.ingredients.includes(ingredient.name)
+  //     )
+  //   );
+  // }, [ingredients]);
 
   const onSubmit = async (formData) => {
+    const createIngredients = async (ingredients) => {
+      const { data } = await api.post("/ingredients", { names: ingredients });
+      // console.log(data);
+      return data.id;
+    };
+
     try {
+      const ingredientIds = await Promise.all(
+        selectedIngredientNames.map(async (name) => {
+          const ingredient = ingredients.find((ing) => ing.name === name);
+          if (ingredient) {
+            console.log(
+              `Found existing ingredient: ${name} with ID: ${ingredient.id}`
+            );
+            return ingredient.id;
+          } else {
+            console.log(`Creating new ingredient: ${name}`);
+            const newIngredientIds = await createIngredients([name]);
+            console.log(`Created ingredient ID: ${newIngredientIds[0]}`);
+            return newIngredientIds[0]; // Assuming createIngredients returns an array of IDs
+          }
+        })
+      );
+
+      console.log("Final ingredient IDs:", ingredientIds);
+
       const form = {
         ...formData,
-        ingredients_id: selectedIngredients.map((ingredient) => ingredient.id),
+        ingredients_id: ingredientIds,
       };
-      console.log(form);
 
-      // First, create the dish without the image
-      // const { data } = await api.put("/dishes", form);
-      // const id = data.id;
-      // console.log(id);
-
-      // console.log(imagePreview);
-
-      // const name = form.name || dish.name;
-      // const category_id = form.category_id || dish.category_id;
-      // const price = form.price || dish.price;
-      // const description = form.description || dish.description;
       const ingredientsIdChanged =
-        form.ingredients_id !==
-        actualIngredients.reduce(
-          (acc, ingredient) => [...acc, ingredient.id],
-          []
-        );
-      // const img = form.img || dish.image;
+        form.ingredients_id.toString() !==
+        actualIngredientNames
+          .map((name) => {
+            const ingredient = ingredients.find((ing) => ing.name === name);
+            return ingredient ? ingredient.id : null;
+          })
+          .filter((id) => id !== null)
+          .toString();
 
-      // Append all form fields to the FormData object
-      // Perform check if any fields are empty
-
-      console.log(form.ingredients_id);
-      console.log(ingredientsIdChanged);
-      console.log(
-        actualIngredients.reduce(
-          (acc, ingredient) => [...acc, ingredient.id],
-          []
-        )
-      );
+      console.log("Ingredients ID changed:", ingredientsIdChanged);
 
       Object.keys(form).forEach((key) => {
         if (
@@ -253,21 +220,15 @@ function DishEdit() {
         }
       });
 
-      console.log(form);
+      console.log("Form data to be sent:", form);
 
-      // Send the updated dish to the API if name, category, ingredients, description or price is changed
       if (Object.keys(form).length > 0) {
         await api.put(`/dishes/${id}`, form);
       }
 
-      // If an image is provided, handle the image upload separately
       if (imageFile) {
         const formDataWithImage = new FormData();
         formDataWithImage.append("img", imageFile);
-
-        console.log(imageFile);
-
-        console.log(formDataWithImage);
 
         await api.patch(`/dishes/img/${id}`, formDataWithImage, {
           headers: {
@@ -275,12 +236,15 @@ function DishEdit() {
           },
         });
       }
-      // Handle successful submission (e.g., redirect or show a success message)
+
       console.log("Dish updated successfully");
       window.location.href = `/dish/${id}`;
     } catch (error) {
-      // Handle error (e.g., show an error message)
-      alert(error.response.data.message);
+      if (error.response && error.response.data) {
+        alert(error.response.data.message);
+      } else {
+        alert("An unexpected error occurred.");
+      }
       console.error("Error updating dish:", error);
     }
   };
@@ -383,8 +347,8 @@ function DishEdit() {
             <label htmlFor="ingredients">Ingredientes</label>
             <IngredientsSelector
               ingredients={ingredients}
-              selectedIngredients={selectedIngredients}
-              setSelectedIngredients={setSelectedIngredients}
+              selectedIngredients={selectedIngredientNames}
+              setSelectedIngredients={setSelectedIngredientNames}
               register={register}
               setValue={setValue}
               errors={errors}
