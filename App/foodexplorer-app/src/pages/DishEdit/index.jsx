@@ -9,13 +9,6 @@ import {
   FileInputWrapper,
   FileInput,
   FileInputLabel,
-  SelectedIngredientsWrapper,
-  IngredientsWrapper,
-  Ingredient,
-  IngredientInput,
-  FilterWrapper,
-  ResultsWrapper,
-  CustomOption,
 } from "./styles";
 
 import { useState, useEffect, useMemo } from "react";
@@ -25,6 +18,7 @@ import Header from "../../components/Header";
 import QuantityControl from "../../components/QuantityControl";
 import Button from "../../components/Button";
 import InputField from "../../components/InputField";
+import IngredientsSelector from "../../components/IngredientsSelector";
 
 import filterIcon from "../../assets/icons/search.svg";
 
@@ -49,6 +43,7 @@ function DishEdit() {
   const [ingredients, setIngredients] = useState([]);
 
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [actualIngredients, setActualIngredients] = useState([]);
 
   const [addingIngredient, setAddingIngredient] = useState(false);
   const [addExistentIngredient, setExistentIngredient] = useState(true);
@@ -179,6 +174,11 @@ function DishEdit() {
         dish.ingredients.includes(ingredient.name)
       )
     );
+    setActualIngredients(
+      ingredients.filter((ingredient) =>
+        dish.ingredients.includes(ingredient.name)
+      )
+    );
   }, [ingredients]);
 
   const handleIngredientChange = (ingredient) => {
@@ -220,24 +220,35 @@ function DishEdit() {
       // const category_id = form.category_id || dish.category_id;
       // const price = form.price || dish.price;
       // const description = form.description || dish.description;
-      const ingredientsIdChanged = form.ingredients_id !== selectedIngredients.reduce(
-        (acc, ingredient) => [...acc, ingredient.id],
-        []
-      );
+      const ingredientsIdChanged =
+        form.ingredients_id !==
+        actualIngredients.reduce(
+          (acc, ingredient) => [...acc, ingredient.id],
+          []
+        );
       // const img = form.img || dish.image;
-
 
       // Append all form fields to the FormData object
       // Perform check if any fields are empty
 
       console.log(form.ingredients_id);
-      console.log(selectedIngredients.reduce(
-        (acc, ingredient) => [...acc, ingredient.id],
-        []
-      ));
+      console.log(ingredientsIdChanged);
+      console.log(
+        actualIngredients.reduce(
+          (acc, ingredient) => [...acc, ingredient.id],
+          []
+        )
+      );
 
       Object.keys(form).forEach((key) => {
-        if (form[key] === undefined || !form[key] || form[key].length <= 0 || key === "img" || key === "ingredients" || (key === "ingredients_id" && ingredientsIdChanged)) {
+        if (
+          form[key] === undefined ||
+          !form[key] ||
+          form[key].length <= 0 ||
+          key === "img" ||
+          key === "ingredients" ||
+          (key === "ingredients_id" && !ingredientsIdChanged)
+        ) {
           delete form[key];
         }
       });
@@ -280,50 +291,6 @@ function DishEdit() {
       window.location.href = "/";
     }
   };
-
-  // Create a memoized version of the ResultsWrapper component,
-  // only re-rendering when the filterResults array changes
-  const memorizedResultsWrapper = useMemo(() => {
-    return (
-      <ResultsWrapper>
-        {filterTerm
-          ? filterResults
-              .filter(
-                (ingredient) =>
-                  !selectedIngredients.some(
-                    (selected) =>
-                      selected.name.toLowerCase() ===
-                      ingredient.name.toLowerCase()
-                  )
-              )
-              .map((result) => (
-                <CustomOption
-                  onClick={() => handleIngredientChange(result)}
-                  className="result"
-                  key={result.id}
-                  children={result.name}
-                />
-              ))
-          : ingredients
-              .filter(
-                (ingredient) =>
-                  !selectedIngredients.some(
-                    (selected) =>
-                      selected.name.toLowerCase() ===
-                      ingredient.name.toLowerCase()
-                  )
-              )
-              .map((ingredient) => (
-                <CustomOption
-                  onClick={() => handleIngredientChange(ingredient)}
-                  className="result"
-                  key={ingredient.id}
-                  children={ingredient.name}
-                />
-              ))}
-      </ResultsWrapper>
-    );
-  }, [filterResults, ingredients, selectedIngredients]);
 
   return (
     <>
@@ -414,109 +381,14 @@ function DishEdit() {
           </Container>
           <Container>
             <label htmlFor="ingredients">Ingredientes</label>
-            <IngredientsWrapper
-              className={`input ${errors.ingredients ? "error" : ""}`}
-            >
-              <SelectedIngredientsWrapper>
-                {selectedIngredients.map((ingredient) => (
-                  <Ingredient key={ingredient.id}>
-                    <IngredientInput
-                      type="text"
-                      value={ingredient.name}
-                      placeholder="Ex.: Banana"
-                      onChange={(e) => {
-                        setSelectedIngredients(
-                          selectedIngredients.map((selIngredient) =>
-                            selIngredient.id === ingredient.id
-                              ? { ...selIngredient, name: e.target.value }
-                              : selIngredient
-                          )
-                        );
-                        setValue(
-                          "ingredients",
-                          selectedIngredients.map((selIngredient) =>
-                            selIngredient.id === ingredient.id
-                              ? { ...selIngredient, name: e.target.value }
-                              : selIngredient
-                          ),
-                          {
-                            shouldValidate: true,
-                            shouldDirty: true, // This will mark the field as dirty
-                          }
-                        );
-                      }}
-                    />
-                    <IoClose
-                      onClick={() => {
-                        setSelectedIngredients(
-                          selectedIngredients.filter(
-                            (selIngredient) =>
-                              selIngredient.id !== ingredient.id
-                          )
-                        );
-                        setValue(
-                          "ingredients",
-                          selectedIngredients.filter(
-                            (selIngredient) =>
-                              selIngredient.id !== ingredient.id
-                          ),
-                          {
-                            shouldValidate: true,
-                            shouldDirty: true, // This will mark the field as dirty
-                          }
-                        );
-                      }}
-                    />
-                  </Ingredient>
-                ))}
-                {addExistentIngredient ? (
-                  <>
-                    <button
-                      id="add-ingredient"
-                      type="button"
-                      className="hidden"
-                      onClick={handleAddIngredientClick}
-                    >
-                      Adicionar
-                      <HiOutlinePlusSm />
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    id="add-new-ingredient"
-                    type="button"
-                    onClick={() => {
-                      setSelectedIngredients([
-                        ...selectedIngredients,
-                        { id: Date.now(), name: "" },
-                      ]);
-                    }}
-                  >
-                    Novo
-                    <HiOutlinePlusSm />
-                  </button>
-                )}
-              </SelectedIngredientsWrapper>
-              {addingIngredient && (
-                <FilterWrapper>
-                  <div id="filter-input-wrapper">
-                    <img src={filterIcon} alt="" />
-                    <InputField
-                      id="filter-input"
-                      placeholder="Busque por ingredientes"
-                      onChange={(e) => handleFilterChange(e)}
-                      value={filterTerm}
-                    />
-                  </div>
-                  {memorizedResultsWrapper}
-                </FilterWrapper>
-              )}
-              {errors.ingredients && (
-                <span className="error-message">
-                  {errors.ingredients.message}
-                </span>
-              )}
-            </IngredientsWrapper>
+            <IngredientsSelector
+              ingredients={ingredients}
+              selectedIngredients={selectedIngredients}
+              setSelectedIngredients={setSelectedIngredients}
+              register={register}
+              setValue={setValue}
+              errors={errors}
+            />
           </Container>
           <Container>
             <label htmlFor="price">Preço</label>
@@ -549,7 +421,9 @@ function DishEdit() {
             )}
           </Container>
           <ButtonContainer>
-            <Button id="delete-btn" onClick={handleDelete}>Excluir prato</Button>
+            <Button id="delete-btn" onClick={handleDelete}>
+              Excluir prato
+            </Button>
             <button
               id="submit-btn"
               type="submit"
