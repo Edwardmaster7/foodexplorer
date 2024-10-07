@@ -35,10 +35,15 @@ class IngredientsController {
             throw new AppError("One or more ingredients already exists.");
         }
 
-        // insert all the ingredients into the database
-        await knex("Ingredients").insert(names.map(name => ({ name })));
+        // insert all the ingredients into the database and get the corresponding ids
+        const insertedIds = await knex("Ingredients").insert(names.map(name => ({ name })), "id");
 
-        return response.status(201).json();
+        // return the ids in the id: [] format
+        const groupedIds = { id: insertedIds.map(id => id.id) };
+
+        // console.log(groupedIds);
+
+        return response.status(201).json(groupedIds);
     }
 
     async update(request, response) {

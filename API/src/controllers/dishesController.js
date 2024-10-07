@@ -7,13 +7,16 @@ class DishesController {
     const { name, description, price, category_id, ingredients_id } =
       request.body;
 
+
+    console.log(name, description, price, category_id, Object.keys(ingredients_id).lenght);
     // validate fields
     if (
       !name ||
       !description ||
       !price ||
       !category_id ||
-      ingredients_id.lenght < 0
+      Object.keys(ingredients_id).lenght < 0 || 
+      ingredients_id === null
     ) {
       throw new AppError("All fields must be provided");
     }
@@ -34,7 +37,7 @@ class DishesController {
     const ingredients = await knex("Ingredients")
       .whereIn("id", ingredients_id)
       .select("id");
-    if (ingredients.length !== ingredients_id.length) {
+    if (Object.keys(ingredients).length !== Object.keys(ingredients_id).length) {
       throw new AppError("One or more ingredients not found");
     }
 
