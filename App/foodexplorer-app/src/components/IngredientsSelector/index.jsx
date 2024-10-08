@@ -20,6 +20,7 @@ function IngredientsSelector({
   register,
   setValue,
   errors,
+  earlyRequired,
 }) {
   const [addingIngredient, setAddingIngredient] = useState(false);
   const [addExistentIngredient, setExistentIngredient] = useState(true);
@@ -33,10 +34,12 @@ function IngredientsSelector({
 
   // load the existing state of ingredients on the form values for validation purposes
   useEffect(() => {
-    setValue("ingredients", selectedIngredients, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
+    if(earlyRequired) {
+      setValue("ingredients", selectedIngredients, {
+        shouldValidate: true,
+        shouldDirty: false,
+      });
+    }
   }, [ingredients]);
 
   const handleFilterChange = (event) => {

@@ -352,6 +352,7 @@ function DishEdit() {
               register={register}
               setValue={setValue}
               errors={errors}
+              earlyRequired
             />
           </Container>
           <Container>

@@ -105,8 +105,8 @@ export const Card = styled.div`
 `;
 
 export const Image = styled.img`
-  width: 10rem;
-  height: 10rem;
+  width: 12rem;
+  height: 12rem;
 
   border-radius: 50%;
 

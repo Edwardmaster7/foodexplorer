@@ -133,7 +133,7 @@ function Home() {
       if (user.id) {
         addItem(item);
         setCustomerID(user.id);
-        console.log(state)
+        // console.log(state)
         console.log(getItemsSum());
       } else {
         alert("Faça login para adicionar pratos ao carrinho");

@@ -127,6 +127,7 @@ export const OrderProvider = ({ children }) => {
     };
 
     const retrieveLocalStorage = async () => {
+      console.log(state);
       const order = JSON.parse(localStorage.getItem("@foodex:order"));
       if (state.dishes.length === 0 && order) {
         dispatch({ type: "SET_STATE", payload: order });
@@ -143,7 +144,7 @@ export const OrderProvider = ({ children }) => {
     };
 
     retrieveLocalStorage();
-  }, []);
+  }, [state]);
 
   return (
     <OrderContext.Provider
