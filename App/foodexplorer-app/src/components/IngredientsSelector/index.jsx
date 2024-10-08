@@ -3,6 +3,8 @@ import { IoClose } from "react-icons/io5";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import filterIcon from "../../assets/icons/search.svg";
 import InputField from "../InputField";
+
+import AutosizeInput from "react-input-autosize";
 import {
   IngredientsWrapper,
   SelectedIngredientsWrapper,
