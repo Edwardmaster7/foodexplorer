@@ -123,7 +123,11 @@ const Header = () => {
             />
             {memorizedResultsWrapper}
           </SearchWrapper>
-          <OrderButton>
+          <OrderButton
+            onClick={() => {
+              window.location.href = "/dish/new";
+            }}
+          >
             {user.isAdmin ? (
               <>Novo prato</>
             ) : (<><img src={receipt} alt="ícone de comanda" />

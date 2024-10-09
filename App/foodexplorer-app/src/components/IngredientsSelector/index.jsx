@@ -23,6 +23,7 @@ function IngredientsSelector({
   setValue,
   errors,
   earlyRequired,
+  className
 }) {
   const [addingIngredient, setAddingIngredient] = useState(false);
   const [addExistentIngredient, setExistentIngredient] = useState(true);
@@ -101,7 +102,7 @@ function IngredientsSelector({
 
   return (
     <IngredientsWrapper
-      className={`input ${errors.ingredients ? "error" : ""}`}
+      className={`${className} ${errors.ingredients ? "error" : ""}`}
     >
       <input
         type="hidden"

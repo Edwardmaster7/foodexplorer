@@ -7,10 +7,18 @@ export const IngredientsWrapper = styled.div`
   flex-direction: column;
   gap: 1.6rem;
 
-  min-height: min-content;
+  width: 100%;
+  min-width: 100%;
+  max-width: 56vw;
+
+  /* min-height: min-content; */
   background-color: ${({ theme }) => theme.colors.dark_900};
 
-  /* overflow: auto; */
+  overflow: auto;
+
+  @media ${devices.tablet} {
+    min-width: 56vw;
+  }
 `;
 
 export const SelectedIngredientsWrapper = styled.div`
@@ -19,6 +27,7 @@ export const SelectedIngredientsWrapper = styled.div`
   gap: 1.6rem;
 
   overflow: auto;
+  width: 100%;
 
   #add-ingredient,
   #add-new-ingredient {
@@ -31,6 +40,8 @@ export const SelectedIngredientsWrapper = styled.div`
     border-radius: 0.8rem;
     background-color: transparent;
     padding: 1rem 1.6rem;
+
+    height: auto;
 
     border: dotted ${({ theme }) => theme.colors.light_600};
 
@@ -46,6 +57,10 @@ export const SelectedIngredientsWrapper = styled.div`
     color: ${({ theme }) => theme.colors.light_100};
 
     transition: background-color 0.3s;
+
+    @media ${devices.tablet} {
+      padding: 0.8rem 1rem;
+    }
   }
 `;
 
@@ -65,7 +80,13 @@ export const Ingredient = styled.div`
     cursor: pointer;
     color: ${({ theme }) => theme.colors.light_100};
   }
+
+  @media ${devices.tablet} {
+    padding: 0.8rem 1rem;
+  }
 `;
+
+export const IngredientInputWrapper = styled.div``;
 
 export const IngredientInput = styled(AutosizeInput)`
   input {

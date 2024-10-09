@@ -18,7 +18,7 @@ export function AppRoutes() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/dish/:id" element={<DishDetails />} />
           <Route path="/dish/edit/:id" element={<DishEdit />} />
-          <Route path="/dish/create" element={<DishCreate />} />
+          <Route path="/dish/new" element={<DishCreate />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
         <Footer />

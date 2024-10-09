@@ -9,6 +9,8 @@ import {
   FileInputWrapper,
   FileInput,
   FileInputLabel,
+  FieldsetOne,
+  FieldsetTwo
 } from "./styles";
 
 import { useState, useEffect, useMemo } from "react";
@@ -270,104 +272,110 @@ function DishEdit() {
         </div>
         <h1>Editar prato</h1>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Container>
-            <label htmlFor="img">Imagem do prato</label>
-            <FileInputWrapper>
-              <FileInput
-                type="file"
-                id="img"
-                accept="image/*"
-                {...register("img")}
-                onChange={handleFileChange}
+          <FieldsetOne>
+            <Container>
+              <label htmlFor="img">Imagem do prato</label>
+              <FileInputWrapper>
+                <FileInput
+                  type="file"
+                  id="img"
+                  accept="image/*"
+                  {...register("img")}
+                  onChange={handleFileChange}
+                />
+                <FileInputLabel
+                  htmlFor="img"
+                  className={`input-img ${errors.image ? "error" : ""}`}
+                >
+                  {imagePreview ? (
+                    <>
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        // style={{
+                        //   width: "10rem",
+                        //   height: "10rem",
+                        //   objectFit: "cover",
+                        //   borderRadius: "50%",
+                        // }}
+                      />
+                      <PiUploadSimple />
+                      <p>Selecionar outra?</p>
+                    </>
+                  ) : (
+                    <>
+                      <PiUploadSimple />
+                      <p>Selecione imagem</p>
+                    </>
+                  )}
+                </FileInputLabel>
+              </FileInputWrapper>
+            </Container>
+            <Container>
+              <label htmlFor="name">Nome</label>
+              <input
+                id="name"
+                type="text"
+                placeholder={dish.name}
+                className={`input ${errors.name ? "error" : ""}`}
+                {...register("name")}
               />
-              <FileInputLabel
-                htmlFor="img"
-                className={`input ${errors.image ? "error" : ""}`}
-              >
-                {imagePreview ? (
-                  <>
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      style={{
-                        width: "10rem",
-                        height: "10rem",
-                        objectFit: "cover",
-                        borderRadius: "50%",
-                      }}
-                    />
-                    <PiUploadSimple />
-                    <p>Selecionar outra?</p>
-                  </>
-                ) : (
-                  <>
-                    <PiUploadSimple />
-                    <p>Selecione imagem</p>
-                  </>
-                )}
-              </FileInputLabel>
-            </FileInputWrapper>
-          </Container>
-          <Container>
-            <label htmlFor="name">Nome</label>
-            <input
-              id="name"
-              type="text"
-              placeholder={dish.name}
-              className={`input ${errors.name ? "error" : ""}`}
-              {...register("name")}
-            />
-            {errors.name && (
-              <span className="error-message">{errors.name.message}</span>
-            )}
-          </Container>
-          <Container>
-            <label htmlFor="category_id">Categoria</label>
-            <SelectWrapper>
-              <Select
-                name="category_id"
-                className={`input ${errors.category ? "error" : ""}`}
-                {...register("category_id")}
-              >
-                <option value="" disabled defaultValue>
-                  {dish.category_name}
-                </option>
-                {categories.map((category) =>
-                  category.id !== dish.category_id ? (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ) : null
-                )}
-              </Select>
-              <IoChevronDown />
-            </SelectWrapper>
-          </Container>
-          <Container>
-            <label htmlFor="ingredients">Ingredientes</label>
-            <IngredientsSelector
-              ingredients={ingredients}
-              selectedIngredients={selectedIngredientNames}
-              setSelectedIngredients={setSelectedIngredientNames}
-              register={register}
-              setValue={setValue}
-              errors={errors}
-              earlyRequired
-            />
-          </Container>
-          <Container>
-            <label htmlFor="price">Preço</label>
-            <input
-              id="price"
-              type="number"
-              placeholder={dish.price}
-              className={`input ${errors.price ? "error" : ""}`}
-              {...register("price")}
-            />
-            {errors.price && (
-              <span className="error-message">{errors.price.message}</span>
-            )}
-          </Container>
+              {errors.name && (
+                <span className="error-message">{errors.name.message}</span>
+              )}
+            </Container>
+            <Container>
+              <label htmlFor="category_id">Categoria</label>
+              <SelectWrapper>
+                <Select
+                  name="category_id"
+                  className={`input ${errors.category ? "error" : ""}`}
+                  {...register("category_id")}
+                >
+                  <option value="" disabled defaultValue>
+                    {dish.category_name}
+                  </option>
+                  {categories.map((category) =>
+                    category.id !== dish.category_id ? (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ) : null
+                  )}
+                </Select>
+                <IoChevronDown />
+              </SelectWrapper>
+            </Container>
+          </FieldsetOne>
+          <FieldsetTwo>
+            <Container>
+              <label htmlFor="ingredients">Ingredientes</label>
+              <IngredientsSelector
+                className="input-ingredient"
+                ingredients={ingredients}
+                selectedIngredients={selectedIngredientNames}
+                setSelectedIngredients={setSelectedIngredientNames}
+                register={register}
+                setValue={setValue}
+                errors={errors}
+                earlyRequired
+              />
+            </Container>
+
+            <Container>
+              <label htmlFor="price">Preço</label>
+              <input
+                id="price"
+                type="number"
+                placeholder={`R$ ${dish.price}`}
+                className={`input ${errors.price ? "error" : ""}`}
+                {...register("price")}
+              />
+              {errors.price && (
+                <span className="price-error-message">{errors.price.message}</span>
+              )}
+            </Container>
+          </FieldsetTwo>
           <Container>
             <label htmlFor="description">Descrição</label>
             <textarea

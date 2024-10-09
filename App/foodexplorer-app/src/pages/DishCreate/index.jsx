@@ -8,6 +8,9 @@ import {
   FileInputWrapper,
   FileInput,
   FileInputLabel,
+  FieldsetOne,
+  FieldsetTwo,
+  ButtonContainer
 } from "./styles";
 
 import { useState, useEffect, useMemo } from "react";
@@ -76,7 +79,6 @@ function DishCreate() {
       // reader.readAsDataURL(file);
     }
   };
-
 
   // fetch categories form api and store them
   useEffect(() => {
@@ -154,7 +156,6 @@ function DishCreate() {
       // Handle successful submission (e.g., redirect or show a success message)
       console.log("Dish created successfully");
       window.location.href = `/dish/${id}`;
-
     } catch (error) {
       // Handle error (e.g., show an error message)
       if (error.response && error.response.data) {
@@ -179,103 +180,114 @@ function DishCreate() {
           </Link>
         </div>
         <h1>Novo prato</h1>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <Container>
-            <label htmlFor="img">Imagem do prato</label>
-            <FileInputWrapper>
-              <FileInput
-                type="file"
-                id="img"
-                accept="image/*"
-                // {...register("img", { required: "Imagem é obrigatória" })}
-                // value={imageFile}
-                onChange={handleFileChange}
-              />
-              <FileInputLabel
-                htmlFor="img"
-                className={`input ${errors.image ? "error" : ""}`}
-              >
-                {imagePreview ? (
-                  <>
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      style={{
-                        width: "10rem",
-                        height: "10rem",
-                        objectFit: "cover",
-                        borderRadius: "50%",
-                      }}
-                    />
-                    <PiUploadSimple />
-                    <p>Selecionar outra?</p>
-                  </>
-                ) : (
-                  <>
-                    <PiUploadSimple />
-                    <p>Selecione imagem</p>
-                  </>
-                )}
-              </FileInputLabel>
-            </FileInputWrapper>
-          </Container>
-          <Container>
-            <label htmlFor="name">Nome</label>
-            <input
-              id="name"
-              type="text"
-              placeholder="Ex.: Salada Ceasar"
-              className={`input ${errors.name ? "error" : ""}`}
-              {...register("name", { required: "Nome é um campo obrigatório" })}
-            />
-            {errors.name && (
-              <span className="error-message">{errors.name.message}</span>
-            )}
-          </Container>
-          <Container>
-            <label htmlFor="category_id">Categoria</label>
-            <SelectWrapper>
-              <Select
-                name="category_id"
-                className={`input ${errors.category ? "error" : ""}`}
-                {...register("category_id", { required: "Categoria é um campo obrigatório" })}
+        <Form id="create-form" onSubmit={handleSubmit(onSubmit)}>
+          <FieldsetOne>
+            <Container>
+              <label htmlFor="img">Imagem do prato</label>
+              <FileInputWrapper>
+                <FileInput
+                  type="file"
+                  id="img"
+                  accept="image/*"
+                  // {...register("img", { required: "Imagem é obrigatória" })}
+                  // value={imageFile}
+                  onChange={handleFileChange}
+                />
+                <FileInputLabel
+                  htmlFor="img"
+                  className={`input-img ${errors.image ? "error" : ""}`}
                 >
-                  <option value="" disabled defaultValue>
+                  {imagePreview ? (
+                    <>
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        style={{
+                          width: "10rem",
+                          height: "10rem",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
+                      />
+                      <PiUploadSimple />
+                      <p>Selecionar outra?</p>
+                    </>
+                  ) : (
+                    <>
+                      <PiUploadSimple />
+                      <p>Selecione imagem</p>
+                    </>
+                  )}
+                </FileInputLabel>
+              </FileInputWrapper>
+            </Container>
+            <Container>
+              <label htmlFor="name">Nome</label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Ex.: Salada Ceasar"
+                className={`input ${errors.name ? "error" : ""}`}
+                {...register("name", {
+                  required: "Nome é um campo obrigatório",
+                })}
+              />
+              {errors.name && (
+                <span className="error-message">{errors.name.message}</span>
+              )}
+            </Container>
+            <Container>
+              <label htmlFor="category_id">Categoria</label>
+              <SelectWrapper>
+                <Select
+                  name="category_id"
+                  className={`input ${errors.category ? "error" : ""}`}
+                  {...register("category_id", {
+                    required: "Categoria é um campo obrigatório",
+                  })}
+                >
+                  <option value="" disabled defaultValue selected>
                     Selecione uma categoria
                   </option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </Select>
-              <IoChevronDown />
-            </SelectWrapper>
-          </Container>
-          <Container>
-            <label htmlFor="ingredients">Ingredientes</label>
-            <IngredientsSelector
-              ingredients={ingredients}
-              selectedIngredients={selectedIngredientNames}
-              setSelectedIngredients={setSelectedIngredientNames}
-              register={register}
-              setValue={setValue}
-              errors={errors}
-            />
-          </Container>
-          <Container>
-            <label htmlFor="price">Preço</label>
-            <input
-              id="price"
-              type="number"
-              placeholder="R$ 00,00"
-              className={`input ${errors.price ? "error" : ""}`}
-              {...register("price", { required: "Preço é um campo obrigatório" })}
-            />
-            {errors.price && (
-              <span className="error-message">{errors.price.message}</span>
-            )}
-          </Container>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </Select>
+                <IoChevronDown />
+              </SelectWrapper>
+            </Container>
+          </FieldsetOne>
+          <FieldsetTwo>
+            <Container>
+              <label htmlFor="ingredients">Ingredientes</label>
+              <IngredientsSelector
+                className="input-ingredient"
+                ingredients={ingredients}
+                selectedIngredients={selectedIngredientNames}
+                setSelectedIngredients={setSelectedIngredientNames}
+                register={register}
+                setValue={setValue}
+                errors={errors}
+              />
+            </Container>
+            <Container>
+              <label htmlFor="price">Preço</label>
+              <input
+                id="price"
+                type="number"
+                placeholder="R$ 00,00"
+                className={`input ${errors.price ? "error" : ""}`}
+                {...register("price", {
+                  required: "Preço é um campo obrigatório",
+                })}
+              />
+              {errors.price && (
+                <span className="error-message">{errors.price.message}</span>
+              )}
+            </Container>
+          </FieldsetTwo>
           <Container>
             <label htmlFor="description">Descrição</label>
             <textarea
@@ -290,15 +302,22 @@ function DishCreate() {
               })}
             />
             {errors.description && (
-              <span className="error-message">
+              <span id="description-error" className="error-message">
                 {errors.description.message}
               </span>
             )}
           </Container>
-          <button id="submit-btn" type="submit" disabled={isSubmitting || !isValid}>
+        </Form>
+        <ButtonContainer>
+          <button
+            id="submit-btn"
+            type="submit"
+            form="create-form"
+            disabled={isSubmitting || !isValid}
+          >
             {isSubmitting ? "Salvando..." : "Criar prato"}
           </button>
-        </Form>
+        </ButtonContainer>
       </App>
     </>
   );
