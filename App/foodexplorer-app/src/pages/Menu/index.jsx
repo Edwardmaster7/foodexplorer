@@ -97,7 +97,7 @@ function Menu() {
         </SearchWrapper>
         <div>
           {user.isAdmin ? (
-            <Link to="/dish/create" className="option">
+            <Link to="/dish/new" className="option">
               Novo Prato
             </Link>
           ) : null}

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, { createContext, useContext, useCallback, useEffect, useReducer, useRef } from "react";
 
 import { api } from "../services/api";
 
@@ -75,7 +75,7 @@ export const OrderProvider = ({ children }) => {
   const { user } = useAuth();
 
   const addItem = (dish) => {
-    dispatch({ type: "ADD_ITEM", payload: dish });
+    dispatch({ type: "ADD_ITEM", payload: dish })
   };
 
   const removeItem = (dish) => {
@@ -119,32 +119,60 @@ export const OrderProvider = ({ children }) => {
     // return state;
   };
 
-
+  // console.log(state);
+  
+  const updateState = useCallback((newState) => {
+    dispatch({ type: "SET_STATE", payload: newState });
+  }, []);
+  
+  const updateLocalStorage = useCallback(() => {
+    localStorage.setItem("@foodex:order", JSON.stringify(state));
+  }, [state]);
+  
+  const clearOrder = useCallback(() => {
+    console.log("clearing order");
+    localStorage.removeItem("@foodex:order");
+    dispatch({ type: "SET_STATE", payload: initialState });
+  }, []);
+  
+  useEffect(() => {
+    const retrieveLocalStorage = async () => {
+      if (state.dishes.length === 0) {
+        updateState(order);
+      } else {
+        updateLocalStorage();
+      }
+    };
+    retrieveLocalStorage();
+  }, [state, updateLocalStorage, updateState]);
 
   useEffect(() => {
-    const updateLocalStorage = async (state) => {
-      localStorage.setItem("@foodex:order", JSON.stringify(state));
-    };
-
+    const order = JSON.parse(localStorage.getItem("@foodex:order"));
+    
+    let customerID = order ? order.customerID : undefined;
+    
     const retrieveLocalStorage = async () => {
-      console.log(state);
-      const order = JSON.parse(localStorage.getItem("@foodex:order"));
       if (state.dishes.length === 0 && order) {
-        dispatch({ type: "SET_STATE", payload: order });
+        updateState(order);
       } 
-      else {
-        updateLocalStorage(state);
-      }
-      
-      if (order.customerID && user.id !== order.customerID) {
-        localStorage.removeItem("@foodex:order");
-        dispatch({ type: "SET_STATE", payload: initialState });
-      }
-     
+      // else {
+      //   updateLocalStorage();
+      // }
     };
+    // if the user is not logged in, clear the order
+    // if (user.id === undefined) {
+      //   clearOrder();
+      //   return;
+      // }
+      
+      // if the user is logged in, but the order is not for the logged in user, clear the order
+    if (customerID !== undefined && customerID !== user.id) {
+      clearOrder();     
+    } else {
+      retrieveLocalStorage();
+    }
 
-    retrieveLocalStorage();
-  }, [state]);
+  }, [user.id, updateState, updateLocalStorage, clearOrder]);
 
   return (
     <OrderContext.Provider
