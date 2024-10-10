@@ -5,7 +5,7 @@ import {
   OrderButton,
   SearchWrapper,
   ResultsWrapper,
-  TopPadding
+  TopPadding,
 } from "./styles";
 
 import menuIcon from "../../assets/icons/stack-menu.svg";
@@ -17,6 +17,8 @@ import signOut from "../../assets/icons/sign_out.svg";
 
 import InputField from "../InputField";
 import ReceiptIcon from "../ReceiptIcon";
+
+import { FaHeart } from "react-icons/fa";
 
 import { useAuth } from "../../hooks/auth";
 import { useOrder } from "../../hooks/order";
@@ -82,7 +84,12 @@ const Header = () => {
     return (
       <ResultsWrapper>
         {searchDishes.map((dish) => (
-          <Link key={dish.id} to={`/dish/${dish.id}`} className="result" onClick={handleClickOutside}>
+          <Link
+            key={dish.id}
+            to={`/dish/${dish.id}`}
+            className="result"
+            onClick={handleClickOutside}
+          >
             <h2>{dish.name}</h2>
             <p>{dish.description}</p>
           </Link>
@@ -93,7 +100,7 @@ const Header = () => {
 
   const itemsSum = useMemo(() => {
     return getItemsSum();
-  }, [state, getItemsSum]); 
+  }, [state, getItemsSum]);
 
   return (
     <>
@@ -123,6 +130,11 @@ const Header = () => {
             />
             {memorizedResultsWrapper}
           </SearchWrapper>
+          {!user.isAdmin ? (
+            <Link to="/favourites" className="option">
+              <FaHeart />
+            </Link>
+          ) : null}
           <OrderButton
             onClick={() => {
               window.location.href = "/dish/new";
@@ -130,17 +142,20 @@ const Header = () => {
           >
             {user.isAdmin ? (
               <>Novo prato</>
-            ) : (<><img src={receipt} alt="ícone de comanda" />
-            <p>Pedidos({itemsSum})</p></>)}
+            ) : (
+              <>
+                <img src={receipt} alt="ícone de comanda" />
+                <p>Pedidos({itemsSum})</p>
+              </>
+            )}
           </OrderButton>
           {user.isAdmin ? (
-            <>
-            </>
+            <></>
           ) : (
             <ReceiptIcon id="receipt" to="/menu" children={itemsSum} />
           )}
           <img id="sign-out" src={signOut} alt="" onClick={signOutUser} />
-          {user.isAdmin ?  <div id="padding-mobile-admin"/> : null}
+          {user.isAdmin ? <div id="padding-mobile-admin" /> : null}
         </Container>
       </App>
     </>

@@ -1,6 +1,5 @@
 import {
   App,
-  BackButton,
   Container,
   ButtonContainer,
   Form,
@@ -10,7 +9,7 @@ import {
   FileInput,
   FileInputLabel,
   FieldsetOne,
-  FieldsetTwo
+  FieldsetTwo,
 } from "./styles";
 
 import { useState, useEffect, useMemo } from "react";
@@ -21,6 +20,7 @@ import QuantityControl from "../../components/QuantityControl";
 import Button from "../../components/Button";
 import InputField from "../../components/InputField";
 import IngredientsSelector from "../../components/IngredientsSelector";
+import BackButton from "../../components/BackButton";
 
 import filterIcon from "../../assets/icons/search.svg";
 
@@ -262,14 +262,7 @@ function DishEdit() {
     <>
       <Header />
       <App>
-        <div id="button-link">
-          <Link to={window.location.origin}>
-            <BackButton>
-              <BsChevronLeft />
-              voltar
-            </BackButton>
-          </Link>
-        </div>
+        <BackButton id="button-link" />
         <h1>Editar prato</h1>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FieldsetOne>
@@ -372,7 +365,9 @@ function DishEdit() {
                 {...register("price")}
               />
               {errors.price && (
-                <span className="price-error-message">{errors.price.message}</span>
+                <span className="price-error-message">
+                  {errors.price.message}
+                </span>
               )}
             </Container>
           </FieldsetTwo>

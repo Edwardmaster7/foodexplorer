@@ -101,6 +101,9 @@ function Menu() {
               Novo Prato
             </Link>
           ) : null}
+          <Link to="/favourites" className="option">
+            {user.isAdmin ? "Favoritados" :  "Meus Favoritos"}
+          </Link>
           <Link to="/" onClick={signOut} className="option">
             Sair
           </Link>

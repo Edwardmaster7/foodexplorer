@@ -64,15 +64,22 @@ export const Container = styled.header`
     transform: scale(0.9);
   }
 
-  
+  .option {
+    display: none;
+  }
+
   @media ${devices.tablet} {
     padding-right: 10rem;
     padding-left: 10rem;
     
-    gap: 3.2rem;
+    gap: 2.4rem;
     
     justify-content: none;
     
+    .option {
+      display: flex;
+    }
+
     #menu {
       display: none;
     }
@@ -102,6 +109,8 @@ export const Container = styled.header`
   @media ${devices.desktop} {
     padding-right: 12rem;
     padding-left: 12rem;
+
+    gap: 3.2rem;
   }
 `;
 
@@ -156,7 +165,7 @@ export const SearchWrapper = styled.div`
     font-weight: 400;
     line-height: 160%;
     background-image: url(${searchIcon});
-    background-position: 19%;
+    background-position: 18%;
     background-repeat: no-repeat;
     background-size: auto 50%; // Adjust as needed
   }

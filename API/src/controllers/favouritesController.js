@@ -50,7 +50,7 @@ class FavouritesController {
                                     .join('Dishes', 'Favourites.dish_id', '=', 'Dishes.id')
                                     .join('Categories', 'Dishes.category_id', '=', 'Categories.id')
                                     .groupBy('Dishes.category_id', 'Dishes.name', 'Categories.name')
-                                    .select('Categories.name as category', 'Dishes.name', 'Dishes.image', knex.raw('COUNT(*) as favoriteCount'))
+                                    .select('Categories.name as category', 'Dishes.id', 'Dishes.name', 'Dishes.image', knex.raw('COUNT(*) as favouriteCount'))
                                     .orderBy('category')
             
             // const formatted = favourites.reduce((acc, dish) => {
@@ -61,7 +61,7 @@ class FavouritesController {
             //     const existingDish = acc[dish.category].find(d => d.name === dish.name);
                 
             //     if (existingDish) {
-            //         existingDish.favoriteCount++;
+            //         existingDish.favouriteCount++;
             //     } else {
             //         acc[dish.category].push({ ...dish });
             //     }

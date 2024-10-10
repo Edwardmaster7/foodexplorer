@@ -1,6 +1,5 @@
 import {
   App,
-  BackButton,
   Container,
   Form,
   SelectWrapper,
@@ -10,7 +9,7 @@ import {
   FileInputLabel,
   FieldsetOne,
   FieldsetTwo,
-  ButtonContainer
+  ButtonContainer,
 } from "./styles";
 
 import { useState, useEffect, useMemo } from "react";
@@ -18,6 +17,7 @@ import { useForm } from "react-hook-form";
 
 import Header from "../../components/Header";
 import IngredientsSelector from "../../components/IngredientsSelector";
+import BackButton from "../../components/BackButton";
 
 import { BsChevronLeft } from "react-icons/bs";
 import { PiUploadSimple } from "react-icons/pi";
@@ -171,14 +171,7 @@ function DishCreate() {
     <>
       <Header />
       <App>
-        <div id="button-link">
-          <Link to="/">
-            <BackButton>
-              <BsChevronLeft />
-              voltar
-            </BackButton>
-          </Link>
-        </div>
+        <BackButton id="button-link" />
         <h1>Novo prato</h1>
         <Form id="create-form" onSubmit={handleSubmit(onSubmit)}>
           <FieldsetOne>

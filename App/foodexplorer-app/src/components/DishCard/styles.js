@@ -109,6 +109,7 @@ export const Image = styled.img`
   height: 12rem;
 
   border-radius: 50%;
+  object-fit: cover;
 
   @media ${devices.tablet} {
     width: 15rem;

@@ -1,6 +1,5 @@
 import {
   App,
-  BackButton,
   DishImage,
   Container,
   Content,
@@ -13,6 +12,7 @@ import { useState, useEffect, useMemo } from "react";
 import Header from "../../components/Header";
 import QuantityControl from "../../components/QuantityControl";
 import Button from "../../components/Button";
+import BackButton from "../../components/BackButton";
 
 import receipt from "../../assets/icons/receipt.svg";
 
@@ -112,7 +112,7 @@ function DishDetails() {
 
   const handleEdit = () => {
     // redirect to edit dish page
-    let to=`/dish/edit/${dish.id}`;
+    let to = `/dish/edit/${dish.id}`;
 
     window.location.href = to;
   };
@@ -121,14 +121,7 @@ function DishDetails() {
     <>
       <Header />
       <App>
-        <div id="button-link">
-          <Link to="/">
-            <BackButton>
-              <BsChevronLeft />
-              voltar
-            </BackButton>
-          </Link>
-        </div>
+        <BackButton id="button-link" />
         <Container>
           <ImageContainer>
             <DishImage src={dish.imgURL} alt="" />
