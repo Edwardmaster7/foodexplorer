@@ -321,18 +321,18 @@ export const ButtonContainer = styled.div`
   align-items: center;
   gap: 3.2rem;
 
+  width: 100%;
+
   button {
     font-size: 1.4rem;
+    /* padding: 0.8rem; */
   }
 
   #delete-btn {
-    grid-column: 3;
   }
 
   #submit-btn {
     width: 100%;
-
-    grid-column: 4;
 
     cursor: pointer;
     width: 100%;
