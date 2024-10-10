@@ -60,12 +60,25 @@ export const Container = styled.header`
   #sign-out {
     display: none;
   }
+
+  #sign-out:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+
   #sign-out:active {
     transform: scale(0.9);
   }
 
   .option {
     display: none;
+  }
+
+  .option:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+    cursor: pointer;
   }
 
   @media ${devices.tablet} {
@@ -101,6 +114,7 @@ export const Container = styled.header`
     #receipt {
       display: none;
     }
+
     #sign-out {
       display: flex;
     }

@@ -130,11 +130,11 @@ const Header = () => {
             />
             {memorizedResultsWrapper}
           </SearchWrapper>
-          {!user.isAdmin ? (
-            <Link to="/favourites" className="option">
-              <FaHeart />
-            </Link>
-          ) : null}
+
+          <Link to="/favourites" className="option">
+            <FaHeart />
+          </Link>
+          
           <OrderButton
             onClick={() => {
               window.location.href = "/dish/new";
