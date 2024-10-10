@@ -103,6 +103,12 @@ export const Favourite = styled.div`
   justify-content: space-between;
 
   /* border: 1px solid red; */
+  border-radius: 0.8rem;
+
+  padding: 0.8rem;
+  &:hover {
+    outline: 2.8px solid ${({ theme }) => theme.colors.light_700};
+  }
 
   padding-top: 2rem;
   padding-bottom: 2rem;
