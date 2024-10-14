@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useCallback, useEffect, useReducer, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useCallback,
+  useEffect,
+  useReducer,
+  useState,
+  useRef,
+  useMemo,
+} from "react";
 
 import { api } from "../services/api";
 
@@ -14,6 +23,7 @@ const initialState = {
   // dishes: [{id: 1, "qty": 3}, {"id": 2, "qty": 1}]
   // other relevant order details
 };
+
 
 const orderReducer = (state, action) => {
   switch (action.type) {
@@ -72,13 +82,16 @@ const orderReducer = (state, action) => {
 
 export const OrderProvider = ({ children }) => {
   const [state, dispatch] = useReducer(orderReducer, initialState);
+  const [hasRemoved, setHasRemoved] = useState(false);
+
   const { user } = useAuth();
 
   const addItem = (dish) => {
-    dispatch({ type: "ADD_ITEM", payload: dish })
+    dispatch({ type: "ADD_ITEM", payload: dish });
   };
 
   const removeItem = (dish) => {
+    setHasRemoved(true);
     dispatch({ type: "REMOVE_ITEM", payload: dish });
   };
 
@@ -101,77 +114,56 @@ export const OrderProvider = ({ children }) => {
   };
 
   const getOrder = () => {
-    // filter orders by the logged in user
-    // const orders = await api.get(`/orders?user_id=${user.id}`);
-    // return orders.data;
+    const storedOrder = JSON.parse(localStorage.getItem("@foodex:order"));
 
-    // for demonstration purposes, we'll just return a hardcoded order
-    return {
-      total_price: 120.0,
-      payment_method: "credit_card",
-      dishes: [
-        { id: 1, quantity: 2 },
-        { id: 2, quantity: 1 },
-      ],
-      customerID: user.id,
-    };
+    if(state.dishes.length === 0 && storedOrder.dishes.length === 1 && hasRemoved) {
+      setHasRemoved(false);
+      return initialState;
+    }
 
+    return storedOrder;
     // return state;
   };
 
   // console.log(state);
-  
+
   const updateState = useCallback((newState) => {
     dispatch({ type: "SET_STATE", payload: newState });
   }, []);
-  
+
   const updateLocalStorage = useCallback(() => {
     localStorage.setItem("@foodex:order", JSON.stringify(state));
   }, [state]);
-  
+
   const clearOrder = useCallback(() => {
     console.log("clearing order");
+    updateState(initialState);
     localStorage.removeItem("@foodex:order");
     dispatch({ type: "SET_STATE", payload: initialState });
+    localStorage.setItem("@foodex:order", JSON.stringify(initialState));
   }, []);
-  
+
+  const order = useMemo(() => getOrder(), [state]);
+
   useEffect(() => {
+    let customerID =
+      order && order.customerID !== null ? order.customerID : undefined;
+
     const retrieveLocalStorage = async () => {
-      if (state.dishes.length === 0) {
+      if (state.dishes.length === 0 && order.dishes.length !== 0) {
         updateState(order);
       } else {
         updateLocalStorage();
       }
     };
-    retrieveLocalStorage();
-  }, [state, updateLocalStorage, updateState]);
 
-  useEffect(() => {
-    const order = JSON.parse(localStorage.getItem("@foodex:order"));
-    
-    let customerID = order ? order.customerID : undefined;
-    
-    const retrieveLocalStorage = async () => {
-      if (state.dishes.length === 0 && order) {
-        updateState(order);
-      } 
-      // else {
-      //   updateLocalStorage();
-      // }
-    };
-    // if the user is not logged in, clear the order
-    // if (user.id === undefined) {
-      //   clearOrder();
-      //   return;
-      // }
-      
-      // if the user is logged in, but the order is not for the logged in user, clear the order
+    // if the user is logged in, but the order is not for the logged in user, clear the order
     if (customerID !== undefined && customerID !== user.id) {
-      clearOrder();     
+      // console.log("customerID", customerID)
+      clearOrder();
     } else {
       retrieveLocalStorage();
     }
-
   }, [user.id, updateState, updateLocalStorage, clearOrder]);
 
   return (
