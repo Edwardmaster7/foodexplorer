@@ -114,7 +114,8 @@ export const OrderProvider = ({ children }) => {
   };
 
   const getOrder = () => {
-    const storedOrder = JSON.parse(localStorage.getItem("@foodex:order"));
+    const storedOrder = JSON.parse(localStorage.getItem("@foodex:order")) || localStorage.setItem("@foodex:order", JSON.stringify(initialState));
+    ;
 
     if(state.dishes.length === 0 && storedOrder.dishes.length === 1 && hasRemoved) {
       setHasRemoved(false);
@@ -136,7 +137,7 @@ export const OrderProvider = ({ children }) => {
   }, [state]);
 
   const clearOrder = useCallback(() => {
-    console.log("clearing order");
+    // console.log("clearing order");
     updateState(initialState);
     localStorage.removeItem("@foodex:order");
     dispatch({ type: "SET_STATE", payload: initialState });

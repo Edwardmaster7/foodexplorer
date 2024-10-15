@@ -101,6 +101,11 @@ function Menu() {
               Novo Prato
             </Link>
           ) : null}
+          {/* {user.isAdmin ? (
+            <Link to="/category/new" className="option">
+              Nova Categoria
+            </Link>
+          ) : null} */}
           <Link to="/favourites" className="option">
             {user.isAdmin ? "Favoritados" :  "Meus Favoritos"}
           </Link>
