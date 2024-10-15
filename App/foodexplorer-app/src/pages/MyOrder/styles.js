@@ -24,6 +24,10 @@ export const App = styled.div`
     #forward-button {
       display: none;
     }
+
+    #mobile-total-price {
+      display: none;
+    }
   }
   @media ${devices.desktop} {
     margin: 3.4rem 19.6rem 12.3rem 12.3rem;
@@ -56,9 +60,13 @@ export const Container = styled.div`
 `;
 
 export const PaymentContainer = styled.div`
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 2.4rem;
+
+  @media ${devices.tablet} {
+    display: flex;
+  }
 `;
 
 export const OrderContainer = styled.div`
@@ -98,6 +106,15 @@ export const OrdersWrapper = styled.div`
 
   #total-price {
     margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .desktop-total-price {
+    display: none;
+  }
+
+  .mobile-total-price {
+    display: flex;
   }
 
   @media ${devices.tablet} {
@@ -108,6 +125,13 @@ export const OrdersWrapper = styled.div`
     display: grid;
     gap: 4.8rem;
     row-gap: 4.8rem;
+
+    .desktop-total-price {
+      display: flex;
+    }
+    .mobile-total-price {
+      display: none;
+    }
   }
 `;
 

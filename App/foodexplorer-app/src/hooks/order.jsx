@@ -49,8 +49,7 @@ const orderReducer = (state, action) => {
       return {
         ...state,
         dishes: state.dishes.filter((dish) => dish.id !== action.payload.id),
-        total_price:
-          state.total_price - action.payload.price * action.payload.quantity,
+        total_price: state.total_price - action.payload.price * action.payload.quantity,
       };
     case "UPDATE_QUANTITY":
       return {

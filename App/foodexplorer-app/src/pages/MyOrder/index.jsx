@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import dishImg from "../../assets/dish.png";
 
 import { api } from "../../services/api";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 
 import { useAuth } from "../../hooks/auth";
 import { useOrder } from "../../hooks/order";
@@ -33,15 +33,23 @@ function Orders() {
   const { user } = useAuth();
   const { state, removeItem, getItemsSum } = useOrder();
 
+  // method to format the price
+  const formatPrice = (price) => {
+    return price.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
   useEffect(() => {
     async function fetchOrders() {
-      setIsLoading(true);
+      // setIsLoading(true);
       const storedOrder = await localStorage.getItem("@foodex:order");
       if (storedOrder) {
         const parsedOrder = JSON.parse(storedOrder);
         setOrders(parsedOrder.dishes || []);
       }
-      setIsLoading(false);
+      // setIsLoading(false);
     }
 
     fetchOrders();
@@ -68,8 +76,13 @@ function Orders() {
           const dishInfo = await api.get(`/dishes/${dish.id}`);
           const imageUrl = `${api.defaults.baseURL}/files/${dishInfo.data.image}`;
           // await preloadImage(imageUrl);
-          const price = await formatPrice(dishInfo.data.price);
-          return { ...dish, image: dishInfo.data.image, imgURL: imageUrl, price: price };
+          const formatedPrice = await formatPrice(dishInfo.data.price);
+          return {
+            ...dish,
+            image: dishInfo.data.image,
+            imgURL: imageUrl,
+            formatedPrice: formatedPrice,
+          };
         })
       );
       setOrders(updatedOrders);
@@ -114,27 +127,25 @@ function Orders() {
     }
   }, [orders]); // ensure that the useEffect only runs when dishes is updated
 
-  const totalPrice = useMemo(() => state.total_price, [state]);
+  const totalPrice = useMemo(
+    () => formatPrice(state.total_price),
+    [state, formatPrice]
+  );
 
-  const handleRemoveOrder = async (dish) => {
-    removeItem(dish);
-    // window.location.reload();
-  };
-
-  // method to format the price
-  const formatPrice = (price) => {
-    return price.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  };
+  const handleRemoveOrder = useCallback(
+    async (dish) => {
+      removeItem(dish);
+      setOrders((prevOrders) =>
+        prevOrders.filter((order) => order.id !== dish.id)
+      );
+    },
+    [removeItem]
+  );
 
   // method to update the price format on each dish
   // const updatePriceFormat = async (dish) => {
   //   return { ...dish, price: formatPrice(dish.price) };
   // };
-
-
 
   const memorizedOrders = useMemo(() => {
     return (
@@ -150,7 +161,7 @@ function Orders() {
                       <h3>
                         {dish.quantity}x {dish.name}
                       </h3>
-                      <span id="price">{dish.price}</span>
+                      <span id="price">{dish.formatedPrice}</span>
                     </div>
                     <a onClick={() => handleRemoveOrder(dish)}>Excluir</a>
                   </div>
@@ -162,14 +173,26 @@ function Orders() {
               <h3>Inclua um prato para fazer um pedido...</h3>
             </Empty>
           )}
-          <h3 id="total-price">Total: {formatPrice(state.total_price)}</h3>
+          <h3 id="total-price" className="desktop-total-price">
+            Total: {totalPrice}
+          </h3>
         </div>
-        <Button id="forward-button" disabled={orders.length === 0}>
-          Avançar
-        </Button>
+
+        <div id="mobile-total-price">
+          <h3 id="total-price">
+            Total: {totalPrice}
+          </h3>
+          <Button
+            id="forward-button"
+            to="/payment"
+            disabled={orders.length === 0}
+          >
+            Avançar
+          </Button>
+        </div>
       </OrdersWrapper>
     );
-  }, [orders, state.total_price]);
+  }, [orders, handleRemoveOrder, totalPrice]);
 
   return (
     <>
