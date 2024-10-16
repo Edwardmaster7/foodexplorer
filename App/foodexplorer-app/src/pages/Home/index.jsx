@@ -81,7 +81,7 @@ function Home() {
 
     // if (dishes.length > 0 && !dishes.every((meal) => meal.isFavourite)) {
     loadFavourites();
-  }, []);
+  }, [dishes]);
 
   // Load images for dishes only when necessary
   useEffect(() => {
