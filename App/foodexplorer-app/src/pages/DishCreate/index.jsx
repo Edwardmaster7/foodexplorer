@@ -12,7 +12,7 @@ import {
   ButtonContainer,
 } from "./styles";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import Header from "../../components/Header";
@@ -22,6 +22,8 @@ import BackButton from "../../components/BackButton";
 import { BsChevronLeft } from "react-icons/bs";
 import { PiUploadSimple } from "react-icons/pi";
 import { IoChevronDown, IoClose } from "react-icons/io5";
+
+import useInputMask from "../../hooks/inputMask";
 
 import { Link } from "react-router-dom";
 
@@ -41,9 +43,23 @@ function DishCreate() {
     reset,
     setValue,
     watch,
-    formState,
   } = useForm({
     mode: "onBlur",
+  });
+
+  const priceInputRef = useInputMask({
+    alias: 'numeric',
+    groupSeparator: '.',
+    radixPoint: ',',
+    autoGroup: true,
+    digits: 2,
+    digitsOptional: false,
+    prefix: 'R$ ',
+    placeholder: '0',
+    oncomplete: function(event) {
+      const numericValue = event.target.inputmask.unmaskedvalue();
+      setValue('price', parseFloat(numericValue.replace(',', '.')));
+    }
   });
 
   const handleFileChange = (event) => {
@@ -132,6 +148,7 @@ function DishCreate() {
 
       const form = {
         ...formData,
+        price: parseFloat(formData.price.replace('R$ ', '').replace('.', '').replace(',', '.')),
         ingredients_id: ingredientIds,
       };
 
@@ -269,11 +286,13 @@ function DishCreate() {
               <label htmlFor="price">Preço</label>
               <input
                 id="price"
-                type="number"
-                placeholder="R$ 00,00"
+                type="text"
+                placeholder="R$ 0,00"
                 className={`input ${errors.price ? "error" : ""}`}
+                ref={priceInputRef}
                 {...register("price", {
                   required: "Preço é um campo obrigatório",
+                  validate: (value) => parseFloat(value.replace(',', '.')) > 0 || "O preço deve ser maior que zero"
                 })}
               />
               {errors.price && (
