@@ -1,17 +1,11 @@
 module.exports = {
-  apps : [{
-    name: 'foodxplorer_api',
-    script: './src/server.js',
+  apps: [{
+    name: "foodxplorer_api",
+    script: "./src/server.js",
     instances: "max",
-    exec_mode: 'cluster',
-    watch: false,
-    autorestart: true,
-    max_memory_restart: '1G',
+    exec_mode: "cluster",
     env: {
-      NODE_ENV: 'development',
-    },
-    env_production: {
-      NODE_ENV: 'production',
+      NODE_ENV: "production",
     }
   }]
 };
