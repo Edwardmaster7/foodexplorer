@@ -35,6 +35,8 @@ import { api } from "../../services/api";
 
 import { useAuth } from "../../hooks/auth";
 
+import useInputMask from "../../hooks/inputMask";
+
 function DishEdit() {
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -57,6 +59,21 @@ function DishEdit() {
     formState,
   } = useForm({ defaultValues: { ingredients: selectedIngredientNames } });
 
+  const priceInputRef = useInputMask({
+    alias: 'numeric',
+    groupSeparator: '.',
+    radixPoint: ',',
+    autoGroup: true,
+    digits: 2,
+    digitsOptional: false,
+    prefix: 'R$ ',
+    placeholder: '0',
+    oncomplete: function(event) {
+      const numericValue = event.target.inputmask.unmaskedvalue();
+      setValue('price', parseFloat(numericValue.replace(',', '.')));
+    }
+  });
+  
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     console.log(file);
@@ -194,6 +211,7 @@ function DishEdit() {
 
       const form = {
         ...formData,
+        price: parseFloat(formData.price.replace("R$ ", "").replace(".", "").replace(",", ".")),
         ingredients_id: ingredientIds,
       };
 
@@ -359,10 +377,16 @@ function DishEdit() {
               <label htmlFor="price">Preço</label>
               <input
                 id="price"
-                type="number"
-                placeholder={`R$ ${dish.price}`}
+                type="text"
+                placeholder={dish.price ? `R$ ${dish.price.toFixed(2).replace(".", ",")}` : "R$ 0,00"}
                 className={`input ${errors.price ? "error" : ""}`}
-                {...register("price")}
+                ref={priceInputRef}
+                {...register("price", {
+                  required: "Preço é um campo obrigatório",
+                  validate: (value) =>
+                    parseFloat(value.replace(",", ".")) > 0 ||
+                    "O preço deve ser maior que zero",
+                })}
               />
               {errors.price && (
                 <span className="price-error-message">
