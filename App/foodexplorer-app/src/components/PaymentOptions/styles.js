@@ -13,6 +13,7 @@ export const PaymentOptionsWrapper = styled.div`
   flex-direction: row;
 
   width: 100%;
+
 `;
 
 export const PaymentOption = styled.div`
@@ -22,6 +23,8 @@ export const PaymentOption = styled.div`
   align-items: center;
 
   width: 100%;
+
+
   padding: 1.6rem;
   border: 1px solid ${({ theme }) => theme.colors.light_400};
 
@@ -54,13 +57,16 @@ export const PaymentOptionText = styled.div`
 
 export const PaymentInfo = styled.div`
   /* background-color: aliceblue; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   border-bottom-left-radius: 0.8rem;
   border-bottom-right-radius: 0.8rem;
   border: 1px solid ${({ theme }) => theme.colors.light_400};
 
   .pix {
-    padding: 4.7rem 10.8rem;
+    padding: 2rem 2rem;
   }
 
   .credit {
@@ -68,12 +74,14 @@ export const PaymentInfo = styled.div`
     grid-template-rows: 1fr 1fr;
     gap: 3.2rem;
 
-    padding: 6rem 6rem;
+    /* place-content: center; */
+
+    padding: 4rem 4rem;
 
     .credit-inputs {
       display: flex;
       flex-direction: row;
-      gap: 3.2rem;
+      gap: 1rem;
     }
 
     button {
@@ -93,6 +101,20 @@ export const PaymentInfo = styled.div`
       }
     }
   }
+
+  @media ${devices.tablet} {
+    .pix {
+      padding: 4.7rem 10.4rem;
+    }
+
+    .credit {
+      padding: 6rem 6.7rem;
+
+      .credit-inputs {
+        gap: 3.2rem;
+      }
+    }
+  }
 `;
 
 export const Input = styled.div`
@@ -100,16 +122,18 @@ export const Input = styled.div`
   flex-direction: column;
   gap: 0.8rem;
 
+  
   font-family: "Roboto", sans-serif;
   font-size: 1.6rem;
   font-weight: 400;
   line-height: 100%;
-
+  
   label {
     color: ${({ theme }) => theme.colors.light_400};
   }
-
+  
   input {
+    width: 100%;
     background-color: transparent;
     border: 1px solid ${({ theme }) => theme.colors.light_400};
     border-radius: 0.5rem;

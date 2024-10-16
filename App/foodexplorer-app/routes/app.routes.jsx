@@ -8,6 +8,7 @@ import DishCreate from "../src/pages/DishCreate";
 import DishEdit from "../src/pages/DishEdit";
 import Favourites from "../src/pages/Favourites";
 import MyOrder from "../src/pages/MyOrder";
+import Payment from "../src/pages/Payment";
 
 import { OrderProvider } from "../src/hooks/order";
 
@@ -23,6 +24,7 @@ export function AppRoutes() {
           <Route path="/dish/new" element={<DishCreate />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/myorder" element={<MyOrder />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
         <Footer />

@@ -21,7 +21,7 @@ export const Container = styled.button`
 
   transition: background-color 0.3s ease-in-out;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.tomato_200};
   }
 `;
