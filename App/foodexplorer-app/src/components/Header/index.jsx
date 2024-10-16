@@ -137,7 +137,7 @@ const Header = () => {
           
           <OrderButton
             onClick={() => {
-              window.location.href = "/dish/new";
+              window.location.href = user.isAdmin ? "/dish/new" : "/myorder";
             }}
           >
             {user.isAdmin ? (
@@ -152,7 +152,7 @@ const Header = () => {
           {user.isAdmin ? (
             <></>
           ) : (
-            <ReceiptIcon id="receipt" to="/menu" children={itemsSum} />
+            <ReceiptIcon id="receipt" to="/myorder" children={itemsSum} />
           )}
           <img id="sign-out" src={signOut} alt="" onClick={signOutUser} />
           {user.isAdmin ? <div id="padding-mobile-admin" /> : null}

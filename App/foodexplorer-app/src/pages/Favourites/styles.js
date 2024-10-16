@@ -144,6 +144,9 @@ export const Favourite = styled.div`
     font-family: "Roboto", sans-serif;
     font-size: 1.4rem;
     line-height: 160%;
+
+    max-width: fit-content;
+
     font-weight: 400;
     text-align: left;
 

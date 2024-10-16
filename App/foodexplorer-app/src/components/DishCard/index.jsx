@@ -58,6 +58,14 @@ function DishCard({
     onInclude(dish);
   }, [dish, onInclude]);
 
+  // method to format the price
+  const formatPrice = (price) => {
+    return price.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
   return (
     <Card key={dish.id}>
       <div id="card-content">
@@ -84,7 +92,7 @@ function DishCard({
         <Description>{dish.description}</Description>
       </div>
       <div id="card-logic">
-        <Price>R$ {dish.price}</Price>
+        <Price>{formatPrice(dish.price)}</Price>
         {!isAdmin ? (
           <LogicsContainer>
             <QuantityControl

@@ -7,6 +7,11 @@ export const Container = styled.button`
   
   background-color: ${({ theme }) => theme.colors.tomato_100};
 
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.tomato_400};
+    cursor: not-allowed;
+  }
+
   border: none;
   border-radius: 0.8rem;
 
@@ -16,7 +21,7 @@ export const Container = styled.button`
 
   transition: background-color 0.3s ease-in-out;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.tomato_200};
   }
 `;
