@@ -130,7 +130,7 @@ dist
 .pnp.*
 
 # database
-database.db
+# database.db
 *.xml
 *.iml
 *.meta
@@ -138,7 +138,7 @@ database.db
 # RSA
 *.pem
 
-tmp/
+# tmp/
 
 queries
 
