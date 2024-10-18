@@ -4,7 +4,7 @@
   "main": "./src/server.js",
   "scripts": {
     "start": "npm run start-pm2",
-    "build": "npm i && npm run migrate && npm run rsa",
+    "build": "npm i && npm run rsa", 
     "dev": "nodemon ./src/server.js",
     "migrate": "knex migrate:latest",
     "rsa": "openssl genrsa -out private.pem 2048; openssl rsa -in private.pem -outform PEM -pubout -out public.pem",
