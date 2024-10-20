@@ -4,7 +4,8 @@ import { HiOutlinePlusSm } from "react-icons/hi";
 import filterIcon from "../../assets/icons/search.svg";
 import InputField from "../InputField";
 
-import AutosizeInput from "react-input-autosize";
+import AutosizeInput from "../AutosizeInput";
+
 import {
   IngredientsWrapper,
   SelectedIngredientsWrapper,
@@ -116,10 +117,10 @@ function IngredientsSelector({
       <SelectedIngredientsWrapper>
         {selectedIngredients.map((ingredientName, index) => (
           <Ingredient key={index}>
-            <IngredientInput
+            <AutosizeInput
               type="text"
               value={ingredientName}
-              placeholder="Ex.: Banana"
+              placeholder="Banana"
               onChange={(e) => {
                 const newSelectedIngredients = [...selectedIngredients];
                 newSelectedIngredients[index] = e.target.value;

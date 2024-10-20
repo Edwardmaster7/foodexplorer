@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { devices } from "../../styles/theme";
-import AutosizeInput from "react-input-autosize";
+// import AutosizeInput from "react-input-autosize";
+import AutosizeInput from "../AutosizeInput";
 
 export const IngredientsWrapper = styled.div`
   display: flex;
@@ -76,7 +77,7 @@ export const Ingredient = styled.div`
 
   svg {
     position: static; // Changed from absolute
-    margin-left: 0.8rem; // Add some space between input and icon
+    /* margin-left: 0.8rem; // Add some space between input and icon */
     cursor: pointer;
     color: ${({ theme }) => theme.colors.light_100};
   }
@@ -88,8 +89,7 @@ export const Ingredient = styled.div`
 
 export const IngredientInputWrapper = styled.div``;
 
-export const IngredientInput = styled(AutosizeInput)`
-  input {
+export const IngredientInput = styled.input`
     background: none;
     outline: none;
     border: none;
@@ -99,9 +99,10 @@ export const IngredientInput = styled(AutosizeInput)`
     font-size: 1.6rem;
     font-family: "Roboto", sans-serif;
     font-weight: 400;
+    width: ${props => props.width || 'auto'};
+    min-width: 5rem;
     /* width: min-content; */
     /* max-width: 10vw; */
-  }
 `;
 
 export const FilterWrapper = styled.div`
