@@ -1,8 +1,5 @@
 import axios from "axios";
 
 export const api = axios.create({
-  // baseURL: "http://169.254.247.118:3333",
-  baseURL: "http://192.168.1.45:3333",
-  // baseURL: "http://localhost:3333",
-  // baseURL: "http://192.168.0.119:3333",
+  baseURL: import.meta.env.VITE_API_URL,
 });

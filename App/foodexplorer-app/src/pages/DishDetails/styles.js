@@ -234,6 +234,7 @@ export const IngredientsWrapper = styled.ul`
 
   @media ${devices.tablet} {
     padding-left: 0;
+    justify-content: flex-start;
   }
   /* 
   li:nth-child(3n-1) {

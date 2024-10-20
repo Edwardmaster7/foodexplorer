@@ -72,9 +72,6 @@ function Home() {
           window.location.href = "/";
         } else {
           console.error("Error loading favourites:", error);
-          alert(
-            `Erro ao carregar os favoritos.\nPor favor, tente novamente mais tarde.\n${error}`
-          );
         }
       }
     };

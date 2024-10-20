@@ -121,7 +121,7 @@ function DishDetails() {
     <>
       <Header />
       <App>
-        <BackButton id="button-link" />
+        <BackButton id="button-link" to="/" />
         <Container>
           <ImageContainer>
             <DishImage src={dish.imgURL} alt="" />

@@ -382,10 +382,8 @@ function DishEdit() {
                 className={`input ${errors.price ? "error" : ""}`}
                 ref={priceInputRef}
                 {...register("price", {
-                  required: "Preço é um campo obrigatório",
                   validate: (value) =>
-                    parseFloat(value.replace(",", ".")) > 0 ||
-                    "O preço deve ser maior que zero",
+                    parseFloat(value.replace(",", "."))
                 })}
               />
               {errors.price && (

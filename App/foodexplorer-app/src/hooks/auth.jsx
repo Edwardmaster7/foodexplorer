@@ -40,19 +40,21 @@ function AuthProvider({ children }) {
       const response = await api.post("/sessions", data);
       const { id: user, token, isAdmin } = response.data;
       console.log(response.data);
-
-      const expirationDate = new Date(Date.now() + 3600000); // 1 hour
-
       
-
+      const expirationDate = new Date(Date.now() + 3600000); // 1 hour
+      
+      
+      
       localStorage.setItem("@foodex:user", [user, isAdmin]);
       localStorage.setItem("@foodex:token", token);
       localStorage.setItem("@foodex:expires_at", expirationDate);
-
+      
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setData({ user, token, isAdmin });
     } catch (error) {
       if (error.response) {
+        console.log(error.response.data.message);
+        console.log(data);
         return alert(`Ocorreu um erro no login\n${error.response.data.message}`);
       } else {
         alert("Ocorreu um erro no login...");

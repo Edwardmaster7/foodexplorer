@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import theme from "../../styles/theme";
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -29,9 +31,13 @@ export const Container = styled.div`
   
   }
 
+  .error {
+    outline: ${(props) => props.isValid ? "" : `3px solid ${theme.colors.tomato_100}`};
+  }
+
   input {
     width: 100%;
-    padding: 0.8rem;
+    padding: 1.4rem;
 
     border: none;
     border-radius: 0.8rem;

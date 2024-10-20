@@ -108,6 +108,5 @@ export const InputWrapper = styled.div`
     outline: ${(props) => (props.is_valid ? "" : `3px solid ${theme.colors.tomato_100}`)};
   
     height: 4.8rem;
-    padding: 1.4rem;
   }
 `;

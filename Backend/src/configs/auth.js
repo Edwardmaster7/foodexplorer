@@ -7,7 +7,7 @@ const secretKey = fs.readFileSync('private.pem', 'utf8');
 // Sign a new JWT token
 const signToken = (payload) => {
   console.log(payload);
-  console.log(secretKey);
+  // console.log(secretKey);
   return jwt.sign(payload, secretKey, { algorithm: 'RS256', expiresIn: '1h' });
 };
 
