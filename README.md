@@ -7,13 +7,12 @@
 4. [Installation](#installation)
 5. [Configuration](#configuration)
 6. [API Documentation](#api-documentation)
-7. [Troubleshooting](#troubleshooting)
-8. [License](#license)
-9. [Contact](#contact)
+7. [License](#license)
+8. [Contact](#contact)
 
 ## Introduction
 
-FoodExplorer is a React-based web application built with Vite, that allows users to explore and discover dishes from a restaurant, like a digital menu. 
+FoodExplorer is a React-based web application built with Vite, that allows users to explore and discover dishes from a restaurant, like a digital menu. You can visit the deploy [here](https://foodexplorer-prod.netlify.app).
 
 ## Features
 
@@ -115,13 +114,9 @@ For detailed information about the FoodExplorer API endpoints and how to use the
 
 This documentation provides a comprehensive guide to all available API routes, request/response formats, and authentication requirements.
 
-## Troubleshooting
-
-[List common issues and their solutions]
-
 ## License
 
-This project is licensed under the [License Name] - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT licence - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Contact
 
