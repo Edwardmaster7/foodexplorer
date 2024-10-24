@@ -271,8 +271,9 @@ function DishEdit() {
 
   const handleDelete = () => {
     if (confirm("Tem certeza que deseja excluir o prato?")) {
-      api.delete(`/dishes/${id}`);
-      window.location.href = "/";
+      api.delete(`/dishes/${id}`).finally(() => {
+        window.location.href = "/";
+      });
     }
   };
 
@@ -411,7 +412,7 @@ function DishEdit() {
             )}
           </Container>
           <ButtonContainer>
-            <Button id="delete-btn" onClick={handleDelete}>
+            <Button id="delete-btn" disabled={isSubmitting} onClick={handleDelete}>
               Excluir prato
             </Button>
             <button
