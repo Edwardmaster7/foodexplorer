@@ -6,9 +6,10 @@
 3. [Prerequisites](#prerequisites)
 4. [Installation](#installation)
 5. [Configuration](#configuration)
-6. [Troubleshooting](#troubleshooting)
-7. [License](#license)
-8. [Contact](#contact)
+6. [API Documentation](#api-documentation)
+7. [Troubleshooting](#troubleshooting)
+8. [License](#license)
+9. [Contact](#contact)
 
 ## Introduction
 
@@ -108,6 +109,11 @@ This project uses two official Vite plugins:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
+## API Documentation
+
+For detailed information about the FoodExplorer API endpoints and how to use them, please refer to our [Postman API Documentation](https://documenter.getpostman.com/view/37660327/2sAY4rGRZG).
+
+This documentation provides a comprehensive guide to all available API routes, request/response formats, and authentication requirements.
 
 ## Troubleshooting
 
