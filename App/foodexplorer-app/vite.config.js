@@ -6,13 +6,13 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
   },
-  build: {
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
-  },
+  // build: {
+  //   minify: 'terser',
+  //   terserOptions: {
+  //     compress: {
+  //       drop_console: true,
+  //       drop_debugger: true,
+  //     },
+  //   },
+  // },
 });
