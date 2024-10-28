@@ -219,7 +219,6 @@ export const Container = styled.div`
   @media ${devices.tablet} {
 
     .error-message {
-      position: absolute;
       bottom: -2.4rem;
       font-size: 1.2rem;
     }
