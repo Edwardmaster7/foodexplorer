@@ -48,7 +48,7 @@ function Home() {
         }
       }
     };
-
+    console.log("load dishes");
     loadDishes();
   }, []);
 
@@ -76,8 +76,11 @@ function Home() {
       }
     };
 
-    // if (dishes.length > 0 && !dishes.every((meal) => meal.isFavourite)) {
-    loadFavourites();
+    if (dishes.length > 0 && !dishes.some((meal) => meal.isFavorite)) {
+      console.log("load favourites");
+      loadFavourites();
+    }
+
   }, [dishes]);
 
   // Load images for dishes only when necessary
@@ -102,6 +105,7 @@ function Home() {
 
     // dishes.every(meal => meal.imgURL) ensures that we only update dishes if not all items already have an imgURL
     if (dishes.length > 0 && !dishes.every((meal) => meal.imgURL)) {
+      console.log("load images");
       loadImages();
     }
   }, [dishes]); // ensure that the useEffect only runs when dishes is updated
@@ -136,6 +140,7 @@ function Home() {
         alert("Faça login para adicionar pratos ao carrinho");
       }
     };
+
     if (memorizedCategoryDishes.length === 0) return null;
     return memorizedCategoryDishes.map((category) => (
       <DishWrapper
