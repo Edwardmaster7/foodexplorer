@@ -87,7 +87,7 @@ export const Card = styled.div`
   }
 
   @media ${devices.tablet} {
-    max-height: fit-content;
+    /* max-height: max-content; */
 
     min-width: 25rem;
 
