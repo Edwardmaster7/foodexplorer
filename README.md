@@ -140,3 +140,4 @@ If you have any questions or feedback, please reach out:
 
 - Your Name - [Eduardo Batista](mailto:eduardoobatista2002@hotmail.com)
 - Project Link: [https://github.com/Edwardmaster7/foodexplorer](https://github.com/Edwardmaster7/foodexplorer)
+- Deploy: [https://foodexplorer-prod.netlify.app](https://foodexplorer-prod.netlify.app)
