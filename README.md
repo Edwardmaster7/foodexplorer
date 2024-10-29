@@ -12,7 +12,6 @@
 
 ## Introduction
 
-<<<<<<< HEAD
 FoodExplorer is a React-based web application built with Vite, that allows users to explore and discover dishes from a restaurant, like a digital menu. You can visit the deploy [here](https://foodexplorer-prod.netlify.app).
 =======
 FoodExplorer is a React-based web application built with Vite, that allows users to explore and discover dishes from a restaurant, like a digital menu. It also allows admins to manage the dishes and the restaurant. We follow the mobile-first approach, using styled-components, focusing on the user experience on all devices. We also use the Context API to manage the state and the authentication, as well as the use of cookies to store the user's session. 
