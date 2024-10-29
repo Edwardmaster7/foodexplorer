@@ -119,6 +119,12 @@ export const Content = styled.div`
     color: ${({ theme }) => theme.colors.light_300};
   }
 
+  @media ${devices.tablet} {
+    p {
+      text-align: left;
+    }
+  }
+
   #include {
     display: flex;
     align-items: center;
@@ -176,6 +182,7 @@ export const Content = styled.div`
       gap: 3rem;
 
       p {
+        text-align: left;
         font-size: 2.4rem;
       }
 
