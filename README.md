@@ -33,10 +33,6 @@ Admins are able to manage the restaurant's dishes. I followed the mobile-first a
 - See the favorited dishes, ordered by the number of times they were favorited and sorted by category
 - Search for a dish by name and by ingredients
 
-## Showcase
-
-![FoodExplorer Showcase](./showcase.gif)
-
 ## Future planned features 
 # For Admins
 - Order history and tracking
