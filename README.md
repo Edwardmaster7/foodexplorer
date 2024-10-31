@@ -34,12 +34,12 @@ Admins are able to manage the restaurant's dishes. I followed the mobile-first a
 - Search for a dish by name and by ingredients
 
 ## Future planned features 
-# For Admins
+### For Admins
 - Order history and tracking
 - CRUD for Categories
 - Edition and deletion of Ingredients
 - Enable or disable comments and rating
-# For Users
+### For Users
 - Order tracking and history
 - Comment and Rate a dish, and see comments from other users
 
