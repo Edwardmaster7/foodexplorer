@@ -1,32 +1,21 @@
-
-const knex = require('../database/knex')
-const DiskStorage = require('../providers/DiskStorage')
-const path = require('path')
+const DishRepository = require('../repositories/DishRepository');
+const DishImageService = require('../services/DishImageService');
 
 class DishImgController {
-
     async update(request, response) {
-        const { id } = request.params
-        const imgFilename = request.file.filename
+        const { id } = request.params;
+        const imgFilename = request.file.filename;
 
-        const diskStorage = new DiskStorage()
+        const dishRepository = new DishRepository();
+        const dishImageService = new DishImageService(dishRepository);
 
-        const dish = await knex('Dishes').where('id', id).first()
-
-        console.log(dish)
-
-        if (dish.image) {
-           await diskStorage.deleteFile(dish.image)
+        try {
+            const updatedDish = await dishImageService.updateDishImage(id, imgFilename);
+            return response.json(updatedDish);
+        } catch (error) {
+            return response.status(400).json({ error: error.message });
         }
-
-        await diskStorage.saveFile(imgFilename)
-        
-        dish.image = imgFilename
-
-        const updatedDish = await knex('Dishes').where('id', id).update({ image: dish.image }).returning('*')
-
-        return response.json(updatedDish)
     }
 }
 
-module.exports = DishImgController
+module.exports = DishImgController;
