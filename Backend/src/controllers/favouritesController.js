@@ -1,85 +1,41 @@
-knex = require('../database/knex')
-
-const AppError = require('../utils/AppError')
+const FavouritesRepository = require('../repositories/FavouritesRepository');
+const FavouritesService = require('../services/FavouritesService');
 
 class FavouritesController {
     async create(request, response) {
-        const user_id = request.user.id
-        const dish_id = request.params.id
-        const isAdmin = request.user.isAdmin
+        const { id: user_id, isAdmin } = request.user;
+        const { id: dish_id } = request.params;
 
-        // check if dish exists
-        const dish = await knex('Dishes').where({ id: dish_id }).first()
-        if (!dish) {
-            throw new AppError('Dish not found')
-        }
+        const favouritesRepository = new FavouritesRepository();
+        const favouritesService = new FavouritesService(favouritesRepository);
 
-        // check if user is admin
-        if (isAdmin) {
-            throw new AppError('Admins can not add a favourite')
-        }
+        const favourite = await favouritesService.addFavourite(user_id, dish_id, isAdmin);
 
-        // check if favourite already exists
-        const favouriteExists = await knex('Favourites').where({ user_id, dish_id }).first()
-        if (favouriteExists) {
-            throw new AppError('Favourite already exists')
-        }
-
-        const favourite = await knex('Favourites').insert({ user_id, dish_id })
-
-        return response.status(201).json(favourite)
+        return response.status(201).json(favourite);
     }
 
     async delete(request, response) {
-        const user_id = request.user.id
-        const dish_id = request.params.id
+        const { id: user_id } = request.user;
+        const { id: dish_id } = request.params;
 
-        const favourite = await knex('Favourites').where({ user_id, dish_id }).delete()
+        const favouritesRepository = new FavouritesRepository();
+        const favouritesService = new FavouritesService(favouritesRepository);
 
-        return response.status(204).json(favourite)
+        await favouritesService.removeFavourite(user_id, dish_id);
+
+        return response.status(204).json();
     }
 
     async index(request, response) {
-        const user_id = request.user.id
-        const isAdmin = request.user.isAdmin
+        const { id: user_id, isAdmin } = request.user;
 
-        console.log(isAdmin)
+        const favouritesRepository = new FavouritesRepository();
+        const favouritesService = new FavouritesService(favouritesRepository);
 
-        if (isAdmin) {
-            const favourites = await knex('Favourites')
-                                    .join('Dishes', 'Favourites.dish_id', '=', 'Dishes.id')
-                                    .join('Categories', 'Dishes.category_id', '=', 'Categories.id')
-                                    .groupBy('Dishes.category_id', 'Dishes.name', 'Categories.name')
-                                    .select('Categories.name as category', 'Dishes.id', 'Dishes.name', 'Dishes.image', knex.raw('COUNT(*) as favouriteCount'))
-                                    .orderBy('category')
-            
-            // const formatted = favourites.reduce((acc, dish) => {
-            //     if (!acc[dish.category]) {
-            //         acc[dish.category] = [];
-            //     }
-                
-            //     const existingDish = acc[dish.category].find(d => d.name === dish.name);
-                
-            //     if (existingDish) {
-            //         existingDish.favouriteCount++;
-            //     } else {
-            //         acc[dish.category].push({ ...dish });
-            //     }
-                
-            //     return acc;
-            //     }, {});                  
+        const favourites = await favouritesService.listFavourites(user_id, isAdmin);
 
-            return response.json(favourites)
-        } else {
-            const favourites = await knex('Favourites')
-                                    .where({ user_id })
-                                    .join('Dishes', 'Favourites.dish_id', '=', 'Dishes.id')
-                                    .leftJoin('Categories', 'Dishes.category_id', '=', 'Categories.id')
-                                    .select('Dishes.*', 'Categories.name as category')
-
-            return response.json(favourites)
-        }
+        return response.json(favourites);
     }
 }
 
-module.exports = FavouritesController
+module.exports = FavouritesController;
