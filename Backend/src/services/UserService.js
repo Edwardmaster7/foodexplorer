@@ -1,7 +1,7 @@
 const AppError = require("../utils/AppError");
 const { encrypt, compare } = require("../configs/crypto");
 
-class UserCreateService {
+class UserService {
   constructor(userRepository) {
     this.userRepository = userRepository;
   }
@@ -72,4 +72,4 @@ class UserCreateService {
   }
 }
 
-module.exports = UserCreateService;
+module.exports = UserService;

@@ -1,4 +1,4 @@
-const UserCreateService = require("./UserCreateService");
+const UserService = require("./UserService");
 const AppError = require("../utils/AppError");
 
 // Mock the crypto config
@@ -7,8 +7,8 @@ jest.mock("../configs/crypto", () => ({
   compare: jest.fn((pwd, hashedPwd) => pwd === hashedPwd.replace("hashed_", ""))
 }));
 
-describe("UserCreateService", () => {
-  let userCreateService;
+describe("UserService", () => {
+  let userService;
   let userRepositoryMock;
 
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe("UserCreateService", () => {
       show: jest.fn()
     };
 
-    userCreateService = new UserCreateService(userRepositoryMock);
+    userService = new UserService(userRepositoryMock);
   });
 
   describe("create", () => {
@@ -35,7 +35,7 @@ describe("UserCreateService", () => {
 
       userRepositoryMock.findByEmail.mockResolvedValue(null);
 
-      await userCreateService.create(userData);
+      await userService.create(userData);
 
       expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(userData.email);
       expect(userRepositoryMock.create).toHaveBeenCalledWith({
@@ -50,7 +50,7 @@ describe("UserCreateService", () => {
         password: "password123"
       };
 
-      await expect(userCreateService.create(userData))
+      await expect(userService.create(userData))
         .rejects
         .toEqual(new AppError("Name and email are required."));
     });
@@ -64,7 +64,7 @@ describe("UserCreateService", () => {
 
       userRepositoryMock.findByEmail.mockResolvedValue({ id: 1, email: userData.email });
 
-      await expect(userCreateService.create(userData))
+      await expect(userService.create(userData))
         .rejects
         .toEqual(new AppError("Email already in use."));
     });
@@ -88,7 +88,7 @@ describe("UserCreateService", () => {
       userRepositoryMock.findById.mockResolvedValue(mockUser);
       userRepositoryMock.findByEmail.mockResolvedValue(null);
 
-      await userCreateService.update(updateData);
+      await userService.update(updateData);
 
       expect(userRepositoryMock.update).toHaveBeenCalledWith(1, {
         ...mockUser,
@@ -106,7 +106,7 @@ describe("UserCreateService", () => {
 
       userRepositoryMock.findById.mockResolvedValue(mockUser);
 
-      await userCreateService.update(updateData);
+      await userService.update(updateData);
 
       expect(userRepositoryMock.update).toHaveBeenCalledWith(1, {
         ...mockUser,
@@ -117,7 +117,7 @@ describe("UserCreateService", () => {
     it("should throw error when user not found", async () => {
       userRepositoryMock.findById.mockResolvedValue(null);
 
-      await expect(userCreateService.update({ user_id: 999 }))
+      await expect(userService.update({ user_id: 999 }))
         .rejects
         .toEqual(new AppError("User not found."));
     });
@@ -131,7 +131,7 @@ describe("UserCreateService", () => {
       userRepositoryMock.findById.mockResolvedValue(mockUser);
       userRepositoryMock.findByEmail.mockResolvedValue({ id: 2, email: updateData.email });
 
-      await expect(userCreateService.update(updateData))
+      await expect(userService.update(updateData))
         .rejects
         .toEqual(new AppError("Email already in use."));
     });
@@ -144,7 +144,7 @@ describe("UserCreateService", () => {
 
       userRepositoryMock.findById.mockResolvedValue(mockUser);
 
-      await expect(userCreateService.update(updateData))
+      await expect(userService.update(updateData))
         .rejects
         .toEqual(new AppError("Old password is required."));
     });
@@ -158,7 +158,7 @@ describe("UserCreateService", () => {
 
       userRepositoryMock.findById.mockResolvedValue(mockUser);
 
-      await expect(userCreateService.update(updateData))
+      await expect(userService.update(updateData))
         .rejects
         .toEqual(new AppError("Old password does not match."));
     });
@@ -174,7 +174,7 @@ describe("UserCreateService", () => {
 
       userRepositoryMock.show.mockResolvedValue(mockUser);
 
-      const result = await userCreateService.show(1);
+      const result = await userService.show(1);
 
       expect(result).toEqual(mockUser);
       expect(userRepositoryMock.show).toHaveBeenCalledWith(1);
@@ -183,7 +183,7 @@ describe("UserCreateService", () => {
     it("should throw error when user not found", async () => {
       userRepositoryMock.show.mockResolvedValue(null);
 
-      await expect(userCreateService.show(999))
+      await expect(userService.show(999))
         .rejects
         .toEqual(new AppError("User not found.", 404));
     });
