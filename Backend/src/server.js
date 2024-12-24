@@ -15,7 +15,11 @@ const app = express();
 
 const port = process.env.PORT || 10000;
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.ORIGIN || '*', // Use the ORIGIN env var or default to '*'
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
